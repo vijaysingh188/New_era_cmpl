@@ -31,8 +31,8 @@ class IndivdualUserForm(ModelForm):
 	last_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Last Name'}))
 	phone_no = forms.CharField(required=False,max_length=10, validators=[MinLengthValidator(10)],error_messages={'required':'Enter a Valid Phone Number'})
 	email = forms.EmailField(required=False,error_messages={'required':'Enter a Valid Email Address'})
-	password = forms.CharField(widget=forms.PasswordInput(attrs={'id':'myInput1'}),required=False)
-	confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'id': 'password2'}), required=False)
+	password = forms.CharField(widget=forms.PasswordInput(attrs={'id':'myInput1','placeholder':'Create Password'}),required=False)
+	confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'id': 'password2','placeholder':'Confrim Password'}), required=False)
 	usecode = forms.CharField(required=False)
 	class Meta:
 		model = CustomUser
@@ -338,7 +338,7 @@ class Eventregistertable(forms.ModelForm):
         ('Conference', 'Conference'),
     )
     eventtype = forms.ChoiceField(choices=EVENT_OPTION) #format='%Y-%m-%d %H:%M:%S',
-    created_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%dT%H:%M-%m-%Y',attrs={'type': 'datetime-local'}))  #format='%Y-%m-%dT%H:%M 12:30PM Sep 2020
+    created_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))  #format='%Y-%m-%dT%H:%M 12:30PM Sep 2020
     ends_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))
     Chairpersons = forms.CharField(widget=forms.TextInput(),required=False)
     mobilenumber = forms.CharField(max_length=10, min_length=10, widget=forms.TextInput(), required=False)

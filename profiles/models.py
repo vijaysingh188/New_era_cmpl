@@ -30,7 +30,7 @@ class IndivdualDoctorProfile(models.Model):
 	res_country = CountryField(default='IN')
 
 	def __str__(self):
-		return self.user.username
+		return str(self.pk)
 
 class NursingHomeProfile(models.Model):
 	user =models.OneToOneField('accounts.CustomUser', on_delete= models.CASCADE)
@@ -77,7 +77,7 @@ class IndivdualUserProfile(models.Model):
 	relation_email = models.CharField(max_length=150)
 
 	def __str__(self):
-		return self.user.username
+		return str(self.pk)
 		
 class UserAddedbyIndividualDoctor(models.Model):
 	user =models.ForeignKey('accounts.CustomUser', on_delete= models.CASCADE)

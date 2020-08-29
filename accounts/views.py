@@ -27,668 +27,668 @@ from django.conf import settings
 
 @csrf_exempt
 def aboutus(request):
-	return render(request, 'About_Us.html')
+    return render(request, 'About_Us.html')
 
 @csrf_exempt
 def contact(request):
-	if request.method == 'POST':
-		form = ContactForm(request.POST)
-		name = request.POST.get('name')
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        name = request.POST.get('name')
 
-		if form.is_valid():
-			if form.save():
-				return redirect('/contact', messages.success(request, 'Thank you for contacting Us. Our team will contact you as soon as earliest.', 'alert-success'))
-			else:
-				return redirect('/contact', messages.error(request, 'Something went wrong!', 'alert-danger'))
-		else:
-			return redirect('/contact', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = ContactForm()
-		return render(request, "Contact_Us.html", {'form':form})
+        if form.is_valid():
+            if form.save():
+                return redirect('/contact', messages.success(request, 'Thank you for contacting Us. Our team will contact you as soon as earliest.', 'alert-success'))
+            else:
+                return redirect('/contact', messages.error(request, 'Something went wrong!', 'alert-danger'))
+        else:
+            return redirect('/contact', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = ContactForm()
+        return render(request, "Contact_Us.html", {'form':form})
 
 @login_required
 @csrf_exempt
 def contact_master(request):
-	module = Contact.objects.all()
-	return render(request, "Contact_Us_List.html", {'module': module})
+    module = Contact.objects.all()
+    return render(request, "Contact_Us_List.html", {'module': module})
 
 @csrf_exempt
 def home(request):
-	return render(request, "index.html", {})
+    return render(request, "index.html", {})
 
 def activate_account(request, uidb64, token):
-	try:
-		uid = force_bytes(urlsafe_base64_decode(uidb64))
-		user = CustomUser.objects.get(pk=uid)
-	except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-		user = None
-	if user is not None and account_activation_token.check_token(user, token):
-		user.is_active = True
-		user.save()
-		login(request, user)
-		return redirect('/existing_module_master', messages.success(request, 'Your account has been activated successfully!', 'alert-success'))
-	else:
-		return redirect('/register', messages.error(request, 'Activation link is invalid!', 'alert-danger'))
+    try:
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        login(request, user)
+        return redirect('/existing_module_master', messages.success(request, 'Your account has been activated successfully!', 'alert-success'))
+    else:
+        return redirect('/register', messages.error(request, 'Activation link is invalid!', 'alert-danger'))
 
 #https://www.google.com/settings/security/lesssecureapps
 
 @csrf_exempt
 def register(request):
-	next = request.GET.get('next')
-	if 'individualdoctor' in request.POST:
+    next = request.GET.get('next')
+    if 'individualdoctor' in request.POST:
 
-		form1 = IndivdualDoctorForm(request.POST)
-		if form1.is_valid():
-			# form2 = HospitalForm(request.POST)
-			# if form2.is_valid():
+        form1 = IndivdualDoctorForm(request.POST)
+        if form1.is_valid():
+            # form2 = HospitalForm(request.POST)
+            # if form2.is_valid():
 
-			user = form1.save(commit=False)
+            user = form1.save(commit=False)
 
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_individual').exists()
-
-
-			if (code_check == True):
-
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_individual=True)
-				counted_values = code_to_count.count()
-
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_individual')
-				counted_in_models = Coupon_count.count_value
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and (
-						str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
-
-					password = form1.cleaned_data.get('password')
-					type = form1.cleaned_data.get('type_of_doctor')
-
-					user.type_of_doctor = type
-					user.set_password(password)
-					user.is_hdc_individual = True
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Individual Doctor"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form1.cleaned_data.get('email')
-					phone_no = form1.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						IndivdualDoctorProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('profile_individual_doctor')
-			else:
-				return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_individual').exists()
 
 
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
+            if (code_check == True):
+
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_individual=True)
+                counted_values = code_to_count.count()
+
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_individual')
+                counted_in_models = Coupon_count.count_value
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and (
+                        str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                    password = form1.cleaned_data.get('password')
+                    type = form1.cleaned_data.get('type_of_doctor')
+
+                    user.type_of_doctor = type
+                    user.set_password(password)
+                    user.is_hdc_individual = True
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Individual Doctor"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form1.cleaned_data.get('email')
+                    phone_no = form1.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        IndivdualDoctorProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('profile_individual_doctor')
+            else:
+                return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
 
 
-	else:
-		form1 = IndivdualDoctorForm(request.POST)
-
-	if 'hospital' in request.POST:
-		form2 = HospitalForm(request.POST)
-
-		if form2.is_valid():
-
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_hospital').exists()
-
-			if (code_check == True):
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_hospital=True)
-				counted_values = code_to_count.count()
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_hospital')
-				counted_in_models = Coupon_count.count_value
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and (
-						str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
-
-					user = form2.save(commit=False)
-					password = form2.cleaned_data.get('password')
-
-					payment = request.POST.get('yesno')
-					user.payment = payment
-					user.set_password(password)
-					user.is_hdc_hospital = True
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Hospital"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form2.cleaned_data.get('email')
-					phone_no = form2.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						HospitalProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('profile_hospital')
-			elif (code_check==False):
-				return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
-
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form2 = HospitalForm(request.POST)
-
-	if 'nursinghome' in request.POST:
-		form3 = NursingHomeForm(request.POST)
-		if form3.is_valid():
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_nursing_home').exists()
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
 
 
-			if code_check == True:
-				# code_to_count = CustomUser.objects.filter(usecode=usecode,is_hdc_nursing_home=True).exists()
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_nursing_home=True)
+    else:
+        form1 = IndivdualDoctorForm(request.POST)
 
-				counted_values = code_to_count.count()
+    if 'hospital' in request.POST:
+        form2 = HospitalForm(request.POST)
 
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_nursing_home')
-				counted_in_models = Coupon_count.count_value
+        if form2.is_valid():
 
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and
-					str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d'))):
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_hospital').exists()
+
+            if (code_check == True):
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_hospital=True)
+                counted_values = code_to_count.count()
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_hospital')
+                counted_in_models = Coupon_count.count_value
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and (
+                        str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                    user = form2.save(commit=False)
+                    password = form2.cleaned_data.get('password')
+
+                    payment = request.POST.get('yesno')
+                    user.payment = payment
+                    user.set_password(password)
+                    user.is_hdc_hospital = True
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Hospital"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form2.cleaned_data.get('email')
+                    phone_no = form2.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        HospitalProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('profile_hospital')
+            elif (code_check==False):
+                return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
+
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form2 = HospitalForm(request.POST)
+
+    if 'nursinghome' in request.POST:
+        form3 = NursingHomeForm(request.POST)
+        if form3.is_valid():
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_nursing_home').exists()
 
 
-					user = form3.save(commit=False)
-					password = form3.cleaned_data.get('password')
-					user.set_password(password)
-					user.is_hdc_nursing_home = True
+            if code_check == True:
+                # code_to_count = CustomUser.objects.filter(usecode=usecode,is_hdc_nursing_home=True).exists()
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_nursing_home=True)
 
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Nursing Home"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form3.cleaned_data.get('email')
-					phone_no = form3.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						NursingHomeProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('profile_nursing_home')
-			else:
-				return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
+                counted_values = code_to_count.count()
 
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form3 = NursingHomeForm(request.POST)
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_nursing_home')
+                counted_in_models = Coupon_count.count_value
 
-	if 'individualuser' in request.POST:
-		form = IndivdualUserForm(request.POST)
-		if form.is_valid():
-			user = form.save(commit=False)
-			password = form.cleaned_data.get('password')
-			usecode = form.cleaned_data.get('usecode')
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and
+                    str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d'))):
 
 
-			code_check = Coupon.objects.filter(code=usecode)
+                    user = form3.save(commit=False)
+                    password = form3.cleaned_data.get('password')
+                    user.set_password(password)
+                    user.is_hdc_nursing_home = True
 
-			code_to_count = CustomUser.objects.filter(usecode=usecode).count()
-			count = Coupon.objects.filter(code=usecode).values_list('count_value',flat=True)
-			check_date = Coupon.objects.filter(code=usecode).values_list('endDate', flat=True)
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Nursing Home"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form3.cleaned_data.get('email')
+                    phone_no = form3.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        NursingHomeProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('profile_nursing_home')
+            else:
+                return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
 
-			if (code_check.exists()==True and code_to_count<=count[0] and (str(check_date[0]) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form3 = NursingHomeForm(request.POST)
 
-				user.set_password(password)
-				user.is_individual = True
+    if 'individualuser' in request.POST:
+        form = IndivdualUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            usecode = form.cleaned_data.get('usecode')
 
-				user.save()
-				email_subject = 'Welcome To Health Perigon!'
-				valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-				date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-				type1 = "HDC - Individual User"
-				message = render_to_string('activate_account.html', {
-					'user': user,
-					'type': type1,
-					'valid_till': valid_till,
-				})
-				to_email = form.cleaned_data.get('email')
-				phone_no = form.cleaned_data.get('phone_no')
-				email = EmailMessage(email_subject, message, to=[to_email])
-				email.content_subtype = 'html'
-				email.send()
-				payload = {}
-				payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-				payload['content-type'] = "application/json"
-				payload['mobiles'] = phone_no
-				payload['flow_id'] = "5efada07d6fc05445570a4f2"
-				payload['ID'] = user.special_id
-				url = "https://api.msg91.com/api/v5/flow/"
-				response = requests.post(url, json=payload)
-				data = response.json()
 
-				login(request, user)
-				if request.user.is_authenticated:
-					IndivdualUserProfile.objects.create(user=request.user)
-				if next:
-					return redirect(next)
-				return redirect('profile_individual_user')
-			else:
-				return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = IndivdualUserForm()
+            code_check = Coupon.objects.filter(code=usecode)
 
-	return render(request, "Register.html", {'form': form, 'form1': form1, 'form2': form2, 'form3': form3})
+            code_to_count = CustomUser.objects.filter(usecode=usecode).count()
+            count = Coupon.objects.filter(code=usecode).values_list('count_value',flat=True)
+            check_date = Coupon.objects.filter(code=usecode).values_list('endDate', flat=True)
+
+            if (code_check.exists()==True and code_to_count<=count[0] and (str(check_date[0]) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                user.set_password(password)
+                user.is_individual = True
+
+                user.save()
+                email_subject = 'Welcome To Health Perigon!'
+                valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                type1 = "HDC - Individual User"
+                message = render_to_string('activate_account.html', {
+                    'user': user,
+                    'type': type1,
+                    'valid_till': valid_till,
+                })
+                to_email = form.cleaned_data.get('email')
+                phone_no = form.cleaned_data.get('phone_no')
+                email = EmailMessage(email_subject, message, to=[to_email])
+                email.content_subtype = 'html'
+                email.send()
+                payload = {}
+                payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                payload['content-type'] = "application/json"
+                payload['mobiles'] = phone_no
+                payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                payload['ID'] = user.special_id
+                url = "https://api.msg91.com/api/v5/flow/"
+                response = requests.post(url, json=payload)
+                data = response.json()
+
+                login(request, user)
+                if request.user.is_authenticated:
+                    IndivdualUserProfile.objects.create(user=request.user)
+                if next:
+                    return redirect(next)
+                return redirect('profile_individual_user')
+            else:
+                return redirect('/register', messages.error(request, 'Invalid code', 'alert-danger'))
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = IndivdualUserForm()
+
+    return render(request, "Register.html", {'form': form, 'form1': form1, 'form2': form2, 'form3': form3})
 
 @csrf_exempt
 def register1(request):
-	next = request.GET.get('next')
-	if 'individualdoctor' in request.POST:
+    next = request.GET.get('next')
+    if 'individualdoctor' in request.POST:
 
-		form1 = IndivdualDoctorForm(request.POST)
-		if form1.is_valid():
-			# form2 = HospitalForm(request.POST)
-			# if form2.is_valid():
+        form1 = IndivdualDoctorForm(request.POST)
+        if form1.is_valid():
+            # form2 = HospitalForm(request.POST)
+            # if form2.is_valid():
 
-			user = form1.save(commit=False)
+            user = form1.save(commit=False)
 
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_individual').exists()
-
-
-			if (code_check == True):
-
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_individual=True)
-				counted_values = code_to_count.count()
-
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_individual')
-				counted_in_models = Coupon_count.count_value
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and (
-						str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
-
-					password = form1.cleaned_data.get('password')
-					type = form1.cleaned_data.get('type_of_doctor')
-
-					user.type_of_doctor = type
-					user.set_password(password)
-					user.is_hdc_individual = True
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Individual Doctor"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form1.cleaned_data.get('email')
-					phone_no = form1.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						IndivdualDoctorProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('Custom_user_list')
-			else:
-				return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_individual').exists()
 
 
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
+            if (code_check == True):
+
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_individual=True)
+                counted_values = code_to_count.count()
+
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_individual')
+                counted_in_models = Coupon_count.count_value
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and (
+                        str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                    password = form1.cleaned_data.get('password')
+                    type = form1.cleaned_data.get('type_of_doctor')
+
+                    user.type_of_doctor = type
+                    user.set_password(password)
+                    user.is_hdc_individual = True
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Individual Doctor"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form1.cleaned_data.get('email')
+                    phone_no = form1.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        IndivdualDoctorProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('Custom_user_list')
+            else:
+                return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
 
 
-	else:
-		form1 = IndivdualDoctorForm(request.POST)
-
-	if 'hospital' in request.POST:
-		form2 = HospitalForm(request.POST)
-
-		if form2.is_valid():
-
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_hospital').exists()
-
-			if (code_check == True):
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_hospital=True)
-				counted_values = code_to_count.count()
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_hospital')
-				counted_in_models = Coupon_count.count_value
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and (
-						str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
-
-					user = form2.save(commit=False)
-					password = form2.cleaned_data.get('password')
-
-					payment = request.POST.get('yesno')
-					user.payment = payment
-					user.set_password(password)
-					user.is_hdc_hospital = True
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Hospital"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form2.cleaned_data.get('email')
-					phone_no = form2.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						HospitalProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('Custom_user_list')
-			elif (code_check==False):
-				return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
-
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form2 = HospitalForm(request.POST)
-
-	if 'nursinghome' in request.POST:
-		form3 = NursingHomeForm(request.POST)
-		if form3.is_valid():
-			usecode = request.POST['usecode']
-			list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
-			code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_nursing_home').exists()
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
 
 
-			if code_check == True:
-				# code_to_count = CustomUser.objects.filter(usecode=usecode,is_hdc_nursing_home=True).exists()
-				code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_nursing_home=True)
+    else:
+        form1 = IndivdualDoctorForm(request.POST)
 
-				counted_values = code_to_count.count()
+    if 'hospital' in request.POST:
+        form2 = HospitalForm(request.POST)
 
-				Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_nursing_home')
-				counted_in_models = Coupon_count.count_value
+        if form2.is_valid():
 
-				Check_date = Coupon_count.endDate
-				if (counted_values <= counted_in_models and
-					str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d'))):
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_hospital').exists()
+
+            if (code_check == True):
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_hospital=True)
+                counted_values = code_to_count.count()
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_hospital')
+                counted_in_models = Coupon_count.count_value
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and (
+                        str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                    user = form2.save(commit=False)
+                    password = form2.cleaned_data.get('password')
+
+                    payment = request.POST.get('yesno')
+                    user.payment = payment
+                    user.set_password(password)
+                    user.is_hdc_hospital = True
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Hospital"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form2.cleaned_data.get('email')
+                    phone_no = form2.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        HospitalProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('Custom_user_list')
+            elif (code_check==False):
+                return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
+
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form2 = HospitalForm(request.POST)
+
+    if 'nursinghome' in request.POST:
+        form3 = NursingHomeForm(request.POST)
+        if form3.is_valid():
+            usecode = request.POST['usecode']
+            list_display = ['is_individual', 'is_hdc_individual', 'is_hdc_hospital', 'is_hdc_nursing_home']
+            code_check = Coupon.objects.filter(code=usecode, profileChoices='is_hdc_nursing_home').exists()
 
 
-					user = form3.save(commit=False)
-					password = form3.cleaned_data.get('password')
-					user.set_password(password)
-					user.is_hdc_nursing_home = True
+            if code_check == True:
+                # code_to_count = CustomUser.objects.filter(usecode=usecode,is_hdc_nursing_home=True).exists()
+                code_to_count = CustomUser.objects.filter(usecode=usecode, is_hdc_nursing_home=True)
 
-					user.save()
-					email_subject = 'Welcome To Health Perigon!'
-					valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-					date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-					type1 = "HDC - Nursing Home"
-					message = render_to_string('activate_account.html', {
-						'user': user,
-						'type': type1,
-						'valid_till': valid_till,
-					})
-					to_email = form3.cleaned_data.get('email')
-					phone_no = form3.cleaned_data.get('phone_no')
-					email = EmailMessage(email_subject, message, to=[to_email])
-					email.content_subtype = 'html'
-					email.send()
-					payload = {}
-					payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-					payload['content-type'] = "application/json"
-					payload['mobiles'] = phone_no
-					payload['flow_id'] = "5efada07d6fc05445570a4f2"
-					payload['ID'] = user.special_id
-					url = "https://api.msg91.com/api/v5/flow/"
-					response = requests.post(url, json=payload)
-					data = response.json()
-					login(request, user)
-					if request.user.is_authenticated:
-						NursingHomeProfile.objects.create(user=request.user)
-					if next:
-						return redirect(next)
-					return redirect('Custom_user_list')
-			else:
-				return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
+                counted_values = code_to_count.count()
 
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form3 = NursingHomeForm(request.POST)
+                Coupon_count = Coupon.objects.get(code=usecode, profileChoices='is_hdc_nursing_home')
+                counted_in_models = Coupon_count.count_value
 
-	if 'individualuser' in request.POST:
-		form = IndivdualUserForm(request.POST)
-		if form.is_valid():
-			user = form.save(commit=False)
-			password = form.cleaned_data.get('password')
-			usecode = form.cleaned_data.get('usecode')
+                Check_date = Coupon_count.endDate
+                if (counted_values <= counted_in_models and
+                    str(Check_date) >= str(datetime.date.today().strftime('20%y-%m-%d'))):
 
 
-			code_check = Coupon.objects.filter(code=usecode)
+                    user = form3.save(commit=False)
+                    password = form3.cleaned_data.get('password')
+                    user.set_password(password)
+                    user.is_hdc_nursing_home = True
 
-			code_to_count = CustomUser.objects.filter(usecode=usecode).count()
-			count = Coupon.objects.filter(code=usecode).values_list('count_value',flat=True)
-			check_date = Coupon.objects.filter(code=usecode).values_list('endDate', flat=True)
+                    user.save()
+                    email_subject = 'Welcome To Health Perigon!'
+                    valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                    date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                    type1 = "HDC - Nursing Home"
+                    message = render_to_string('activate_account.html', {
+                        'user': user,
+                        'type': type1,
+                        'valid_till': valid_till,
+                    })
+                    to_email = form3.cleaned_data.get('email')
+                    phone_no = form3.cleaned_data.get('phone_no')
+                    email = EmailMessage(email_subject, message, to=[to_email])
+                    email.content_subtype = 'html'
+                    email.send()
+                    payload = {}
+                    payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                    payload['content-type'] = "application/json"
+                    payload['mobiles'] = phone_no
+                    payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                    payload['ID'] = user.special_id
+                    url = "https://api.msg91.com/api/v5/flow/"
+                    response = requests.post(url, json=payload)
+                    data = response.json()
+                    login(request, user)
+                    if request.user.is_authenticated:
+                        NursingHomeProfile.objects.create(user=request.user)
+                    if next:
+                        return redirect(next)
+                    return redirect('Custom_user_list')
+            else:
+                return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
 
-			if (code_check.exists()==True and code_to_count<=count[0] and (str(check_date[0]) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form3 = NursingHomeForm(request.POST)
 
-				user.set_password(password)
-				user.is_individual = True
+    if 'individualuser' in request.POST:
+        form = IndivdualUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data.get('password')
+            usecode = form.cleaned_data.get('usecode')
 
-				user.save()
-				email_subject = 'Welcome To Health Perigon!'
-				valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
-				date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
-				type1 = "HDC - Individual User"
-				message = render_to_string('activate_account.html', {
-					'user': user,
-					'type': type1,
-					'valid_till': valid_till,
-				})
-				to_email = form.cleaned_data.get('email')
-				phone_no = form.cleaned_data.get('phone_no')
-				email = EmailMessage(email_subject, message, to=[to_email])
-				email.content_subtype = 'html'
-				email.send()
-				payload = {}
-				payload['authkey'] = "95631AQvoigMsq5ec52866P1"
-				payload['content-type'] = "application/json"
-				payload['mobiles'] = phone_no
-				payload['flow_id'] = "5efada07d6fc05445570a4f2"
-				payload['ID'] = user.special_id
-				url = "https://api.msg91.com/api/v5/flow/"
-				response = requests.post(url, json=payload)
-				data = response.json()
 
-				login(request, user)
-				if request.user.is_authenticated:
-					IndivdualUserProfile.objects.create(user=request.user)
-				if next:
-					return redirect(next)
-				return redirect('Custom_user_list')
-			else:
-				return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
-		else:
-			email = request.POST.get('email')
-			phone_no = request.POST.get('phone_no')
-			if CustomUser.objects.filter(email=email).exists():
-				return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
-			elif CustomUser.objects.filter(phone_no=phone_no).exists():
-				return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
-			else:
-				return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = IndivdualUserForm()
+            code_check = Coupon.objects.filter(code=usecode)
 
-	return render(request, "register1.html", {'form': form, 'form1': form1, 'form2': form2, 'form3': form3})
+            code_to_count = CustomUser.objects.filter(usecode=usecode).count()
+            count = Coupon.objects.filter(code=usecode).values_list('count_value',flat=True)
+            check_date = Coupon.objects.filter(code=usecode).values_list('endDate', flat=True)
+
+            if (code_check.exists()==True and code_to_count<=count[0] and (str(check_date[0]) >= str(datetime.date.today().strftime('20%y-%m-%d')))):
+
+                user.set_password(password)
+                user.is_individual = True
+
+                user.save()
+                email_subject = 'Welcome To Health Perigon!'
+                valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
+                date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
+                type1 = "HDC - Individual User"
+                message = render_to_string('activate_account.html', {
+                    'user': user,
+                    'type': type1,
+                    'valid_till': valid_till,
+                })
+                to_email = form.cleaned_data.get('email')
+                phone_no = form.cleaned_data.get('phone_no')
+                email = EmailMessage(email_subject, message, to=[to_email])
+                email.content_subtype = 'html'
+                email.send()
+                payload = {}
+                payload['authkey'] = "95631AQvoigMsq5ec52866P1"
+                payload['content-type'] = "application/json"
+                payload['mobiles'] = phone_no
+                payload['flow_id'] = "5efada07d6fc05445570a4f2"
+                payload['ID'] = user.special_id
+                url = "https://api.msg91.com/api/v5/flow/"
+                response = requests.post(url, json=payload)
+                data = response.json()
+
+                login(request, user)
+                if request.user.is_authenticated:
+                    IndivdualUserProfile.objects.create(user=request.user)
+                if next:
+                    return redirect(next)
+                return redirect('Custom_user_list')
+            else:
+                return redirect('/register1', messages.error(request, 'Invalid code', 'alert-danger'))
+        else:
+            email = request.POST.get('email')
+            phone_no = request.POST.get('phone_no')
+            if CustomUser.objects.filter(email=email).exists():
+                return redirect('/register1', messages.error(request, 'Email already Exists!', 'alert-danger'))
+            elif CustomUser.objects.filter(phone_no=phone_no).exists():
+                return redirect('/register1', messages.error(request, 'Phone Number already Exists!', 'alert-danger'))
+            else:
+                return redirect('/register1', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = IndivdualUserForm()
+
+    return render(request, "register1.html", {'form': form, 'form1': form1, 'form2': form2, 'form3': form3})
 
 @superadmin_required
 @csrf_exempt
 def existing_module_master(request):
-	if request.user.is_authenticated:
-		#user = ModuleMaster.objects.get(user=request.user)
-		#module = ModuleMaster.objects.filter(user=user.user)
-		module = ModuleMaster.objects.all()
-		return render(request, "Subscription_Master-Existing_Module_Master.html", {'module': module})
+    if request.user.is_authenticated:
+        #user = ModuleMaster.objects.get(user=request.user)
+        #module = ModuleMaster.objects.filter(user=user.user)
+        module = ModuleMaster.objects.all()
+        return render(request, "Subscription_Master-Existing_Module_Master.html", {'module': module})
 
 
 @superadmin_required
 @csrf_exempt
 def create_module_master(request):
-	#user = ModuleMaster.objects.get(user=request.user)
-	if request.method == 'POST':
-		form = ModuleMasterForm(request.POST)
-		if form.is_valid():
-			#module_name = form.cleaned_data.get('module_name')
-			#module_code = form.cleaned_data.get('module_code')
-			#no_of_patients = form.cleaned_data.get('no_of_patients')
-			#web_space = form.cleaned_data.get('web_space')
-			#amount = form.cleaned_data.get('amount')
-			#cgst = form.cleaned_data.get('cgst')
-			#sgst = form.cleaned_data.get('sgst')
-			#gst = form.cleaned_data.get('gst')
-			#total_amount = form.cleaned_data.get('total_amount')
-			#ModuleMaster.objects.create(user = request.user, module_name = module_name, module_code = module_code, no_of_patients = no_of_patients, web_space = web_space, amount = amount, cgst = cgst, sgst = sgst, gst = gst, total_amount = total_amount)
-			#ModuleMaster.objects.create(user= request.user)
-			if form.save():
-				return redirect('/create_module_master', messages.success(request, 'Module is successfully created.', 'alert-success'))
-			else:
-				return redirect('/create_module_master', messages.error(request, 'Module is not saved', 'alert-danger'))
-		else:
-			return redirect('/create_module_master', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = ModuleMasterForm()
-		return render(request, 'Subscription_Master-Create_Module_Master.html', {'form':form})
+    #user = ModuleMaster.objects.get(user=request.user)
+    if request.method == 'POST':
+        form = ModuleMasterForm(request.POST)
+        if form.is_valid():
+            #module_name = form.cleaned_data.get('module_name')
+            #module_code = form.cleaned_data.get('module_code')
+            #no_of_patients = form.cleaned_data.get('no_of_patients')
+            #web_space = form.cleaned_data.get('web_space')
+            #amount = form.cleaned_data.get('amount')
+            #cgst = form.cleaned_data.get('cgst')
+            #sgst = form.cleaned_data.get('sgst')
+            #gst = form.cleaned_data.get('gst')
+            #total_amount = form.cleaned_data.get('total_amount')
+            #ModuleMaster.objects.create(user = request.user, module_name = module_name, module_code = module_code, no_of_patients = no_of_patients, web_space = web_space, amount = amount, cgst = cgst, sgst = sgst, gst = gst, total_amount = total_amount)
+            #ModuleMaster.objects.create(user= request.user)
+            if form.save():
+                return redirect('/create_module_master', messages.success(request, 'Module is successfully created.', 'alert-success'))
+            else:
+                return redirect('/create_module_master', messages.error(request, 'Module is not saved', 'alert-danger'))
+        else:
+            return redirect('/create_module_master', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = ModuleMasterForm()
+        return render(request, 'Subscription_Master-Create_Module_Master.html', {'form':form})
 
 @superadmin_required
 @csrf_exempt
@@ -716,205 +716,205 @@ def destroy_module_master(request, module_id):
 
 @csrf_exempt
 def password_reset_admin(request):
-	form = PasswordForm(request.POST or None)
-	form1 = PasswordVerificationAdminForm(request.POST or None)
+    form = PasswordForm(request.POST or None)
+    form1 = PasswordVerificationAdminForm(request.POST or None)
 
-	if request.method == 'POST':
-		email = request.POST.get('email')
-		phone_no = request.POST.get('phone_no')
-			
-		#check = SecurityQuestions.objects.get(id=1)   #change it when adding security question
-	else:
-		form = PasswordForm()
-		form1 = PasswordVerificationAdminForm()
-	return render(request,"forget_password_admin.html", {"form": form, "form1":form1})
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        phone_no = request.POST.get('phone_no')
+
+        #check = SecurityQuestions.objects.get(id=1)   #change it when adding security question
+    else:
+        form = PasswordForm()
+        form1 = PasswordVerificationAdminForm()
+    return render(request,"forget_password_admin.html", {"form": form, "form1":form1})
 
 @csrf_exempt
 def send_otp_admin(request):
-	if request.method == "GET":
-		email = request.GET.get('email')
-		if CustomUser.objects.filter(email=email).exists():
-			reg_email = CustomUser.objects.get(email=email)
-			phone_no = reg_email.phone_no
-		#url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+919702221660&invisible=1&otp=OTP to send and verify. If not sent, OTP will be generated.&userip=IPV4 User IP&email=Email ID"
-		url = 'https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile='+"+91"+str(phone_no)+'&invisible=1&userip=IPV4 User IP&email=Email ID'
-		response = requests.request("GET",url)
-		data = response.json()
-		data_json = {"error" : False, "errorMessage" : "OTP Sent to your registered phone number"}
-	else:
-		data_json = {"error" : True, "errorMessage" : "Email not registered"}
-	return JsonResponse(data_json)
+    if request.method == "GET":
+        email = request.GET.get('email')
+        if CustomUser.objects.filter(email=email).exists():
+            reg_email = CustomUser.objects.get(email=email)
+            phone_no = reg_email.phone_no
+        #url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+919702221660&invisible=1&otp=OTP to send and verify. If not sent, OTP will be generated.&userip=IPV4 User IP&email=Email ID"
+        url = 'https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile='+"+91"+str(phone_no)+'&invisible=1&userip=IPV4 User IP&email=Email ID'
+        response = requests.request("GET",url)
+        data = response.json()
+        data_json = {"error" : False, "errorMessage" : "OTP Sent to your registered phone number"}
+    else:
+        data_json = {"error" : True, "errorMessage" : "Email not registered"}
+    return JsonResponse(data_json)
 
 
 @csrf_exempt
 def verify_otp_admin(request):
-	if request.method == "POST":
-		otptxt = request.POST.get('phone_no')
-		url = 'https://api.msg91.com/api/v5/otp/verify?mobile=+919702221660&otp='+str(otptxt)+'&authkey=95631AQvoigMsq5ec52866P1'
-		response = requests.request("POST",url)
-		data = response.json()
-		data_json = {"error" : False, "errorMessage" : "OTP verified"}
-	else:
-		data_json = {"error" : True, "errorMessage" : "Fail to verify"}
-	return JsonResponse(data_json)
+    if request.method == "POST":
+        otptxt = request.POST.get('phone_no')
+        url = 'https://api.msg91.com/api/v5/otp/verify?mobile=+919702221660&otp='+str(otptxt)+'&authkey=95631AQvoigMsq5ec52866P1'
+        response = requests.request("POST",url)
+        data = response.json()
+        data_json = {"error" : False, "errorMessage" : "OTP verified"}
+    else:
+        data_json = {"error" : True, "errorMessage" : "Fail to verify"}
+    return JsonResponse(data_json)
 
 
 
 
 @csrf_exempt
 def password_reset(request):
-	form = PasswordForm(request.POST or None)
-	form1 = PasswordVerificationForm(request.POST or None)
+    form = PasswordForm(request.POST or None)
+    form1 = PasswordVerificationForm(request.POST or None)
 
-	if request.method == 'POST':
-		question = request.POST.get('question')
-		answer = request.POST.get('answer')
-		phone_no = request.POST.get('phone_no')
-		check = SecurityQuestions.objects.get(id=1)   #change it when adding security question
-		if check.answer == answer:
-			data_json = {"error" : False, "errorMessage" : "Correct Answer"}
-			return JsonResponse(data_json, safe=False)
-		else:
-			data_json = {"error" : True, "errorMessage" : "Incorrect Answer"}
-			return JsonResponse(data_json, safe=False)
-	else:
-		form = PasswordForm()
-		form1 = PasswordVerificationForm()
-	return render(request,"forget_password.html", {"form": form, "form1":form1})
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answer = request.POST.get('answer')
+        phone_no = request.POST.get('phone_no')
+        check = SecurityQuestions.objects.get(id=1)   #change it when adding security question
+        if check.answer == answer:
+            data_json = {"error" : False, "errorMessage" : "Correct Answer"}
+            return JsonResponse(data_json, safe=False)
+        else:
+            data_json = {"error" : True, "errorMessage" : "Incorrect Answer"}
+            return JsonResponse(data_json, safe=False)
+    else:
+        form = PasswordForm()
+        form1 = PasswordVerificationForm()
+    return render(request,"forget_password.html", {"form": form, "form1":form1})
 
 @csrf_exempt
 def change_password(request):
-	form = PasswordForm()
-	if request.method == 'POST':
-		password = request.POST.get('password')
-		password_confirm = request.POST.get('password_confirm')
+    form = PasswordForm()
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
 
-		if password != password_confirm:
-			data_json = {"error" : True, "errorMessage" : "Password Mismatch"}
-			return JsonResponse(data_json, safe=False)
-		else:
+        if password != password_confirm:
+            data_json = {"error" : True, "errorMessage" : "Password Mismatch"}
+            return JsonResponse(data_json, safe=False)
+        else:
 
-			request.user.password = make_password(password)
-			request.user.save()
-			data_json = {"error" : False, "errorMessage" : "Password Changed"}
-			return JsonResponse(data_json, safe=False)
-	return render(request,"forget_password.html", {"form": form})
+            request.user.password = make_password(password)
+            request.user.save()
+            data_json = {"error" : False, "errorMessage" : "Password Changed"}
+            return JsonResponse(data_json, safe=False)
+    return render(request,"forget_password.html", {"form": form})
 
 @csrf_exempt
 def change_password_admin(request):
-	form = PasswordForm()
-	if request.method == 'POST':
-		password = request.POST.get('password')
-		password_confirm = request.POST.get('password_confirm')
-		email = request.POST.get('email')
-		if password != password_confirm:
-			data_json = {"error" : True, "errorMessage" : "Password Mismatch"}
-			return JsonResponse(data_json, safe=False)
-		else:
-			data1 = CustomUser.objects.get(email=email)
-			data1.password = make_password(password)
-			data1.save()
-			data_json = {"error" : False, "errorMessage" : "Password Changed"}
-			return JsonResponse(data_json, safe=False)
-	return render(request,"forget_password_admin.html", {"form": form})
+    form = PasswordForm()
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        password_confirm = request.POST.get('password_confirm')
+        email = request.POST.get('email')
+        if password != password_confirm:
+            data_json = {"error" : True, "errorMessage" : "Password Mismatch"}
+            return JsonResponse(data_json, safe=False)
+        else:
+            data1 = CustomUser.objects.get(email=email)
+            data1.password = make_password(password)
+            data1.save()
+            data_json = {"error" : False, "errorMessage" : "Password Changed"}
+            return JsonResponse(data_json, safe=False)
+    return render(request,"forget_password_admin.html", {"form": form})
 
 @csrf_exempt
 def send_otp(request):
-	if request.method == "GET":
-		#url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+919702221660&invisible=1&otp=OTP to send and verify. If not sent, OTP will be generated.&userip=IPV4 User IP&email=Email ID"
-		url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+917400395192&invisible=1&userip=IPV4 User IP&email=Email ID"
-		response = requests.request("GET",url)
-		data = response.json()
-		data_json = {"error" : False, "errorMessage" : "OTP Sent to your phone"}
-	else:
-		data_json = {"error" : True, "errorMessage" : "Failed to send OTP"}
-	return JsonResponse(data_json)
+    if request.method == "GET":
+        #url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+919702221660&invisible=1&otp=OTP to send and verify. If not sent, OTP will be generated.&userip=IPV4 User IP&email=Email ID"
+        url = "https://api.msg91.com/api/v5/otp?authkey=95631AQvoigMsq5ec52866P1&template_id=5ec52d2dd6fc050944666272&mobile=+917400395192&invisible=1&userip=IPV4 User IP&email=Email ID"
+        response = requests.request("GET",url)
+        data = response.json()
+        data_json = {"error" : False, "errorMessage" : "OTP Sent to your phone"}
+    else:
+        data_json = {"error" : True, "errorMessage" : "Failed to send OTP"}
+    return JsonResponse(data_json)
 
 
 @csrf_exempt
 def verify_otp(request):
-	if request.method == "POST":
-		otptxt = request.POST.get('phone_no')
-		url = 'https://api.msg91.com/api/v5/otp/verify?mobile=+919702221660&otp='+str(otptxt)+'&authkey=95631AQvoigMsq5ec52866P1'
-		response = requests.request("POST",url)
-		data = response.json()
-		data_json = {"error" : False, "errorMessage" : "OTP verified"}
-	else:
-		data_json = {"error" : True, "errorMessage" : "Fail to verify"}
-	return JsonResponse(data_json)
+    if request.method == "POST":
+        otptxt = request.POST.get('phone_no')
+        url = 'https://api.msg91.com/api/v5/otp/verify?mobile=+919702221660&otp='+str(otptxt)+'&authkey=95631AQvoigMsq5ec52866P1'
+        response = requests.request("POST",url)
+        data = response.json()
+        data_json = {"error" : False, "errorMessage" : "OTP verified"}
+    else:
+        data_json = {"error" : True, "errorMessage" : "Fail to verify"}
+    return JsonResponse(data_json)
 
 @csrf_exempt
 def login_view(request):
-	next = request.GET.get("next")
-	check = CustomUser.objects.get(id=1)
-	if check.last_login != None:
-		form = UserLoginForm(request.POST or None)
-		if form.is_valid():
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			user = authenticate(username = username, password = password)
-			if not user:
-				return redirect('/accounts/login/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
-			login(request, user)
-			if next:
-				return redirect(next)
-			if request.user.is_superuser:
-				return redirect('contact_master')
-			elif request.user.is_hdc_individual:
-				return redirect('profile_individual_doctor')
-			elif request.user.is_individual:
-				return redirect('profile_individual_user')
-			elif request.user.is_hdc_hospital:
-				return redirect('profile_hospital')
-			elif request.user.is_hdc_nursing_home:
-				return redirect('profile_nursing_home')
-		return render(request, "login.html", {'form': form})
-	else:
-		form = UserLoginForm(request.POST or None)
-		form1 = SecurityQuestionsForm(request.POST or None)
-		if form.is_valid() and form1.is_valid():
-			form1.save()
-			username = form.cleaned_data.get('username')
-			password = form.cleaned_data.get('password')
-			user = authenticate(username = username, password = password)
-			if not user:
-				return redirect('/accounts/login_superadmin/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
-			login(request, user)
-			if next:
-				return redirect(next)
-			return redirect('contact_master')
-		return render(request, "login.html", {'form': form, 'form1':form1})
+    next = request.GET.get("next")
+    check = CustomUser.objects.get(id=1)
+    if check.last_login != None:
+        form = UserLoginForm(request.POST or None)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username = username, password = password)
+            if not user:
+                return redirect('/accounts/login/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
+            login(request, user)
+            if next:
+                return redirect(next)
+            if request.user.is_superuser:
+                return redirect('contact_master')
+            elif request.user.is_hdc_individual:
+                return redirect('profile_individual_doctor')
+            elif request.user.is_individual:
+                return redirect('profile_individual_user')
+            elif request.user.is_hdc_hospital:
+                return redirect('profile_hospital')
+            elif request.user.is_hdc_nursing_home:
+                return redirect('profile_nursing_home')
+        return render(request, "login.html", {'form': form})
+    else:
+        form = UserLoginForm(request.POST or None)
+        form1 = SecurityQuestionsForm(request.POST or None)
+        if form.is_valid() and form1.is_valid():
+            form1.save()
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username = username, password = password)
+            if not user:
+                return redirect('/accounts/login_superadmin/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
+            login(request, user)
+            if next:
+                return redirect(next)
+            return redirect('contact_master')
+        return render(request, "login.html", {'form': form, 'form1':form1})
 
 
 @csrf_exempt
 def login_view_admin(request):
-	next = request.GET.get("next")
-	form = UserLoginForm(request.POST or None)
-	if form.is_valid():
-		username = form.cleaned_data.get('username')
-		password = form.cleaned_data.get('password')
-		user = authenticate(username = username, password = password)
-		if not user:
-			return redirect('/accounts/login/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
-		login(request, user)
-		if next:
-			return redirect(next)
-		if request.user.is_superuser:
-			return redirect('contact_master')
-		elif request.user.is_hdc_individual:
-			return redirect('profile_individual_doctor')
-		elif request.user.is_individual:
-			return redirect('profile_individual_user')
-		elif request.user.is_hdc_hospital:
-			return redirect('profile_hospital')
-		elif request.user.is_hdc_nursing_home:
-			return redirect('profile_nursing_home')
-	return render(request, "login_admin.html", {'form': form})
+    next = request.GET.get("next")
+    form = UserLoginForm(request.POST or None)
+    if form.is_valid():
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(username = username, password = password)
+        if not user:
+            return redirect('/accounts/login/', messages.error(request, 'Username or password is incorrect', 'alert-danger'))
+        login(request, user)
+        if next:
+            return redirect(next)
+        if request.user.is_superuser:
+            return redirect('contact_master')
+        elif request.user.is_hdc_individual:
+            return redirect('profile_individual_doctor')
+        elif request.user.is_individual:
+            return redirect('profile_individual_user')
+        elif request.user.is_hdc_hospital:
+            return redirect('profile_hospital')
+        elif request.user.is_hdc_nursing_home:
+            return redirect('profile_nursing_home')
+    return render(request, "login_admin.html", {'form': form})
 
 
 def logout_view(request):
-	logout(request)
-	return redirect('/')
+    logout(request)
+    return redirect('/')
 
 
 @csrf_exempt
@@ -945,8 +945,8 @@ def destroyonservice(request, module_id):
 
 @csrf_exempt
 def pharmacytable(request):
-	module = pharamcytab.objects.all()
-	return render(request,'pharmacytable.html',{'module':module})
+    module = pharamcytab.objects.all()
+    return render(request,'pharmacytable.html',{'module':module})
 
 
 @csrf_exempt
@@ -974,92 +974,92 @@ def destroypharamcy(request, module_id):
 
 @csrf_exempt
 def laboratory_insertion(request):
-	data = request.POST.get("data")
-	investigation_name = request.POST.get("investigation_name")
-	synonyms = request.POST.get("synonyms")
-	important_note = request.POST.get("important_note")
-	check = request.POST.get("check")
-	dict_data = json.loads(data)
-	intial_data = LaboratoryModule(investigation_name=investigation_name, synonyms=synonyms, important_note=important_note)
-	intial_data.save()
-	name = LaboratoryModule.objects.get(investigation_name=investigation_name)
-	if check == "predefine_dropdown":
-		try:
-			select_dropdown_list = request.POST.get("select_dropdown_list")
-			select = request.POST.get("select")
-			initial_data2 = LaboratoryPreDefine(investigation=name, select_dropdown_list=select_dropdown_list, select=select)
-			initial_data2.save()
-			data_json = {"error" : False, "errorMessage" : "Data Added Sucessfully"}
-			return JsonResponse(data_json, safe=False)
-		except:
-			data_json = {"error" : True, "errorMessage" : "Failed To Add Data"}
-			return JsonResponse(data_json, safe=False)
+    data = request.POST.get("data")
+    investigation_name = request.POST.get("investigation_name")
+    synonyms = request.POST.get("synonyms")
+    important_note = request.POST.get("important_note")
+    check = request.POST.get("check")
+    dict_data = json.loads(data)
+    intial_data = LaboratoryModule(investigation_name=investigation_name, synonyms=synonyms, important_note=important_note)
+    intial_data.save()
+    name = LaboratoryModule.objects.get(investigation_name=investigation_name)
+    if check == "predefine_dropdown":
+        try:
+            select_dropdown_list = request.POST.get("select_dropdown_list")
+            select = request.POST.get("select")
+            initial_data2 = LaboratoryPreDefine(investigation=name, select_dropdown_list=select_dropdown_list, select=select)
+            initial_data2.save()
+            data_json = {"error" : False, "errorMessage" : "Data Added Sucessfully"}
+            return JsonResponse(data_json, safe=False)
+        except:
+            data_json = {"error" : True, "errorMessage" : "Failed To Add Data"}
+            return JsonResponse(data_json, safe=False)
 
-	elif check == "empty_text":
-		try:
-			for dict_single in dict_data:
-				initial_data3 = LaboratoryEmpty(investigation=name, from_age=dict_single['from_age'], to_age=dict_single['to_age'], gender=dict_single['gender'], conventional=dict_single['conventional'], umo1=dict_single['umo1'], umo2=dict_single['umo2'], conversion_factor=dict_single['conversion_factor'], high1=dict_single['high1'], low1=dict_single['low1'], high2 = dict_single['high2'], low2 = dict_single['low2'])
-				initial_data3.save()
-			data_json = {"error" : False, "errorMessage" : "Data Added Sucessfully"}
-			return JsonResponse(data_json, safe=False)
-		except:
-			data_json = {"error" : True, "errorMessage" : "Failed To Add Data"}
-			return JsonResponse(data_json, safe=False)
+    elif check == "empty_text":
+        try:
+            for dict_single in dict_data:
+                initial_data3 = LaboratoryEmpty(investigation=name, from_age=dict_single['from_age'], to_age=dict_single['to_age'], gender=dict_single['gender'], conventional=dict_single['conventional'], umo1=dict_single['umo1'], umo2=dict_single['umo2'], conversion_factor=dict_single['conversion_factor'], high1=dict_single['high1'], low1=dict_single['low1'], high2 = dict_single['high2'], low2 = dict_single['low2'])
+                initial_data3.save()
+            data_json = {"error" : False, "errorMessage" : "Data Added Sucessfully"}
+            return JsonResponse(data_json, safe=False)
+        except:
+            data_json = {"error" : True, "errorMessage" : "Failed To Add Data"}
+            return JsonResponse(data_json, safe=False)
 
 @superadmin_required
 @csrf_exempt
 def laboratory(request):
-	return render(request, 'laboratory.html')
+    return render(request, 'laboratory.html')
 
 @superadmin_required
 @csrf_exempt
 def laboratory_edit(request, module_id):
-	data = LaboratoryModule.objects.get(id=module_id)
-	data1 = LaboratoryPreDefine.objects.filter(investigation=module_id).first()
-	data2 = LaboratoryEmpty.objects.filter(investigation=module_id)
-	return render(request,'laboratory_edit.html',{"data":data,"data1":data1,"data2":data2})
+    data = LaboratoryModule.objects.get(id=module_id)
+    data1 = LaboratoryPreDefine.objects.filter(investigation=module_id).first()
+    data2 = LaboratoryEmpty.objects.filter(investigation=module_id)
+    return render(request,'laboratory_edit.html',{"data":data,"data1":data1,"data2":data2})
 
 @csrf_exempt
 def laboratory_update(request):
-	data1=request.POST.get("data")
-	investigation_name=request.POST.get("investigation_name")
-	synonyms=request.POST.get("synonyms")
-	important_note=request.POST.get("important_note")
-	select_dropdown_list=request.POST.get("select_dropdown_list")
-	select=request.POST.get("select")
-	base_id=request.POST.get("base_id")
-	pre_id=request.POST.get("pre_id")
-	dict_data=json.loads(data1)
-	try:
-		base=LaboratoryModule.objects.get(id=base_id)
-		base.investigation_name = investigation_name
-		base.synonyms = synonyms
-		base.important_note = important_note
-		base.save()
-		if pre_id != "":
-			pre = LaboratoryPreDefine.objects.get(id=pre_id)
-			pre.select_dropdown_list = select_dropdown_list
-			pre.select = select
-			pre.save()
-		else:
-			for dic_single in dict_data:
-				data=LaboratoryEmpty.objects.get(id=dic_single['id'])
-				data.from_age=dic_single['from_age']
-				data.to_age=dic_single['to_age']
-				data.conventional=dic_single['conventional']
-				data.umo1=dic_single['umo1']
-				data.umo2=dic_single['umo2']
-				data.conversion_factor=dic_single['conversion_factor']
-				data.high1=dic_single['high1']
-				data.low1=dic_single['low1']
-				data.high2=dic_single['high2']
-				data.low2=dic_single['low2']
-				data.save()
-		data_json={"error":False,"errorMessage":"Updated Successfully"}
-		return JsonResponse(data_json,safe=False)
-	except:
-		data_json={"error":True,"errorMessage":"Failed to Update Data"}
-		return JsonResponse(data_json,safe=False)
+    data1=request.POST.get("data")
+    investigation_name=request.POST.get("investigation_name")
+    synonyms=request.POST.get("synonyms")
+    important_note=request.POST.get("important_note")
+    select_dropdown_list=request.POST.get("select_dropdown_list")
+    select=request.POST.get("select")
+    base_id=request.POST.get("base_id")
+    pre_id=request.POST.get("pre_id")
+    dict_data=json.loads(data1)
+    try:
+        base=LaboratoryModule.objects.get(id=base_id)
+        base.investigation_name = investigation_name
+        base.synonyms = synonyms
+        base.important_note = important_note
+        base.save()
+        if pre_id != "":
+            pre = LaboratoryPreDefine.objects.get(id=pre_id)
+            pre.select_dropdown_list = select_dropdown_list
+            pre.select = select
+            pre.save()
+        else:
+            for dic_single in dict_data:
+                data=LaboratoryEmpty.objects.get(id=dic_single['id'])
+                data.from_age=dic_single['from_age']
+                data.to_age=dic_single['to_age']
+                data.conventional=dic_single['conventional']
+                data.umo1=dic_single['umo1']
+                data.umo2=dic_single['umo2']
+                data.conversion_factor=dic_single['conversion_factor']
+                data.high1=dic_single['high1']
+                data.low1=dic_single['low1']
+                data.high2=dic_single['high2']
+                data.low2=dic_single['low2']
+                data.save()
+        data_json={"error":False,"errorMessage":"Updated Successfully"}
+        return JsonResponse(data_json,safe=False)
+    except:
+        data_json={"error":True,"errorMessage":"Failed to Update Data"}
+        return JsonResponse(data_json,safe=False)
 
 @csrf_exempt
 def lob(request):
@@ -1069,9 +1069,9 @@ def lob(request):
 
 @csrf_exempt
 def destroylaboratory(request, module_id):
-	module = LaboratoryModule.objects.get(id=module_id)
-	module.delete()
-	return redirect('/laboratorytable', messages.success(request, 'Successfully deleted.', 'alert-success'))
+    module = LaboratoryModule.objects.get(id=module_id)
+    module.delete()
+    return redirect('/laboratorytable', messages.success(request, 'Successfully deleted.', 'alert-success'))
 
 @csrf_exempt
 def edit_service(request, module_id):
@@ -1110,52 +1110,52 @@ def edit_pharmacy(request, module_id):
 def update_database(request):
     reg =labo(request.POST or None)
     if request.method == 'POST':
-	    froms = request.POST.get('froms')
-	    to= request.POST.get('to')
-	    gender = request.POST.get('gender') 
-	    umo1 = request.POST.get('umo1')
-	    umo2 = request.POST.get('muo2')
-	    conversationfactor = request.POST.get('conversationfactor')
-	    refrencerange = request.POST.get('refrencerange')
-	    high = request.POST.get('high')
-	    return render(request,'sample2.html',{"reg":reg})
+        froms = request.POST.get('froms')
+        to= request.POST.get('to')
+        gender = request.POST.get('gender')
+        umo1 = request.POST.get('umo1')
+        umo2 = request.POST.get('muo2')
+        conversationfactor = request.POST.get('conversationfactor')
+        refrencerange = request.POST.get('refrencerange')
+        high = request.POST.get('high')
+        return render(request,'sample2.html',{"reg":reg})
     else:
-	    reg = labo()
-	    return render(request,'sample2.html',{"reg":reg})
+        reg = labo()
+        return render(request,'sample2.html',{"reg":reg})
 
 @csrf_exempt
 def labo2(request):
-	module = Empty.objects.all()
-	return render(request,'sample.html',{'module':module})
+    module = Empty.objects.all()
+    return render(request,'sample.html',{'module':module})
 
 @csrf_exempt
 def add_individual_user(request):
-	if request.method == 'POST':
-		form = IndivdualUserForm(request.POST)
-		if form.is_valid():
-			form.save()
-			return redirect("../")
-	else:
-		form = IndivdualUserForm()
-	return render(request,'add_user.html',{'form':form})
+    if request.method == 'POST':
+        form = IndivdualUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("../")
+    else:
+        form = IndivdualUserForm()
+    return render(request,'add_user.html',{'form':form})
 
 
 @csrf_exempt
 def User_creation(request):
-	if request.method == 'POST':
-		form = IndivdualDoctorForm(request.POST)
-		first_name = request.POST.get('first_name')
+    if request.method == 'POST':
+        form = IndivdualDoctorForm(request.POST)
+        first_name = request.POST.get('first_name')
 
-		if form.is_valid():
-			if form.save():
-				return redirect('/User_creation', messages.success(request, 'Thank you for contacting Us. Our team will contact you as soon as earliest.', 'alert-success'))
-			else:
-				return redirect('/User_creation', messages.error(request, 'Something went wrong!', 'alert-danger'))
-		else:
-			return redirect('/User_creation', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = IndivdualDoctorForm()
-		return render(request, "User_creation.html", {'form': form})
+        if form.is_valid():
+            if form.save():
+                return redirect('/User_creation', messages.success(request, 'Thank you for contacting Us. Our team will contact you as soon as earliest.', 'alert-success'))
+            else:
+                return redirect('/User_creation', messages.error(request, 'Something went wrong!', 'alert-danger'))
+        else:
+            return redirect('/User_creation', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = IndivdualDoctorForm()
+        return render(request, "User_creation.html", {'form': form})
 
 
 
@@ -1172,33 +1172,33 @@ def account_status_change(request):
 
 @csrf_exempt
 def Custom_user_list(request):
-	custmore_obj = CustomUser.objects.all().values()
-	context = {
-		'customers':custmore_obj
-	}
+    custmore_obj = CustomUser.objects.all().values()
+    context = {
+        'customers':custmore_obj
+    }
 
-	return render(request,'custom_user_list.html',context)
-	
+    return render(request,'custom_user_list.html',context)
+
 @csrf_exempt
 def coupon_code_list(request):
-	coupon_obj = Coupon.coupon.all().values_list('code', flat=True)              #,'profileChoices'
-	final_data = []
+    coupon_obj = Coupon.coupon.all().values_list('code', flat=True)              #,'profileChoices'
+    final_data = []
 
-	for i in coupon_obj:
-		coup_count = CustomUser.objects.filter(usecode=i).values_list('email', flat=True)
-		coup_count_use = len(coup_count)
-		coupon_obj1 = list(Coupon.objects.filter(code=i).values())
-		a = dict(used_number=coup_count_use)
-		coupon_obj1[0].update(a)
-		final_data.append(coupon_obj1)
-	done=[]
-	for l in final_data:
-		done.append(l[0])
+    for i in coupon_obj:
+        coup_count = CustomUser.objects.filter(usecode=i).values_list('email', flat=True)
+        coup_count_use = len(coup_count)
+        coupon_obj1 = list(Coupon.objects.filter(code=i).values())
+        a = dict(used_number=coup_count_use)
+        coupon_obj1[0].update(a)
+        final_data.append(coupon_obj1)
+    done=[]
+    for l in final_data:
+        done.append(l[0])
 
-	context = {
-		'coupon':done
-	}
-	return render(request,'coupon_code_list.html',context)
+    context = {
+        'coupon':done
+    }
+    return render(request,'coupon_code_list.html',context)
 
 
 @csrf_exempt
@@ -1213,180 +1213,180 @@ def custom_account_status_change(request):
 
 @csrf_exempt
 def Coupon_status_change(request):
-	status = request.GET
-	some_list = Coupon.objects.filter(code=status['id']).values_list('active')
-	res = [lis[0] for lis in some_list]
+    status = request.GET
+    some_list = Coupon.objects.filter(code=status['id']).values_list('active')
+    res = [lis[0] for lis in some_list]
 
-	if res[0] == True:
-		some_list =Coupon.objects.filter(code=status['id']).update(active=False)
-	elif res[0] == False:
-		some_list = Coupon.objects.filter(code=status['id']).update(active=True)
-	return HttpResponse()
+    if res[0] == True:
+        some_list =Coupon.objects.filter(code=status['id']).update(active=False)
+    elif res[0] == False:
+        some_list = Coupon.objects.filter(code=status['id']).update(active=True)
+    return HttpResponse()
 
 @csrf_exempt
 def add_coupon(request):
-	form = CouponForm()
-	return render(request, 'added_coupon.html',{'form':form})
+    form = CouponForm()
+    return render(request, 'added_coupon.html',{'form':form})
 
 @csrf_exempt
 def Coupon_to_create(request):
-	if request.method == "POST" and request.is_ajax():
-		code = request.POST.get('code')
+    if request.method == "POST" and request.is_ajax():
+        code = request.POST.get('code')
 
-		check_code = Coupon.objects.filter(code=code)
+        check_code = Coupon.objects.filter(code=code)
 
-		if request.POST.get('profileChoices') not in Coupon.objects.filter(code=code):
-			form = CouponForm(request.POST)
-			if form.is_valid():
-				form.save()
-			return JsonResponse({"success": True}, status=200)
-		else:
-			return JsonResponse({"success": False}, status=400)
-	return JsonResponse({"success": False}, status=400)
+        if request.POST.get('profileChoices') not in Coupon.objects.filter(code=code):
+            form = CouponForm(request.POST)
+            if form.is_valid():
+                form.save()
+            return JsonResponse({"success": True}, status=200)
+        else:
+            return JsonResponse({"success": False}, status=400)
+    return JsonResponse({"success": False}, status=400)
 
 @csrf_exempt
 def Add_streaming_link(request):
-	streaming_link = request.POST.get("streaming_link")
-	eventtitle = request.POST.get("eventtitle")
-	eventtype = request.POST.get("eventtype")
-	targetaudiance = request.POST.get("targetaudiance")
+    streaming_link = request.POST.get("streaming_link")
+    eventtitle = request.POST.get("eventtitle")
+    eventtype = request.POST.get("eventtype")
+    targetaudiance = request.POST.get("targetaudiance")
 
 
-	query = Webregister.objects.filter(eventtitle=eventtitle,eventtype=eventtype,targetaudiance=targetaudiance).exists()
-	if query == True:
-		query = Webregister.objects.filter(eventtitle=eventtitle,eventtype=eventtype,targetaudiance=targetaudiance).update(streaming_link=streaming_link)
-	else:
-		return JsonResponse({"success": False}, status=400)
+    query = Webregister.objects.filter(eventtitle=eventtitle,eventtype=eventtype,targetaudiance=targetaudiance).exists()
+    if query == True:
+        query = Webregister.objects.filter(eventtitle=eventtitle,eventtype=eventtype,targetaudiance=targetaudiance).update(streaming_link=streaming_link)
+    else:
+        return JsonResponse({"success": False}, status=400)
 
 
-	return JsonResponse({"success": True}, status=200)
-	
+    return JsonResponse({"success": True}, status=200)
+
 @csrf_exempt
 def partner_visibility(request):
 
-	if request.method == 'POST':
+    if request.method == 'POST':
 
-		form = EventregisteruserForm(request.POST, request.FILES) #, instance=obj
-		if form.is_valid():
+        form = EventregisteruserForm(request.POST, request.FILES) #, instance=obj
+        if form.is_valid():
 
-			header_eventimage = form.cleaned_data.get('header_eventimage')
-			footer_eventimage = form.cleaned_data.get('footer_eventimage')
-			streaming_header = form.cleaned_data.get('streaming_header')
-			streaming_leftpanel = form.cleaned_data.get('streaming_leftpanel')
-			streaming_rightpanel = form.cleaned_data.get('streaming_rightpanel')
-
-
-			types = ['.jpg', '.png', '.jpeg','.PNG']
-
-			import pathlib
-			if header_eventimage:
-				a = pathlib.Path(str(header_eventimage)).suffix
-
-				if a not in types:
-					return redirect('/partner_visibility',
-									messages.error(request, 'Please proper format for header_eventimage', 'alert-danger'))
-
-				if header_eventimage:
-					if header_eventimage.size > 1000 * 100:  # 41937
-						return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for header_eventimage', 'alert-danger'))
-
-			if footer_eventimage:
-				b = pathlib.Path(str(footer_eventimage)).suffix
-
-				if b not in types:
-					return redirect('/partner_visibility',
-									messages.error(request, 'Please proper format for footer_eventimage', 'alert-danger'))
-
-				if footer_eventimage:
-					if footer_eventimage.size > 1000 * 100:  # 41937
-						return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for footer_eventimage ', 'alert-danger'))
-
-			if streaming_header:
-				c = pathlib.Path(str(streaming_header)).suffix
-
-				if c not in types:
-					return redirect('/partner_visibility',
-									messages.error(request, 'Please proper format for streaming_header', 'alert-danger'))
-
-				if streaming_header:
-					if streaming_header.size > 1000 * 100:  # 41937
-						return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_header', 'alert-danger'))
-
-			if streaming_leftpanel:
-				d = pathlib.Path(str(streaming_leftpanel)).suffix
-
-				if d not in types:
-					return redirect('/partner_visibility',
-									messages.error(request, 'Please proper format for streaming_leftpanel', 'alert-danger'))
-
-				if streaming_leftpanel:
-					if streaming_leftpanel.size > 700 * 200:  # 41937
-						return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_leftpanel', 'alert-danger'))
-			if streaming_rightpanel:
-				e = pathlib.Path(str(streaming_rightpanel)).suffix
-
-				if e not in types:
-					return redirect('/partner_visibility',
-									messages.error(request, 'Please proper format for streaming_leftpanel', 'alert-danger'))
-
-				if streaming_rightpanel:
-					if streaming_rightpanel.size > 700 * 200:  # 41937
-						return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_rightpanel', 'alert-danger'))
+            header_eventimage = form.cleaned_data.get('header_eventimage')
+            footer_eventimage = form.cleaned_data.get('footer_eventimage')
+            streaming_header = form.cleaned_data.get('streaming_header')
+            streaming_leftpanel = form.cleaned_data.get('streaming_leftpanel')
+            streaming_rightpanel = form.cleaned_data.get('streaming_rightpanel')
 
 
+            types = ['.jpg', '.png', '.jpeg','.PNG']
 
-			if form.save():
+            import pathlib
+            if header_eventimage:
+                a = pathlib.Path(str(header_eventimage)).suffix
 
-				return redirect('/partner_visibility',
-								messages.success(request, 'visibility is successfully submitted.', 'alert-success'))
-			else:
-				return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration', 'alert-danger'))
+                if a not in types:
+                    return redirect('/partner_visibility',
+                                    messages.error(request, 'Please proper format for header_eventimage', 'alert-danger'))
 
-		else:
-			return redirect('/partner_visibility', messages.error(request, 'visibilityis not valid', 'alert-danger'))
-	else:
+                if header_eventimage:
+                    if header_eventimage.size > 1000 * 100:  # 41937
+                        return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for header_eventimage', 'alert-danger'))
 
-		form = EventregisteruserForm()
-		return render(request, 'partner_visibility.html', {'form': form})
+            if footer_eventimage:
+                b = pathlib.Path(str(footer_eventimage)).suffix
+
+                if b not in types:
+                    return redirect('/partner_visibility',
+                                    messages.error(request, 'Please proper format for footer_eventimage', 'alert-danger'))
+
+                if footer_eventimage:
+                    if footer_eventimage.size > 1000 * 100:  # 41937
+                        return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for footer_eventimage ', 'alert-danger'))
+
+            if streaming_header:
+                c = pathlib.Path(str(streaming_header)).suffix
+
+                if c not in types:
+                    return redirect('/partner_visibility',
+                                    messages.error(request, 'Please proper format for streaming_header', 'alert-danger'))
+
+                if streaming_header:
+                    if streaming_header.size > 1000 * 100:  # 41937
+                        return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_header', 'alert-danger'))
+
+            if streaming_leftpanel:
+                d = pathlib.Path(str(streaming_leftpanel)).suffix
+
+                if d not in types:
+                    return redirect('/partner_visibility',
+                                    messages.error(request, 'Please proper format for streaming_leftpanel', 'alert-danger'))
+
+                if streaming_leftpanel:
+                    if streaming_leftpanel.size > 700 * 200:  # 41937
+                        return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_leftpanel', 'alert-danger'))
+            if streaming_rightpanel:
+                e = pathlib.Path(str(streaming_rightpanel)).suffix
+
+                if e not in types:
+                    return redirect('/partner_visibility',
+                                    messages.error(request, 'Please proper format for streaming_leftpanel', 'alert-danger'))
+
+                if streaming_rightpanel:
+                    if streaming_rightpanel.size > 700 * 200:  # 41937
+                        return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration for streaming_rightpanel', 'alert-danger'))
+
+
+
+            if form.save():
+
+                return redirect('/partner_visibility',
+                                messages.success(request, 'visibility is successfully submitted.', 'alert-success'))
+            else:
+                return redirect('/partner_visibility', messages.error(request, 'Images should have proper configuration', 'alert-danger'))
+
+        else:
+            return redirect('/partner_visibility', messages.error(request, 'visibilityis not valid', 'alert-danger'))
+    else:
+
+        form = EventregisteruserForm()
+        return render(request, 'partner_visibility.html', {'form': form})
 
 @csrf_exempt
 def event_visibility(request):
-	if request.method == 'POST':
-		mail_id = request.POST['email']
-		form1 = Eventregistertable(request.POST)
-		if form1.is_valid():
+    if request.method == 'POST':
+        mail_id = request.POST['email']
+        form1 = Eventregistertable(request.POST)
+        if form1.is_valid():
 
-			form1.save()
-		aa = Webregister.objects.get(email=mail_id)
-		obj = Eventregisterationuser.objects.create(webregister=aa)
-		return partner_visibility(obj)
+            form1.save()
+        aa = Webregister.objects.get(email=mail_id)
+        obj = Eventregisterationuser.objects.create(webregister=aa)
+        return partner_visibility(obj)
 
 
 @csrf_exempt
 def eventregister(request):
-	if request.method == 'POST':
-		form = Eventregistertable(request.POST)
-		if form.is_valid():
-			if form.save():
-				return redirect('/eventtable',
-								messages.success(request, 'Event is successfully updated.', 'alert-success'))
-			else:
-				return redirect('/eventtable', messages.error(request, 'Event is not saved', 'alert-danger'))
-		else:
-			return redirect('/eventtable', messages.error(request, 'Event is not valid', 'alert-danger'))
-	else:
-		form = Eventregistertable()
-		return render(request,'event.html', {'form': form})
+    if request.method == 'POST':
+        form = Eventregistertable(request.POST)
+        if form.is_valid():
+            if form.save():
+                return redirect('/eventtable',
+                                messages.success(request, 'Event is successfully updated.', 'alert-success'))
+            else:
+                return redirect('/eventtable', messages.error(request, 'Event is not saved', 'alert-danger'))
+        else:
+            return redirect('/eventtable', messages.error(request, 'Event is not valid', 'alert-danger'))
+    else:
+        form = Eventregistertable()
+        return render(request,'event.html', {'form': form})
 
 
 @csrf_exempt
 def home_event(request):
-	events = Webregister.objects.all()
-	context={
-		'events':events
-	}
+    events = Webregister.objects.all()
+    context={
+        'events':events
+    }
 
-	return render(request,"index_event.html",context)
+    return render(request,"index_event.html",context)
 
 
 @csrf_exempt
@@ -1430,27 +1430,27 @@ def registerlink(request, module_id):
 
 @csrf_exempt
 def editevent(request, module_id): #,new_module
-	module = Webregister.objects.get(id=module_id)
+    module = Webregister.objects.get(id=module_id)
 
-	new_module = Eventregisterationuser.objects.get(webregister=module)
+    new_module = Eventregisterationuser.objects.get(webregister=module)
 
-	if request.POST:
-		form = Eventregistertable(request.POST,instance=module)
-		form1 = EventregisteruserForm(request.POST,request.FILES,instance=new_module)
-		if form.is_valid():
-			form.save()
-			if form1.is_valid():
-				form1.save()
-				return redirect('/eventtable/', messages.error(request, 'successfully updated', 'alert-danger'))
-		else:
-			return redirect('/editevent/', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = Eventregistertable(instance=module)
-		form1 = EventregisteruserForm(instance=new_module)
-		p_image = Eventregisterationuser.objects.filter(webregister=module).values()[0]
+    if request.POST:
+        form = Eventregistertable(request.POST,instance=module)
+        form1 = EventregisteruserForm(request.POST,request.FILES,instance=new_module)
+        if form.is_valid():
+            form.save()
+            if form1.is_valid():
+                form1.save()
+                return redirect('/eventtable/', messages.error(request, 'successfully updated', 'alert-danger'))
+        else:
+            return redirect('/editevent/', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = Eventregistertable(instance=module)
+        form1 = EventregisteruserForm(instance=new_module)
+        p_image = Eventregisterationuser.objects.filter(webregister=module).values()[0]
 
-		p_image.update(form1.data)
-		return render(request, 'editevent.html', {'form':form,'form1':p_image})
+        p_image.update(form1.data)
+        return render(request, 'editevent.html', {'form':form,'form1':p_image})
 
 @csrf_exempt
 def destroyevent(request, module_id):
@@ -1460,107 +1460,107 @@ def destroyevent(request, module_id):
 
 @csrf_exempt
 def partner_and_event_register(request):
-	if request.method == 'POST':
-		form = Eventregistertable(request.POST)
-		if form.is_valid():
-			form.save()
-			aa = Webregister.objects.latest('id')
-			aa.register_link = 'www.healthperigon.net/'+ str(Webregister.objects.latest('id'))
-			aa.save()
-			obj = Eventregisterationuser.objects.create(webregister=aa)
-			form1 = EventregisteruserForm(request.POST, request.FILES, instance=obj)
+    if request.method == 'POST':
+        form = Eventregistertable(request.POST)
+        if form.is_valid():
+            form.save()
+            aa = Webregister.objects.latest('id')
+            aa.register_link = 'www.healthperigon.net/'+ str(Webregister.objects.latest('id'))
+            aa.save()
+            obj = Eventregisterationuser.objects.create(webregister=aa)
+            form1 = EventregisteruserForm(request.POST, request.FILES, instance=obj)
 
 
-			if form1.is_valid():
-				header_eventimage = form.cleaned_data.get('header_eventimage')
-				footer_eventimage = form.cleaned_data.get('footer_eventimage')
-				streaming_header = form.cleaned_data.get('streaming_header')
-				streaming_leftpanel = form.cleaned_data.get('streaming_leftpanel')
-				streaming_rightpanel = form.cleaned_data.get('streaming_rightpanel')
-				types = ['.jpg', '.png', '.jpeg', '.PNG']
+            if form1.is_valid():
+                header_eventimage = form.cleaned_data.get('header_eventimage')
+                footer_eventimage = form.cleaned_data.get('footer_eventimage')
+                streaming_header = form.cleaned_data.get('streaming_header')
+                streaming_leftpanel = form.cleaned_data.get('streaming_leftpanel')
+                streaming_rightpanel = form.cleaned_data.get('streaming_rightpanel')
+                types = ['.jpg', '.png', '.jpeg', '.PNG']
 
-				import pathlib
-				if header_eventimage:
-					a = pathlib.Path(str(header_eventimage)).suffix
+                import pathlib
+                if header_eventimage:
+                    a = pathlib.Path(str(header_eventimage)).suffix
 
-					if a not in types:
-						return redirect('/partner_and_event_register',
-										messages.error(request, 'Please proper format for header_eventimage','alert-danger'))
-						if header_eventimage:
-							if header_eventimage.size > 1000 * 100:  # 41937
-								return redirect("/partner_and_event_register", messages.error(request, 'Images should have proper configuration for footer_eventimage ', 'alert-danger'))
+                    if a not in types:
+                        return redirect('/partner_and_event_register',
+                                        messages.error(request, 'Please proper format for header_eventimage','alert-danger'))
+                        if header_eventimage:
+                            if header_eventimage.size > 1000 * 100:  # 41937
+                                return redirect("/partner_and_event_register", messages.error(request, 'Images should have proper configuration for footer_eventimage ', 'alert-danger'))
 
-					if footer_eventimage:
-						b = pathlib.Path(str(footer_eventimage)).suffix
+                    if footer_eventimage:
+                        b = pathlib.Path(str(footer_eventimage)).suffix
 
-						if b not in types:
-							return redirect('/partner_and_event_register',
-											messages.error(request, 'Please proper format for footer_eventimage',
-														   'alert-danger'))
+                        if b not in types:
+                            return redirect('/partner_and_event_register',
+                                            messages.error(request, 'Please proper format for footer_eventimage',
+                                                           'alert-danger'))
 
-						if footer_eventimage:
-							if footer_eventimage.size > 1000 * 100:  # 41937
-								return redirect('/partner_and_event_register', messages.error(request,
-																					  'Images should have proper configuration for footer_eventimage ',
-																					  'alert-danger'))
+                        if footer_eventimage:
+                            if footer_eventimage.size > 1000 * 100:  # 41937
+                                return redirect('/partner_and_event_register', messages.error(request,
+                                                                                      'Images should have proper configuration for footer_eventimage ',
+                                                                                      'alert-danger'))
 
-					if streaming_header:
-						c = pathlib.Path(str(streaming_header)).suffix
+                    if streaming_header:
+                        c = pathlib.Path(str(streaming_header)).suffix
 
-						if c not in types:
-							return redirect('/partner_and_event_register',
-											messages.error(request, 'Please proper format for streaming_header',
-														   'alert-danger'))
+                        if c not in types:
+                            return redirect('/partner_and_event_register',
+                                            messages.error(request, 'Please proper format for streaming_header',
+                                                           'alert-danger'))
 
-						if streaming_header:
-							if streaming_header.size > 1000 * 100:  # 41937
-								return redirect('/partner_and_event_register', messages.error(request,
-																					  'Images should have proper configuration for streaming_header',
-																					  'alert-danger'))
+                        if streaming_header:
+                            if streaming_header.size > 1000 * 100:  # 41937
+                                return redirect('/partner_and_event_register', messages.error(request,
+                                                                                      'Images should have proper configuration for streaming_header',
+                                                                                      'alert-danger'))
 
-					if streaming_leftpanel:
-						d = pathlib.Path(str(streaming_leftpanel)).suffix
+                    if streaming_leftpanel:
+                        d = pathlib.Path(str(streaming_leftpanel)).suffix
 
-						if d not in types:
-							return redirect('/partner_and_event_register',
-											messages.error(request, 'Please proper format for streaming_leftpanel',
-														   'alert-danger'))
+                        if d not in types:
+                            return redirect('/partner_and_event_register',
+                                            messages.error(request, 'Please proper format for streaming_leftpanel',
+                                                           'alert-danger'))
 
-						if streaming_leftpanel:
-							if streaming_leftpanel.size > 200 * 700:  # 41937
-								return redirect('/partner_and_event_register', messages.error(request,
-																					  'Images should have proper configuration for streaming_leftpanel',
-																					  'alert-danger'))
-					if streaming_rightpanel:
-						e = pathlib.Path(str(streaming_rightpanel)).suffix
+                        if streaming_leftpanel:
+                            if streaming_leftpanel.size > 200 * 700:  # 41937
+                                return redirect('/partner_and_event_register', messages.error(request,
+                                                                                      'Images should have proper configuration for streaming_leftpanel',
+                                                                                      'alert-danger'))
+                    if streaming_rightpanel:
+                        e = pathlib.Path(str(streaming_rightpanel)).suffix
 
-						if e not in types:
-							return redirect('/partner_and_event_register',
-											messages.error(request, 'Please proper format for streaming_leftpanel',
-														   'alert-danger'))
+                        if e not in types:
+                            return redirect('/partner_and_event_register',
+                                            messages.error(request, 'Please proper format for streaming_leftpanel',
+                                                           'alert-danger'))
 
-						if streaming_rightpanel:
-							if streaming_rightpanel.size > 200 * 700:  # 41937
-								return redirect('/partner_and_event_register', messages.error(request,
-																					  'Images should have proper configuration for streaming_rightpanel',
-																					  'alert-danger'))
-
-
-
-				form1.save()
-				return redirect('/partner_and_event_register',
-								messages.success(request, 'Visibility Created Successfully.', 'alert-success'))
+                        if streaming_rightpanel:
+                            if streaming_rightpanel.size > 200 * 700:  # 41937
+                                return redirect('/partner_and_event_register', messages.error(request,
+                                                                                      'Images should have proper configuration for streaming_rightpanel',
+                                                                                      'alert-danger'))
 
 
-			return redirect('/partner_and_event_register',
-								messages.success(request, 'Event Created Successfully.', 'alert-success'))
 
-		else:
-			return redirect('/partner_and_event_register', messages.error(request, 'Form is not valid', 'alert-danger'))
-	else:
-		form = Eventregistertable()
-		form1 = EventregisteruserForm()
-		return render(request,'create_partner.html', {'form': form,'form1':form1})
+                form1.save()
+                return redirect('/partner_and_event_register',
+                                messages.success(request, 'Visibility Created Successfully.', 'alert-success'))
+
+
+            return redirect('/partner_and_event_register',
+                                messages.success(request, 'Event Created Successfully.', 'alert-success'))
+
+        else:
+            return redirect('/partner_and_event_register', messages.error(request, 'Form is not valid', 'alert-danger'))
+    else:
+        form = Eventregistertable()
+        form1 = EventregisteruserForm()
+        return render(request,'create_partner.html', {'form': form,'form1':form1})
 
 @csrf_exempt		
 def show_events(request):
@@ -1790,10 +1790,11 @@ def streaming(request, id):
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
     print(module.register_link, 'register_link')  # www.healthperigon.net/2
-    #
-    check_auth = CustomUser.objects.filter(email=request.user, register_link__isnull=True).exists()
+    some_auth = CustomUser.objects.filter(email=request.user, register_link=link_check)
+    print(some_auth,'auth')
+    check_auth = CustomUser.objects.filter(email=request.user, register_link=link_check).exists()
     print(check_auth,"check_auth")
-    if check_auth == True:
+    if check_auth == False:
         return redirect('/event_register_form/' + str(id))
     else:
         return render(request, "video_streaming.html", {'module': module, 'object': object})
