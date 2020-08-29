@@ -367,6 +367,13 @@ border-radius: 10px;
         </div>	
     </header>
 	<div class="container">
+			{% if messages %}
+				{% for message in messages %}
+					<div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
 		<div class="main">
 		    <div class="AboutUs-section">
 				<div class="row">
