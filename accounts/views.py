@@ -1458,6 +1458,8 @@ def destroyevent(request, module_id):
     module.delete()
     return redirect('/eventtable', messages.success(request, 'Event is successfully deleted.', 'alert-success'))
 
+
+
 @csrf_exempt
 def partner_and_event_register(request):
     if request.method == 'POST':
@@ -1549,7 +1551,7 @@ def partner_and_event_register(request):
 
                 form1.save()
                 return redirect('/partner_and_event_register',
-                                messages.success(request, 'Visibility Created Successfully.', 'alert-success'))
+                                messages.success(request, 'Event Created Successfully.', 'alert-success'))
 
 
             return redirect('/partner_and_event_register',
@@ -1721,6 +1723,7 @@ def event_register_form(request, module_id):
                     login(request, user)
                     print("fine work")
                     for_link = CustomUser.objects.filter(email=username).update(register_link=link)
+                    # for_link = CustomUser.objects.filter(email=username).append(register_link=link)
                     print(for_link, 'linkkk')
                 return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
@@ -1790,9 +1793,10 @@ def streaming(request, id):
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
     print(module.register_link, 'register_link')  # www.healthperigon.net/2
-    some_auth = CustomUser.objects.filter(email=request.user, register_link=link_check)
-    print(some_auth,'auth')
-    check_auth = CustomUser.objects.filter(email=request.user, register_link=link_check).exists()
+    # some_auth = CustomUser.objects.filter(email=request.user, register_link=link_check)
+    # print(some_auth,'auth')
+    # check_auth = CustomUser.objects.filter(email=request.user, register_link=link_check).exists()
+    check_auth = CustomUser.objects.filter(email=request.user, register_link__icontains=link_check).exists()
     print(check_auth,"check_auth")
     if check_auth == False:
         return redirect('/event_register_form/' + str(id))

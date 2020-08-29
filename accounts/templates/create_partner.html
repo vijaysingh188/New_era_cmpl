@@ -659,7 +659,7 @@ span.switch-label:after {
 										<div class="col-md-12">
                                                 <div class="mybtn-holder">
                                                     <button class="mybtn" data-toggle="collapse" data-target="#demo">Cancel</button>
-                                                    <button class="mybtn" type="submit">Register</button>
+                                                    <button class="mybtn" type="submit" name="registerForm">Register</button>
                                                 </div>
                                             </div>
 
@@ -830,7 +830,7 @@ given frequency)</span></label>
                             	<div class="col-md-12">
                                      <div class="mybtn-holder">
                                         <button class="mybtn" data-toggle="collapse" data-target="#demo">Cancel</button>
-                                        <button class="mybtn" type="submit">Add</button>
+                                        <button class="mybtn" type="submit" name="visbilityForm">Add</button>
                                     </div>
                                 </div>
                             </div>
@@ -925,11 +925,8 @@ given frequency)</span></label>
 });
 
 		</script>
-
-
 <script>
-
-$('#header_eventimage').bind('change', function() {
+    $('#streaming_rightpanel').bind('change', function() {
 
     var ht = $(this).height()
      var wt = $(this).width()
@@ -938,7 +935,7 @@ $('#header_eventimage').bind('change', function() {
 
 
 
-	var ext = $('#header_eventimage').val().split('.').pop().toLowerCase();
+	var ext = $('#streaming_rightpanel').val().split('.').pop().toLowerCase();
 	alert(ext);
 
 	if (ext == 'PNG' || ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
@@ -952,21 +949,23 @@ $('#header_eventimage').bind('change', function() {
 
                 }
             else{
-            alert("image should be configured");
+            console.log("image should be configured");
             }
 
 
 		}
 
 		else{
-		    alert("file is too large");
+		    console.log("file is too large");
 		}
 	}
 	else{
-        alert("image should be format of PNG,png,jpeg,jpg");
+        console.log("image should be format of PNG,png,jpeg,jpg");
     }
 });
 </script>
+
+
   {% endblock %}
 
 
