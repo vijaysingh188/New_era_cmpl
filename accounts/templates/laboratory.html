@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Subscription Master - Module Master {% endblock %}
+
+{% block body %}
+<style>
+    ul {
+  list-style-type: none;
+}
+</style>
+
+<div class="main">
+    <div class="inner-navbar">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" href="#">Single Investigation</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Panel Investigation</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="content-holder">
+          <div class="form-group text-center">
+            <div class="alert alert-success" id="update_success" style="display: none;">
+            </div>
+            <div class="alert alert-danger" id="update_error" style="display: none;">
+            </div>
+          </div>
+            <div class="row">
+                <div class="col-md-12 order-md-1">
+                    <h5 class="title-holder">Create Laboratory Module </h5>
+                    <div class="btn-holder">
+                        <a class="link-btn" href="{% url 'laboratorytable' %}">Back to list</a>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="needs-validation" method="post">
+                            <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for=""> Investigation Name <span class="red-color"> * </span></label>
+                                        <input type="text" name="investigation_name" class="form-control" id="investigation_name" placeholder="Investigation Name">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label>Synonyms<span class="red-color">  </span></label>
+                                        <input type="text" name="synonyms" class="form-control" id="synonyms" placeholder="Synonyms">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label>Important Notes <span class="red-color">  </span></label>
+                                        <input type="text" name="important_note" class="form-control" id="important_note" placeholder="Important Notes">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label>Display Result Field on <span class="red-color"> * </span></label>
+                                         Empty Textbox <input type="radio" name="shipping" value="empty_text" id="empty_text" checked>
+                                         <br>
+                                        Pre-Define Dropdown <input type="radio" name="shipping" id="predefine_dropdown" value="predefine_dropdown">
+                                     </div>
+                                     <div class="col-md-4 mb-3" id="dropdown">
+                                        <label>Select DropDown List</label>
+                                        <input type="radio" name="select_dropdown_list" value ="Yes-No" id="Yes-No"> Yes-No <br>
+                                        <input type="radio" name="select_dropdown_list" value="Present-Absent" id="Present-Absent"> Present-Absent <br>
+                                        <input type="radio" name="select_dropdown_list" value="Seen-Not-Seen" id="Seen-Not-Seen"> Seen-Not Seen <br>
+                                        <input type="radio" name="select_dropdown_list" value="Positive-Negative" id="Positive-Negative"> Positive-Negative <br>
+                                        <input type="radio" name="select_dropdown_list" id="Customize-Value" value="Customize-Value"> Customize-Value
+                                    </div>
+                                    <div class="col-md-4 mb-3" id="select_value">
+                                        <label>Select Normal Value <span class="red-color"> * </span></label>
+                                        <select name="select" class="form-control" id="select">
+                                          <option value="" selected>Select Normal Values</option>
+                                          <option value="10-11">10-11</option>
+                                        </select>
+                                    </div>
+                            </div>
+                            </form>
+                            <div class="row">
+                                <form method="post" id="insert_form">
+                                    <div class="col-md-12" id="tablerow">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                    <th colspan="2" style="border-bottom: 0px; ">Age in days</th>
+                                                    <th colspan="1" style="border-bottom: 0px; width: 130px;">Gender</th>
+                                                    <th colspan="1" style="border-bottom: 0px; ">Measurement System</th>
+                                                    <th colspan="2" style="border-bottom: 0px; ">Unit of Measurement</th>
+                                                    <th colspan="1" style="border-bottom: 0px; ">Conversion Factor (in digits)</th>
+                                                    <th colspan="2" style="border-bottom: 0px; ">Reference Range (UMO1)</th>
+                                                    <th colspan="2" style="border-bottom: 0px; ">Reference Range (UMO2)</th>
+                                                    </tr>
+                                                    <tr>
+                                                    <th>From</th>
+                                                    <th>To</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th>UMO1</th>
+                                                    <th>UMO2</th>
+                                                    <th></th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    <th>High</th>
+                                                    <th>Low</th>
+                                                    </tr>
+                                               </thead>
+                                                <tbody>
+                                                    <td><input type="text" name="from" class="form-control input_data"></td>
+                                                    <td><input type="text" name="to" class="form-control input_data"></td>
+                                                    <td><select name="gender" class="form-control input_data">
+                                                        <option value="" selected>Select</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select></td>
+                                                    <td><input type="text" name="conventional" class="form-control input_data"></td>
+                                                    <td><input type="text" name="umo1" class="form-control input_data"></td>
+                                                    <td><input type="text" name="umo2" class="form-control input_data"></td>
+                                                    <td><input type="text" name="conversion_factor" class="form-control input_data"></td>
+                                                    <td><input type="text" name="high1" class="form-control input_data"></td>
+                                                    <td><input type="text" name="low1" class="form-control input_data"></td>
+                                                    <td><input type="text" name="high2" class="form-control input_data"></td>
+                                                    <td><input type="text" name="low2" class="form-control input_data"></td>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+
+
+                                                <div class="text-right">
+                                                     <button class="mybtn btn-insert-data">Add Row</button>
+                                                 </div>
+                                   
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn" data-toggle="collapse" data-target="#demo">Cancel</button>
+                                                    <button class="mybtn sodmzs" type="submit">Add</button>
+                                                </div>
+                                            </div>
+
+
+                                            
+   {% endblock %}
+    
+    {% block javascript %}
+    <script>
+ $(function() {
+    $(".btn-insert-data").click(function(){
+        var html_data = "<tr><td><input type='text' name='from' class='form-control input_data'</td><td><input type='text' name='to' class='form-control input_data'></td><td><select name='gender' class='form-control input_data'><option value='select' selected>Select</option><option value='male'>Male</option><option value='female'>Female</option></select></td><td><input type='text' name='conventional' class='form-control input_data'></td><td><input type='text' name='umo1' class='form-control input_data'></td><td><input type='text' name='umo2' class='form-control input_data'></td><td><input type='text' name='conversion_factor' class='form-control input_data'></td><td><input type='text' name='high1' class='form-control input_data'></td><td><input type='text' name='low1' class='form-control input_data'></td><td><input type='text' name='high2' class='form-control input_data'></td><td><input type='text' name='low2' class='form-control input_data'></td></tr>";
+        $(".table tbody").append(html_data);
+      });
+
+  
+  $("#dropdown").hide();
+  $("#select_value").hide();
+
+  $('#empty_text').on('click', function() {
+  $("#tablerow").show();
+  $("#dropdown").hide();
+  $("#select_value").hide();
+  $(this).parent('label').next('div').slideToggle(this.checked);
+});
+
+  $('#predefine_dropdown').on('click', function() {
+  $("#dropdown , #select_value").show();
+  $("#tablerow").hide();
+  $(this).parent('label').next('div').slideToggle(this.checked);
+});
+
+$(".sodmzs").click(function(){
+      var investigation_name = $("#investigation_name").val();
+      var synonyms = $("#synonyms").val();
+      var important_note = $("#important_note").val();
+      var select_dropdown_list = $('input[name="select_dropdown_list"]:checked').val();
+      var select = $('#select option:selected').val();
+      var check = $('input[name="shipping"]:checked').val();
+      var json_data = [];
+      //console.log(investigation_name);
+      //console.log(synonyms);
+      //console.log(important_note);
+      //console.log(select_dropdown_list);
+      //console.log(select);
+      $(".input_data").each(function(){
+        var value = $(this).val();
+        var parent_html = $(this).parent();
+        parent_html.html(value);
+        $(this).remove();
+      });
+      $("tbody tr").each(function(){
+        var from_age = $(this).children().eq(0).text()
+        var to_age = $(this).children().eq(1).text()
+        var gender = $(this).children().eq(2).text()
+        var conventional = $(this).children().eq(3).text()
+        var umo1 = $(this).children().eq(4).text()
+        var umo2 = $(this).children().eq(5).text()
+        var conversion_factor = $(this).children().eq(6).text()
+        var high1 = $(this).children().eq(7).text()
+        var low1 = $(this).children().eq(8).text()
+        var high2 = $(this).children().eq(9).text()
+        var low2 = $(this).children().eq(10).text()
+
+        var single_data = {"from_age":from_age, "to_age":to_age, "gender":gender,"conventional":conventional,"umo1":umo1, "umo2":umo2, "conversion_factor":conversion_factor, "high1":high1, "low1":low1,"high2":high2,"low2":low2};
+        //console.log(single_data);
+        json_data.push(single_data);
+      });
+      var string_data = JSON.stringify(json_data)
+
+        $.ajax({
+          url : '{% url 'laboratory_insertion' %}',
+          type : 'POST',
+          data : {data:string_data,investigation_name:investigation_name,synonyms:synonyms, important_note:important_note,select_dropdown_list:select_dropdown_list, select:select, check: check}
+        })
+        .done(function(response){
+          if(response['error'] == false){
+            $("#update_error").hide();
+            $("#update_success").text(response['errorMessage']);
+            $("#update_success").show();
+            window.setTimeout(function(){location.reload()},3000)
+          }
+          else{
+            $("#update_success").hide();
+            $("#update_error").text(response['errorMessage']);
+            $("#update_error").show();
+
+          }
+        })
+        .fail(function(){
+          $("#update_success").hide();
+          $("#update_error").text("Something Went Wrong");
+          $("#update_error").show();
+        })
+        .always(function(){
+
+        })
+
+      
+});
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
+
+
+  
+
+
+
+  
+  
+    </script>
+    {% endblock %}
+
+</body>
+</html>

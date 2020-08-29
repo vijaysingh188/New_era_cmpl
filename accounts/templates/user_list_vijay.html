@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %} Subscription Master - Module Master {% endblock %}
+
+{% block body %}
+
+	<div class="main">
+		<div class="col-md-12">
+			<div class="content-holder">
+				<div class="row">
+					<div class="col-md-12 order-md-1">
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="btn-holder">
+							        <a class="link-btn-2" href="{% url 'add_individual_user' %}">Add User</a>
+									<hr class="hrstyle" />
+						        </div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+						    <div class="col-md-12 form-group">
+							    <div class="input-group">
+                                    <input type="text" class="form-control" id="search_name"placeholder="Search by Perigon ID, Name, Email id, Phone Number, Status">
+									<span class="input-group-append">
+									   <div class="input-group-text input-group-icon"><i class="fa fa-search" aria-hidden="true"></i></div>
+									</span>
+                                </div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="table-responsive">
+									<table class="table table-bordered" id="datatable">
+										<thead>
+											<tr>
+												<th>S.No</th>
+												<th>Perigon ID</th>
+												<th>User Name</th>
+												<th>User Type</th>
+												<th>Email Address</th>
+												<th>Phone Number</th>
+												<th>Status</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for individual in customers %}
+											<tr>
+												<td>{{ forloop.counter }}</td>
+												<td>{{ individual.special_id}}</td>
+												<td >{{individual.title }}  {{individual.first_name}} {{individual.middle_name}} {{individual.last_name}}</td>
+												<td>{{ individual.type_of_doctor}}</td>
+												<td>{{ individual.email }}</td>
+												<td>{{ individual.phone_no }}</td>
+												<td>
+												    <select class="form-control"  name="status1" id="status1">
+												    		{% if individual.is_active is True %}
+
+														<option value="Active" >Active</option>
+														<option value="Inactive" >Inactive</option>
+
+
+														{% else %}
+														<option value="Inactive" >Inactive</option>
+														<option value="Active" >Active</option>
+
+
+
+													    {%endif%}
+													</select>
+											    </td>
+												{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+				    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock %}
+{% block javascript %}
+
+<script>
+   	$(function() {
+  var oTable = $('#datatable').DataTable({
+  	"lengthMenu": [[10, 25, 50, -1], [10, 15, 20,25]],
+    "pageLength": 10,
+    "iDisplayLength": -1,
+    "pagingType": "simple_numbers",
+    "lengthChange": false,
+  });
+  $("#search_name").on('keyup', function (){
+        $('#datatable').dataTable().fnFilter(this.value);
+    });
+
+  $("#datepicker_from").datepicker({
+    "onSelect": function(date) {
+      minDateFilter = new Date(date).getTime();
+      console.log("minDateFilter"+minDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    minDateFilter = new Date(this.value).getTime();
+    console.log("minDateFilterSecond"+minDateFilter)
+    oTable.draw();
+  });
+
+  $("#datepicker_to").datepicker({
+    "onSelect": function(date) {
+      maxDateFilter = new Date(date).getTime();
+      console.log("maxDateFilter"+maxDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    maxDateFilter = new Date(this.value).getTime();
+    oTable.draw();
+  });
+
+});
+
+// Date range filter
+minDateFilter = "";
+maxDateFilter = "";
+
+$.fn.dataTableExt.afnFiltering.push(
+  function(oSettings, aData, iDataIndex) {
+    if (typeof aData._date == 'undefined') {
+      aData._date = new Date(aData[0]).getTime();
+    }
+
+    if (minDateFilter && !isNaN(minDateFilter)) {
+    	console.log("CHECK"+aData._date)
+      if (aData._date < minDateFilter) {
+        return false;
+      }
+    }
+
+    if (maxDateFilter && !isNaN(maxDateFilter)) {
+      if (aData._date > maxDateFilter) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+);
+
+
+
+
+	$('#datatable').find('tr').change( function(data){
+	    	console.log(data);
+	        console.log("Clicked data");
+    		var row = $(this).find('td:eq(1)').text();
+    		console.log(row,"this is row");
+
+	    $.ajax({
+	      url: "{% url 'account_status_change' %}",
+	      type: "GET",
+		  data: {"id":row},
+	      headers: { "X-CSRFToken": "{{ csrf_token }}" }, // for csrf token
+	      success: function (data) {
+	      	// location.reload()
+	        // alert(data.result);
+	      },
+	    });
+	  })
+</script>
+
+{% endblock %}
+
+
+

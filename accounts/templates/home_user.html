@@ -1,0 +1,563 @@
+{% load static %}
+{% load widget_tweaks %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>Event Registeration </title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+
+
+		<style>
+			.toggle-content {
+	display: none;
+	height: 0;
+	overflow: hidden;
+	transition: height 350ms ease-in-out;
+}
+
+.toggle-content.is-visible {
+	display: block;
+	height: auto;
+	overflow:visible;
+}
+.yesnobtn{
+	padding: 5px 30px;
+	background: #0c7f48;
+	color: #fff;
+	font-size: 14px;
+
+}
+
+
+
+
+
+
+
+         .pos-rel{
+         position:relative;
+         }
+         .pos-rel .nav-item{
+         margin:0 1em;
+         }
+         .connected-line{
+         border-bottom: 1px solid #007bff;
+         position: relative;
+         top: -20px;
+         z-index: -1;
+         }
+         .seminor-login-modal-body .close{
+ position: relative;
+ top: -45px;
+ left: 10px;
+color: #1cd8ad;
+}
+.seminor-login-modal-body .close{
+    opacity:0.75;
+}
+
+.seminor-login-modal-body .close:focus, .seminor-login-modal-body .close:hover {
+    color: #39e8b0;
+ opacity: 1;
+ text-decoration: none;
+ outline:0;
+}
+
+.seminor-login-modal .modal-dialog .modal-content{
+    border-radius:0px;
+}
+
+/* form animation */
+.seminor-login-form .form-group {
+  position: relative;
+  margin-bottom: 1.5em !important;
+}
+.seminor-login-form .form-control{
+ border: 0px solid #ced4da !important;
+ border-bottom:1px solid #adadad !important;
+ border-radius:0 !important;
+}
+.seminor-login-form .form-control:focus, .seminor-login-form .form-control:active{
+ outline:none !important;
+ outline-width: 0;
+ border-color: #adadad !important;
+ box-shadow: 0 0 0 0.2rem transparent;
+}
+*:focus {
+ outline: none;
+}
+.seminor-login-form{
+ padding: 2em 0 0;
+}
+
+.form-control-placeholder {
+position: absolute;
+top: 0;
+padding: 7px 0 0 13px;
+transition: all 200ms;
+opacity: 0.5;
+border-top: 0px;
+border-left: 0;
+border-right: 0;
+}
+
+.form-control:focus + .form-control-placeholder,
+.form-control:valid + .form-control-placeholder {
+font-size: 75%;
+-webkit-transform: translate3d(0, -100%, 0);
+       transform: translate3d(0, -100%, 0);
+opacity: 1;
+}
+
+.container-checkbox input {
+ position: absolute;
+ opacity: 0;
+ cursor: pointer;
+}
+.checkmark-box {
+ position: absolute;
+ top: -5px;
+ left: 0;
+ height: 25px;
+ width: 25px;
+ background-color: #adadad;
+}
+.container-checkbox {
+ display: block;
+ position: relative;
+ padding-left: 40px;
+ margin-bottom: 20px;
+ cursor: pointer;
+ font-size: 14px;
+ font-weight: bold;
+ -webkit-user-select: none;
+ -moz-user-select: none;
+ -ms-user-select: none;
+ user-select: none;
+ line-height: 1.1;
+}
+.container-checkbox input:checked ~ .checkmark-box:after {
+ color: #fff;
+}
+.container-checkbox input:checked ~ .checkmark-box:after {
+ display: block;
+}
+.container-checkbox .checkmark-box:after {
+ left: 10px;
+ top: 4px;
+ width: 7px;
+ height: 15px;
+ border: solid white;
+ border-width: 0 3px 3px 0;
+ -webkit-transform: rotate(45deg);
+ -ms-transform: rotate(45deg);
+ transform: rotate(45deg);
+}
+.checkmark:after, .checkmark-box:after {
+ content: "";
+ position: absolute;
+ display: none;
+}
+.container-checkbox input:checked ~ .checkmark-box {
+ background-color: #f58220;
+ border: 0px solid transparent;
+}
+.btn-check-log .btn-check-login {
+ font-size: 16px;
+ padding: 10px 0;
+}
+button.btn-check-login:hover {
+    color: #fff;
+    background-color: #f58220;
+    border: 2px solid #f58220;
+}
+.btn-check-login {
+ color: #f58220;
+ background-color: transparent;
+ border: 2px solid #f58220;
+ transition: all ease-in-out .3s;
+}
+.btn-check-login {
+ display: inline-block;
+ padding: 12px 0;
+ margin-bottom: 0;
+ line-height: 1.42857143;
+ text-align: center;
+ white-space: nowrap;
+ vertical-align: middle;
+ -ms-touch-action: manipulation;
+ touch-action: manipulation;
+ cursor: pointer;
+ -webkit-user-select: none;
+ -moz-user-select: none;
+ -ms-user-select: none;
+ user-select: none;
+ background-image: none;
+ border-radius: 0;
+ width: 100%;
+}
+.forgot-pass-fau a {
+    text-decoration: none !important;
+    font-size: 14px;
+}
+.text-primary-fau {
+    color: #1959a2;
+}
+
+.select-form-control-placeholder{
+  font-size: 100%;
+    padding: 7px 0 0 13px;
+    margin: 0;
+}
+.tabsyesno{
+	width:100%;
+}
+.naavs{
+	width:50%;
+	margin-left:25%;
+	}
+
+
+
+
+		</style>
+
+
+
+
+		<style>
+			.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+.btn-facebook {
+    background-color: #405D9D;
+    color: #fff;
+}
+.btn-twitter {
+    background-color: #42AEEC;
+    color: #fff;
+}
+		</style>
+
+
+
+
+
+
+    </head>
+    <body>
+
+	<div class="container-fluid">
+
+		<div class="main">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div style="margin-top:5%"  class="Aboutus-slider-content">
+					<img class="d-block w-100 "width="300" height="200" src="https://healthperigon.net/media/{{ object.header_eventimage }}" alt="Health Perigon Event">
+				</div>
+			</div>
+		</div>
+
+		    <div class="Register-section">
+				<div class="card bg-light">
+
+				<div class="row">
+				<div class="col-lg-4"></div>
+				<div style="margin-top:1%" class="col-lg-4 card-title mt-3 text-center">
+					<h6>Are you an Health Perigon Member</h6>
+
+
+
+				<div class="row">
+           <div class="col-sm-12">
+             <div class="pos-rel">
+               <!-- Nav pills -->
+               <ul class="nav nav-pills naavs justify-content-center nav-justified" role="tablist">
+			   <br><br>
+                  <li class="nav-item">
+                     <a style="padding:1px 5px;margin-right:3%;margin-top:2%" class="nav-link active btn btn-primary" data-toggle="pill" href="#organizer-details">Yes</a>
+                  </li>
+                  <li class="nav-item">
+                     <a style="padding:1px 5px;margin-right:3%;margin-top:2%" class="nav-link btn btn-primary" data-toggle="pill" href="#event-details">No </a>
+                  </li>
+
+               </ul>
+			   <br>
+               <div class="connected-line"></div>
+               <!-- Tab panes -->
+               <div class="tab-content">
+                  <div id="organizer-details" class="container tabsyesno tab-pane active">
+                    <form method="POST">
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+									</div>
+									<input class="form-control" placeholder="Email Address or Phone Number" id="username" name="username" type="text">
+								</div> <!-- form-group// -->
+
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+									</div>
+									<input class="form-control" placeholder="Enter password" name="password" id="password" type="password">
+								</div> <!-- form-group// -->
+
+								<div class="form-group">
+									<button style="background:#00adee" type="submit" formmethod="post" class="btn btn-primary btn-block" name="loginForm" id="saveBtn"> Register For Event </button>
+								</div> <!-- form-group// -->
+								 <a style="color:#d1232a;font-weight:600" href="{% url 'password_reset_user_for_event' %}" class="pull-right need-help">Forget Password? </a><span class="clearfix"></span>
+
+
+							</form>
+                  </div>
+
+                  <div id="event-details" class="container tabsyesno tab-pane fade">
+						{% if target == 'HDC' or target == 'Both' %}
+						 <form method="POST">
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-user-md"></i> </span>
+
+									</div>
+							{{ form.type_of_doctor | add_class:'form-control' }}
+
+
+								</div> <!-- form-group// -->
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+									 </div>
+									<input name="first_name" class="form-control" placeholder="First name" type="text">
+
+									<input name="middle_name" class="form-control" placeholder="Middle name" type="text">
+
+									<input name="last_name" class="form-control" placeholder="Last name" type="text">
+								</div> <!-- form-group// -->
+
+
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+									 </div>
+									<input name="email" class="form-control" placeholder="Email address" type="email">
+								</div> <!-- form-group// -->
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+									</div>
+									<select class="custom-select" style="max-width: 70px;">
+										<option selected="">+91</option>
+
+									</select>
+									{{ form.phone_no | add_class:'form-control' }}
+
+								</div> <!-- form-group// -->
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+									</div>
+									{{ form.password | add_class:'form-control' }}
+
+								</div> <!-- form-group// -->
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+									</div>
+									{{ form.confirm_password | add_class:'form-control' }}
+								</div> <!-- form-group// -->
+								<div class="form-group">
+									<button style="background:#00adee" type="submit" formmethod="post" class="btn btn-primary btn-block" name="doctor"> Register </button>
+								</div> <!-- form-group// -->
+
+							</form>
+
+					  {% elif target == 'Individual'%}
+					  <form method="POST">
+						  <p>Reached here</p>
+
+
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+									 </div>
+									<input name="first_name" class="form-control" placeholder="First name" type="text">
+
+									<input name="middle_name" class="form-control" placeholder="Middle name" type="text">
+
+									<input name="last_name" class="form-control" placeholder="Last name" type="text">
+								</div> <!-- form-group// -->
+
+
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+									 </div>
+									{{ form1.email | add_class:'form-control' }}
+								</div> <!-- form-group// -->
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-phone"></i> </span>
+									</div>
+									<select class="custom-select" style="max-width: 70px;">
+										<option selected="">+91</option>
+
+									</select>
+									{{ form1.phone_no | add_class:'form-control' }}
+
+								</div> <!-- form-group// -->
+
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+									</div>
+									{{ form1.password | add_class:'form-control' }}
+
+								</div> <!-- form-group// -->
+								<div class="form-group input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+									</div>
+									{{ form1.confirm_password | add_class:'form-control' }}
+
+								</div> <!-- form-group// -->
+								<div class="form-group">
+									<button style="background:#00adee" type="submit" class="btn btn-primary btn-block" formmethod="post" name="individual"> Register </button>
+								</div> <!-- form-group// -->
+
+							</form>
+					  {% endif %}
+                  </div>
+
+               </div>
+            </div>
+            </div>
+         </div>
+
+
+
+
+
+
+			</div>
+
+
+			<div class="col-lg-4"></div>
+
+
+
+
+		</div>
+
+
+		</div>
+
+
+
+	</div>
+
+	<div class="row">
+			<div class="col-md-12">
+				<div style="margin-top:0%"  class="Aboutus-slider-content">
+					<img class="d-block w-100 "width="300" height="200" src="https://healthperigon.net/media/{{ object.footer_eventimage }}" alt="Health Perigon Event">
+				</div>
+			</div>
+		</div>
+
+
+	<footer class="footer">
+	    <div class="container">
+		    <div class="copyright">
+			    <p>Copyright © Health Perigon 2020. All Rights Reserved</p>
+			</div>
+			<div class="footer-social-icons-holder">
+				<a class="footer-icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+			        <a class="footer-icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+		    </div>
+		</div>
+	<footer>
+	<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script>
+	    function selectFormType() {
+        if (document.getElementById('hdc').checked) {
+            document.getElementById('hdcform').style.display = 'block';
+        }
+         else document.getElementById('hdcform').style.display = 'none';
+
+		if (document.getElementById('individual').checked) {
+            document.getElementById('individualform').style.display = 'block';
+        }
+         else document.getElementById('individualform').style.display = 'none';
+		}
+	</script>
+
+    <script>
+	    function paymentCheck() {
+        if (document.getElementById('pay').checked) {
+            document.getElementById('payselect').style.display = 'inline-block';
+        }
+         else document.getElementById('payselect').style.display = 'none';
+
+		if (document.getElementById('usecode').checked) {
+            document.getElementById('usecodeselect').style.display = 'inline-block';
+        }
+         else document.getElementById('usecodeselect').style.display = 'none';
+        }
+	</script>
+		<script>
+
+			$( document ).ready(function() {
+    document.getElementById("id_phone_no").setAttribute("placeholder", "Phone Number");
+    document.getElementById("id_email").setAttribute("placeholder", "Email");
+
+
+
+
+
+});
+</script>
+
+
+
+
+    </body>
+</html>

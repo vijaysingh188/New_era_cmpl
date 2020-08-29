@@ -1,0 +1,675 @@
+
+{% extends "base.html" %}
+
+{% load widget_tweaks %}
+
+
+{% block title %} service master {% endblock %}
+
+
+
+{% block body %}
+            <div class="main">
+            <div class="inner-navbar">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                    	 <span class="Register-title">Individual <input type="radio" onclick="javascript:selectFormType();" name="Form" id="individual" checked></span>
+                        <span class="Register-title">Healthcare Delivery Center <input type="radio" onclick="javascript:selectFormType();" name="Form" id="hdc"></span>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="content-holder">
+
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                                        {% csrf_token %}
+
+    <script>
+    	function selectFormType() {
+        if (document.getElementById('hdc').checked) {
+            document.getElementById('hdcform').style.display = 'block';
+        }
+         else document.getElementById('hdcform').style.display = 'none';
+
+		if (document.getElementById('individual').checked) {
+            document.getElementById('individualform').style.display = 'block';
+        }
+         else document.getElementById('individualform').style.display = 'none';
+		}
+    </script>
+
+
+
+
+
+	<!-- main-->
+
+        <div class="row" id="individualform">
+          <div class="col-md-12">
+                {% if messages %}
+    				{% for message in messages %}
+    					<div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+    						{{ message }}
+    					</div>
+    				{% endfor %}
+    			{% endif %}
+            <form class="needs-validation" method="post">
+              <div class="Contact-holder">
+                  <div class="row">
+                  <div class="col-md-12 mb-4 text-center">
+                      <div class="Register-form-title"> INDIVIDUAL - REGISTRATION FORM </div>
+                  </div>
+                </div>
+
+
+
+
+								<div class="row">
+									<div class="col-md-2">
+										<label class="color-white">Name <span class="red-color"> * </span> : </label>
+									</div>
+									<div class="col-md-10">
+									    <div class="row">
+										    <div class="col-md-3 mb-3">
+												{{ form.title | add_class:'form-control Contact-textbox' }}
+											</div>
+										    <div class="col-md-3 mb-3">
+												{{ form.first_name | add_class:'form-control Contact-textbox' }}
+											</div>
+											<div class="col-md-3 mb-3">
+												{{ form.middle_name | add_class:'form-control Contact-textbox' }}
+											</div>
+											<div class="col-md-3 mb-3">
+												{{ form.last_name | add_class:'form-control Contact-textbox' }}
+											</div>
+									    </div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-2">
+										<label>Phone Number <span class="red-color"> * </span></label>
+									</div>
+									<div class="col-md-10 mb-3">
+										{{ form.phone_no | add_class:'form-control Contact-textbox' }}
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-md-2">
+										<label class="color-white" for="">Email Address <span class="red-color"> * </span> : </label>
+									</div>
+									<div class="col-md-10 mb-3">
+										{{ form.email | add_class:'form-control Contact-textbox' }}
+									</div>
+								</div>
+								 	 <div class="row">
+
+											<div class="col-md-2">
+                                                <label class="color-white" for="">Password <span class="red-color"> * </span> : </label>
+                                            </div>
+                                                <div class="col-md-10 mb-3">
+                                                		<div class="input-group " id="log_pass_id1" data-target-input="nearest">
+                                                {{ form.password | add_class:'form-control Contact-textbox' }}
+                                                	<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+										  <div class="input-group-text"><span class='fa fa-fw fa-eye field_icon' onclick="myFunction1()"></span>
+										 	</div>
+										 </div>
+										</div>
+										 	<div class="col-md-10">
+										 		<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+                                                <span style="color:red;font-size:11px;margin-left:-15px;">
+(Password must contain one uppercase letter,one special character, length must be minimum 6 characters.)</span>
+                                            </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+								<div class="row">
+									<div class="col-md-2">
+										<label class="color-white" for="">Use Code</label>
+									</div>
+									<div class="col-md-10 mb-3">
+										{{ form.usecode | add_class:'form-control Contact-textbox' }}
+									</div>
+								</div>
+							</div>
+						    <div class="row">
+                  <div class="col-md-12 mb-3">
+
+                    <div class="text-center">
+                    <button class="mybtn" name="individualuser" formmethod="post" type="submit">Submit</button>
+
+                  </div>
+                  </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+				<div class="row" id="hdcform" style="display:none;">
+				    <div class="col-md-12">
+					    <ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item">
+								<a class="nav-link active" data-toggle="tab" href="#hdcid" aria-selected="true">HDC - Individual Doctor</a>
+							</li>
+							<!--<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#hdch"  aria-selected="false">HDC - Hospital</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" data-toggle="tab" href="#hdcnh"  aria-selected="false">HDC - Nursing Home</a>
+							</li>-->
+                        </ul>
+						<div class="tab-content" id="myTabContent">
+						    <div class="tab-pane  show active" id="hdcid">
+						        <form class="needs-validation" method="post">
+							        <div class="Contact-holder">
+										<div class="row">
+											<div class="col-md-12 mb-4 text-center">
+												<div class="Register-form-title"> HDC - INDIVIDUAL DOCTOR </div>
+											</div>
+										</div>
+
+								        <div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Type of Doctor <span class="red-color">*</span> :</label>
+											</div>
+											<div class="col-md-10 mb-3">
+
+												{{ form1.type_of_doctor | add_class:'form-control Contact-textbox' }}
+											</div>
+								        </div>
+
+								        <div class="row">
+											<div class="col-md-2">
+												<label class="color-white">Name <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+													<div class="col-md-3 mb-3">
+														{{ form1.title | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">
+														{{ form1.first_name | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">
+														{{ form1.middle_name | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">
+														{{ form1.last_name | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Mobile Number <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form1.phone_no | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Email Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form1.email | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+                                         <div class="row">
+
+											<div class="col-md-2">
+                                                <label class="color-white" for="">Password <span class="red-color"> * </span> : </label>
+                                            </div>
+                                                <div class="col-md-10 mb-3">
+                                                		<div class="input-group " id="log_pass_id1" data-target-input="nearest">
+                                                {{ form1.password | add_class:'form-control Contact-textbox' }}
+                                                	<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+										  <div class="input-group-text"><span class='fa fa-fw fa-eye field_icon' onclick="myFunction2()"></span>
+										 	</div>
+										 </div>
+										</div>
+										 	<div class="col-md-10">
+										 		<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+                                                <span style="color:red;font-size:11px; margin-left:-15px;">(Password must contain one uppercase letter,one special character, length must be minimum 6 characters.)</span>
+                                            </div>
+
+
+
+                                            </div>
+                                        </div>
+                                        </div>
+
+
+
+
+										<div class="row" id="payment">
+											<div class="col-md-2">
+												<label class="color-white" for="">Payment <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+													<div class="col-md-3 mb-3">Pay
+														{{ form1.payment | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">Use Code
+														{{ form1.usecode | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+										</div>
+							        </div>
+
+
+							        </div>
+									<div class="row">
+										<div class="col-md-12 mb-3">
+											<div class="Submit-btn-holder">
+												 <div class="text-center">
+												<button class="mybtn" name="individualdoctor" formmethod="post" class="form-control"type="submit">Submit</button>
+											</div>
+
+											</div>
+										</div>
+									</div>
+						        </form>
+				            </div>
+						    <!--<div class="tab-pane" id="hdch">
+						        <form class="needs-validation" method="post">
+									<div class="Contact-holder">
+										<div class="row">
+											<div class="col-md-12 mb-4 text-center">
+												<div class="Register-form-title"> HDC - HOSPITAL </div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												 <label class="color-white">Name of Hospital <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form2.name_of_hospital | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">Hospital Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+
+													<div class="col-md-4 mb-3">
+														{{ form2.street | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.area | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.city | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.taluka | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.district | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.state | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.pincode | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form2.country | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">Owner’s Name <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form2.owner_name | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Mobile Number <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form2.phone_no | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Email Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form2.email | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">No. of Doctor accounts<span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form2.no_of_doctor_accounts | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+
+                                   	<div class="row">
+
+											<div class="col-md-2">
+                                                <label class="color-white" for="">Password <span class="red-color"> * </span> : </label>
+                                            </div>
+                                                <div class="col-md-10 mb-3">
+                                                		<div class="input-group " id="log_pass_id1" data-target-input="nearest">
+                                                <input type="password"  class="form-control  Contact-textbox" name="password3" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" id="myInput3"  required />
+                                                	<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+										  <div class="input-group-text"><span class='fa fa-fw fa-eye field_icon' onclick="myFunction3()"></span>
+										 	</div>
+										 </div>
+										</div>
+										 	<div class="col-md-10">
+										 		<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+                                                <span style="color:red;font-size:11px;">(one uppercase,one special character,one number,length should be minimum 6)</span>
+                                            </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+										<div class="row" id="payment">
+											<div class="col-md-2">
+												<label class="color-white" for="">Payment <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+													<div class="col-md-3 mb-3">Pay
+														{{ form1.payment | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">Use Code
+														{{ form1.usecode | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+										</div>
+							        </div>
+
+									<div class="row">
+										<div class="col-md-12 mb-3">
+											<div class="Submit-btn-holder">
+												 <div class="text-center">
+												<button class="mybtn " name="hospital1" formmethod="post" type="submit"class="form-control">Submit</button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</form>
+						    </div>
+						    <div class="tab-pane" id="hdcnh">
+						        <form class="needs-validation" method="post">
+							        <div class="Contact-holder">
+										<div class="row">
+											<div class="col-md-12 mb-4 text-center">
+												<div class="Register-form-title"> HDC - NURSING HOME </div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												 <label class="color-white">Name of Nursing Home <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form3.name_of_nursing_home | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">Nursing Home  Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+
+													<div class="col-md-4 mb-3">
+														{{ form3.street | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.area | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.city | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.taluka | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.district | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.state | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.pincode | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-4 mb-3">
+														{{ form3.country | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">Owner’s Name <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form3.owner_name | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Mobile Number <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form3.phone_no | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-md-2">
+												<label class="color-white" for="">Email Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form3.email | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-2" >
+												<label class="color-white">No. of Doctor accounts<span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10 mb-3">
+												{{ form3.no_of_doctor_accounts | add_class:'form-control Contact-textbox' }}
+											</div>
+										</div>
+
+
+
+									<div class="row">
+
+											<div class="col-md-2">
+                                                <label class="color-white" for="">Password <span class="red-color"> * </span> : </label>
+                                            </div>
+                                                <div class="col-md-10 mb-3">
+                                                		<div class="input-group " id="log_pass_id1" data-target-input="nearest">
+                                                <input type="password"  class="form-control  Contact-textbox" name="password4" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" id="myInput4"  required />
+                                                	<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+										  <div class="input-group-text"><span class='fa fa-fw fa-eye field_icon' onclick="myFunction4()"></span>
+										 	</div>
+										 </div>
+										</div>
+										 	<div class="col-md-10">
+										 		<div class="input-group-append" data-target="#log_pass_id1" data-toggle="log_pass_id1">
+                                                <span style="color:red;font-size:11px;">(one uppercase,one special character,one number,length should be minimum 6)</span>
+                                            </div>
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+										<div class="row" id="payment">
+											<div class="col-md-2">
+												<label class="color-white" for="">Payment <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-10">
+												<div class="row">
+													<div class="col-md-3 mb-3">Pay
+														{{ form1.payment | add_class:'form-control Contact-textbox' }}
+													</div>
+													<div class="col-md-3 mb-3">Use Code
+														{{ form1.usecode | add_class:'form-control Contact-textbox' }}
+													</div>
+												</div>
+											</div>
+
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-12 mb-3">
+											<div class="Submit-btn-holder">
+
+												 <div class="text-center">
+												<button class=" mybtn" name="nursinghome1" formmethod="post" type="submit"class="form-control">Submit</button>
+											</div>
+											</div>
+										</div>
+									</div>
+								</form>
+						    </div>-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	{% endblock %}
+	{% block javascript %}
+
+     <script>
+
+            // Function to check Whether both passwords
+            // is same or not.
+            function checkPassword(form) {
+                password1 = form.password1.value;
+                password2 = form.password2.value;
+
+                // If password not entered
+                if (password1 == '')
+                    alert ("Please enter Password");
+
+                // If confirm password not entered
+                else if (password2 == '')
+                    alert ("Please enter confirm password");
+
+                // If Not same return False.
+                else if (password1 != password2) {
+                    alert ("\nPassword did not match: please enter correct password...")
+                    return false;
+                }
+
+                // If same return True.
+                else{
+                    alert("Password Match: Welcome to Health Perigon!")
+                    return true;
+                }
+            }
+        </script>
+
+
+         <script>
+    function myFunction1() {
+  var x = document.getElementById("myInput1");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+    </script>
+
+     <script>
+    function myFunction2() {
+  var x = document.getElementById("myInput2");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+    </script>
+
+     <script>
+    function myFunction3() {
+  var x = document.getElementById("myInput3");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+    </script>
+
+     <script>
+    function myFunction4() {
+  var x = document.getElementById("myInput4");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+    </script>
+
+
+        <script>
+			function specialty2Show() {
+			  var x = document.getElementById("hide1");
+			  if (x.style.display === "none") {
+				x.style.display = "block";
+			  } else {
+				x.style.display = "none";
+			  }
+			}
+		</script>
+
+
+
+{% endblock %}
+

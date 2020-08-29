@@ -1,0 +1,232 @@
+class labo(ModelForm):
+   investigationname=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'name'}))
+   synonyms=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Synonmys'}))
+   importantnotes=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'importantnotes'}))
+   forms.IntegerField(widget=forms.TextInput(attrs={'placeholder':'date in days'}))
+   to = forms.IntegerField(widget=forms.TextInput(attrs={'placeholder':'end date'}))
+   gender= forms.CharField(widget=forms.TextInput(attrs={'placeholder':'gender'}),required=False)
+   umo1= forms.CharField(widget=forms.TextInput(attrs={'placeholder':'umo1'}),required=False)
+   umo2 = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'umo2'}))
+   conversationfactor= forms.IntegerField(widget=forms.TextInput(attrs={'placeholder':'factor'}),required=False)
+   GENDER_CHOICES=(
+    	('M','HIGH'),
+	    ('F','LOW'),
+   )
+
+   refrencerange = forms.ChoiceField(choices=GENDER_CHOICES,widget=forms.RadioSelect())
+   GENDER_CHOICES=(
+    	('M','HIGH'),
+	    ('F','LOW'),
+   )
+   high = forms.ChoiceField(choices=GENDER_CHOICES,widget=forms.RadioSelect())
+   
+   
+   class Meta:
+       model=emptytextbox
+       fields=['id','investigationname','synonyms','importantnotes','froms','to','gender','umo1','umo2','conversationfactor','refrencehigh','refrencelow','high']
+
+
+
+
+       def labor(request):
+   if request.method =='POST':
+     rag=laboratorylab(request.POST)
+     rag.is_valid()
+     rag.save()
+   else:
+       rag=laboratorylab()
+       return render(request,'labo.html', {'reg': reg})
+
+@csrf_exempt
+def labotable(request):
+    module=emptytextbox.objects.all()
+    return render(request,'laotable.html',{'module':module})
+
+
+        investigationname=forms.CharField(widget=forms.TextInput(attrs={'placeholder':'name'}),required=False)
+    
+conversationfactor= models.CharField(max_length=255)
+   GENDER_CHOICES=(
+      ('M','high'),
+      ('F','low'),
+    )
+   refrencerange = models.CharField(choices=GENDER_CHOICES,max_length=10)
+   GENDER_CHOICES=(
+      ('M','high'),
+      ('F','low'),
+    )
+   
+   high=models.CharField(choices=GENDER_CHOICES,max_length=10)
+
+
+
+   def __str__(self):
+    return self.gender
+
+
+
+
+    $(function() {
+            $('#newrow').click('.add',function() {
+                var froms="<tr>"
+                     froms+=$('div')
+                    froms+="<td><input type='text' name='empname' placeholder='Enter name' class='form-control' ></td>"
+                    
+                   
+                  
+                    froms+="<td><input type='text' name='froms' placeholder='Enter date from' class='form-control'></td>"
+                    froms+="<td><input type='text' name='to' placeholder='Enter Date to' class='form-control'></td>"
+                    froms+="<td><input type='text' name='gender' placeholder='Enter Gender' class='form-control'></td>"
+                    froms+="<td><input type='text' name='salary' placeholder='Enter UMO1' class='form-control'></td>"
+                    froms+="<td><input type='text' name='salary' placeholder='Enter UMO2' class='form-control'></td>"
+                     froms+="<td>High <input type='radio' name='high' placeholder='Enter sal'><br>Low<input type='radio' name='high' placeholder='Enter Conversation Digits' ></td>"
+                    
+                   
+                    froms+="<td>High <input type='radio' name='high' placeholder='click umo1' id='datatable'><br>Low<input type='radio' name='high' placeholder='click umo2' ></td>"
+                    
+                           
+                    
+                    froms+="</tr>"
+                    tablebody=$("table thead")
+                    tablebody.append(froms)
+
+
+
+
+
+                    var data_dict = [];
+
+
+// function called when Add row button is clicked
+function Add_input_row()
+  {
+
+    var input_row ='<tr id="input_row">\
+                      <td><input id="1"></td>\
+                      <td><input id="2"></td>\
+                      <td><input id="3"></td>\
+                      <td><input id="4"></td>\
+                      <td><input id="5"></td>\
+                      <td><input id="i6"></td>\
+                      <td><input id=""></td>\
+                      <td><button onclick="save_row()">save</button></td>\
+                    </tr>';
+
+    var table_element = document.getElementById("data_table");
+
+    //do nothing if input_row already exists
+    if(document.getElementById("input_row")) {
+
+        alert("input row already exists !");
+    }
+    else {
+
+        table_element.innerHTML = table_element.innerHTML + input_row;
+    }
+
+  } 
+  // function called when Save button is clicked
+function save_row()
+  {
+     var field_val1 = document.getElementById("1").value;
+     var field_val2 = document.getElementById("2").value;
+     var field_val3 = document.getElementById("3").value;
+     var field_val4 = document.getElementById("4").value;
+     var field_val5 = document.getElementById("5").value;
+     var field_val6 = document.getElementById("6").value;
+     var field_val7 = document.getElementById("7").value;
+  
+     var data_id = data_dict.length;
+     data_dict.push({
+        key:  data_id,
+        value: [field_val1,field_val2,field_val3,field_val4,field_val5,field_val6,field_val7]
+    });
+
+     var data_row ='<tr>\
+                      <td id="data_field1'+data_id+'">'+field_val1+'</td>\
+                       <td id="data_field2'+data_id+'">'+field_val2+'</td>\
+                       <td id="data_field3'+data_id+'">'+field_val3+'</td>\
+                       <td id="data_field4'+data_id+'">'+field_val4+'</td>\
+                       <td id="data_field5'+data_id+'">'+field_val5+'</td>\
+                       <td id="data_field6'+data_id+'">'+field_val6+'</td>\
+                       <td id="data_field7'+data_id+'">'+field_val7+'</td>\
+                       <td></td>\
+                    </tr>'        
+     document.getElementById("input_row").remove();
+     //append data to table
+     var table_element = document.getElementById("data_table");
+     table_element.innerHTML = table_element.innerHTML + data_row;
+  }
+
+
+  // send data to  django view
+
+
+
+
+
+
+
+
+  $(document).on('submit',function(event){
+        event.preventDefault();
+        var error="";
+        $('.item_name').each(function(){
+            var count=1;
+            if ($(this).val()=='')
+            {
+                error+="<p>Item name at "+count+" Row</p>";
+                return false;
+            }
+            count=count+1;
+
+        });
+        $('.item_quantity').each(function() {
+            var count=1;
+            if( $(this).val() =='')
+        {
+            error += "<p>Enter Item Quantity</p>";
+              return false;
+        }
+           count=count+1;
+        });
+        $('.item_unit').each(function() {
+            var  count=1;
+               if( $(this).val() =='')
+        {
+            error += "<p>Enter Item Quantity</p>";
+              return false;
+        
+
+        }
+        count=count+1;
+       
+   });
+
+
+
+
+   //unique id for each added data row needed when reading data directly from table
+     
+     var data_id = data_dict.length;
+     //push the data to data dictionary
+
+     data_dict.push({
+        key:  from,to,gender,umo1,conversationfactor,refrencerange,high
+        value: [field_val1,field_val2,field_val3,field_val4,field_val5,field_val6,field_val7]
+  
+    });    
+    
+
+    function save_row()
+  {
+     var field_val1 = document.getElementById("1").value;
+     var field_val2 = document.getElementById("2").value; 
+     var field_val3 = document.getElementById("3").value;
+     var field_val4= document.getElementById("4").value;  
+     var field_val5 = document.getElementById("5").value;
+     var field_val6 = document.getElementById("6").value;
+     var field_val7 = document.getElementById("7").value;
+     }    
+     var data_id = data_dict.length
+   });

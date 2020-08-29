@@ -1,0 +1,186 @@
+{% extends "base_profile.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block title %} Health Perigon - Individual Doctor - User Creation{% endblock %}
+
+
+
+
+
+{% block body %}
+        <div class="main">
+            <div class="col-md-12">
+                <div class="content-holder mb-3">
+                    <div class="btn-holder">
+
+                        <a class="link-btn" href="{% url 'individual_doctor_user_list' %}">Back to List</a>
+                        <h4 class="title-holder">User Creation</h4>
+
+                        <div class="alert alert-danger text-center" id="Inumber" role="alert" style="display:none;" >Invalid Mobile Number</div>
+
+                         <div class="alert alert-success text-center" id="success" role="alert" style="display:none;" >User Added Sucessfully</div>
+
+                        <div class="alert alert-danger text-center" id="MnE" role="alert" style="display:none;" >Mobile Number Already Exist!</div>
+
+                        <div class="alert alert-danger text-center" id="EExist" role="alert" style="display:none;" >Email Id Already Exist!</div>
+                        
+                         
+                        {% if messages %}
+                                    {% for message in messages %}
+                                        <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <form class="needs-validation" id="useradd_form" method="POST">
+                                        {% csrf_token %}
+                                        {{form.as_p}}
+                                        <div class="row">
+                                            <div class="col-md-2 col-sm-6">
+                                                <label for="">User Type<span class="red-color"> * </span> :</label>
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <select name="type_of_doctor" class="custom-select d-block w-100" id="type_of_doctor" required>
+                                                    <option value="Select User Type">Select User Type</option>
+                                                    <option value="DF">Junior Doctor</option>
+                                                    <option value="DG">Front Desk</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <label for="lastName">Name <span class="red-color"> * </span> : </label>
+                                            </div>                                      
+                                            <div class="col-md-8 mb-3">
+                                                
+                                                <div class="row">
+                                                    <div class="col-md-2 padding-right">
+                                                        <select name="title"class="custom-select d-block  w-100" id="title" required>
+                                                            <option value="">Title</option>
+                                                            <option value="Mr.">Mr.</option>
+                                                            <option value="Mrs.">Mrs.</option>
+                                                            <option value="Ms.">Ms.</option>
+                                                            <option value="Miss.">Miss.</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 padding-right-left">
+                                                        <input name="first_name" type="text" class="form-control" id="first_name" placeholder="First Name" value="" required />
+                                                    </div>
+                                                    <div class="col-md-3 padding-right-left">
+                                                        <input name="middle_name" type="text" class="form-control" id="middle_name" placeholder="Middle Name" value="" required />
+                                                    </div>
+                                                    <div class="col-md-4 padding-left">
+                                                        <input name="last_name" type="text" class="form-control" id="last_name" placeholder="Last Name" value="" required />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="text-center">
+                        <div id="loader" id="loader" style="display:none;">
+                               <div class="spinner-border "></div>
+                        </div>
+                        </div>
+                                        <div class="row">
+                                             <div class="col-md-2">
+                                                <label for="">Mobile Number <span class="red-color"> * </span> : </label>
+                                            </div>  
+                                            <div class="col-md-3 mb-3">
+                                                
+                                                <input name="phone_no" type="text"  class="form-control"  id="phone_no" value="" required />
+                                            </div> 
+                                        </div>  
+
+                                        <div class="row">
+                                             <div class="col-md-2">
+                                                <label for="">Email Address <span class="red-color"> * </span> : </label>
+                                            </div>                                          
+                                            <div class="col-md-3 mb-3">
+                                                
+                                                <input name="email" type="text"  class="form-control" id="email"  value="" required />
+                                            </div>
+                                        </div>  
+                                        <hr class="hrstyle" />    
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn btn" type="submit" value="submit">Add User</button>
+                                                    
+                                                    <a class="mybtn btn" href="{% url 'individual_doctor_user_list' %}">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       {% endblock %}
+    {% block javascript %}
+         <script>
+    $(document).ready(function(){
+
+   
+    $(document).on('submit','#useradd_form',function(e){
+    e.preventDefault();
+
+    $.ajax({
+        type:'POST',
+        url:"{% url 'individual_doctor_user_creation' %}",
+        data:{
+            'type_of_doctor':$('#type_of_doctor').val(),
+            'title':$('#title').val(),
+            'first_name':$('#first_name').val(),
+            'middle_name':$('#middle_name').val(),
+            'last_name':$('#last_name').val(),
+            'phone_no':$('#phone_no').val(),
+            'email':$('#email').val(),
+            'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+        },
+        beforeSend:function(){
+            $("#loader").show();
+        },
+        complete:function(){
+            $("#loader").hide();
+        },
+        success:function(data){
+            if (data.status=="IM"){
+            $('#Inumber').show();
+             }
+            else if (data.status=="MNE"){
+            $('#MnE').show();
+             }
+
+            else if (data.status=="EmailE"){
+            $('#EExist').show();
+             }
+           
+             else{
+          
+            
+                console.log("here")
+                $('#success').show();
+                 $('#useradd_form')[0].reset();
+                // location.href='/individual_doctor_user_list/'
+              
+ 
+             }
+        
+
+}
+});
+})
+});
+
+
+
+     
+        </script>
+        {% endblock %}

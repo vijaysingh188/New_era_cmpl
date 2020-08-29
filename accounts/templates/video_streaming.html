@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>Health Perigon </title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+      <style>
+         .video-streaming{display: flex;}
+         .leftside{width:220px;float: left;margin:0 5px;}
+         .rightside{width:220px;float: right;margin:0 5px;display:block;}
+         .md-panal{width:90%;padding:5px 20px;margin:auto;}
+         .video-position{height:72vh;}
+		 .video-positionfullscreen{height:90vh;}
+         .banner-img-left{width:194px;height:auto;padding:11px;float:left;display:block;}
+         .banner-img-left-mob{display:none;}
+         .banner-img-right{width:194px;height:auto;padding:11px;float: right;}
+         .header-img{width:100%;height:85px;}
+         .button-holder{padding: 10px;text-align:left;margin-bottom:25px; margin-top:0px;}
+         :root {
+         --backgroundColor: rgba(246, 241, 209);
+         --colorShadeA: #a9a4a4;
+         --colorShadeB: rgb(121, 186, 156);
+         --colorShadeC: #4a4949d9;
+         --colorShadeD: #000;
+         --colorShadeE: #cd2628ba;
+         }
+         @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+         button {
+         position: relative;
+         display: inline-block;
+         cursor: pointer;
+         outline: none;
+         border: 0;
+         vertical-align: middle;
+         text-decoration: none;
+         font-size:13px;
+         color: #e3d200;
+         font-weight: 600;
+         text-transform: uppercase;
+         font-family: inherit;
+         }
+         button.big-button {
+         padding: 5px 10px;
+         border: 1px solid var(--colorShadeA);
+         border-radius:10px;
+         background: var(--colorShadeE);
+         transform-style: preserve-3d;
+         transition: all 175ms cubic-bezier(0, 0, 1, 1);
+         }
+         button.big-button::before {
+         position: absolute;
+         content: '';
+         width: 100%;
+         height: 100%;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: var(--colorShadeC);
+         border-radius: inherit;
+         box-shadow: 0 0.25em 0 0 var(--colorShadeA);
+         transform: translate3d(0, 0.55em, -1em);
+         transition: all 175ms cubic-bezier(0, 0, 1, 1);
+         }
+         button.big-button:hover {
+         background: var(--colorShadeD);
+         transform: translate(0, 0.375em);
+         }
+         button.big-button:hover::before {
+         transform: translate3d(0, 0.75em, -1em);
+         }
+         button.big-button:active {
+         transform: translate(0em, 0.75em);
+         }
+         button.big-button:active::before {
+         transform: translate3d(0, 0, -1em);
+         box-shadow: 0 0.5em 0 0 var(--colorShadeB);
+         }
+		 
+		 @media (max-width:1200px) { 
+         .banner-img-left{width:175px;}
+         .banner-img-right{width:175px;}
+         .md-panal{width:100%;}
+         }
+		  @media (max-width:996px) { 
+         .banner-img-left{width:160px;}
+         .banner-img-right{width:160px;}
+         .md-panal{width:100%;}
+         }
+		 
+         @media (max-width: 786px) { 
+         .leftside{width:140px;margin:0;}
+         .rightside{width:140px;margin:0;}
+         .md-panal{width:100%;padding:10px;margin:0;}
+		 .banner-img-left{width:120px;height:auto;padding:11px;float:left;display:block;}
+         .banner-img-left-mob{display:none;}
+         .banner-img-right{width:120px;height:auto;padding:11px;float: right;}
+         }
+         @media (max-width: 576px) {
+		 .video-streaming{display:block;}
+         .leftside{width:100%;padding:5px;}
+         .rightside{display:none;}
+         .md-panal{width:100%;padding:5px;margin:0;}
+         .banner-img-left{display:none;}
+         .banner-img-left-mob{display:block;}
+         .banner-img-right{display:none;}
+         .header-img{width:100%;height:auto;}
+         .button-holder{padding: 5px;}
+		 .video-positionfullscreen{height:60vh;}
+		 .video-position{height:42vh;}
+		 .button-holder{padding: 10px;text-align:left;margin-top:20px;}
+         }
+      </style>
+   </head>
+   <body>
+      <header id="header">
+         <img src="https://healthperigon.net/media/{{ object.streaming_header }}" class="header-img" alt="">
+      </header>
+      <div class="video-streaming">
+         <div class="leftside" id="leftBanner">
+            <img src="https://healthperigon.net/media/{{ object.streaming_leftpanel }}" class="banner-img-left" alt="Health Perigon Event">
+			<img src="{% static 'images/leftrightpanel-mob.jpg' %}" class="banner-img-left-mob" width="100%" alt="Health Perigon Event">
+         </div>
+         <div class="md-panal">
+            <div class="embed-responsive embed-responsive-21by9 video-position" id="videoSize">
+               <iframe id="sodmzs" class="embed-responsive-item" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+            </div>
+            <div class="button-holder">
+               <button class="big-button">Q & A</button>
+               <button class="big-button">Vote</button>
+               <button class="big-button" onclick="fullScreen()"><span id="textchenge">Full Screen </span></button>
+			   <div class="" style="float:right">
+			       <a class="footer-icon-style " href="{% url 'eventtable' %}" title="Logout"> <img src="{% static 'images/logout.png' %}" width="32px;" alt="Health Perigon Event"></a>
+            </div>
+            </div>
+         </div>
+         <div class="rightside" id="rightBanner">
+            <img  src="https://healthperigon.net/media/{{ object.streaming_rightpanel }}" class="banner-img-right"  alt="Health Perigon Event">
+         </div>
+      </div>
+      <footer class="footer ">
+      <div class="container">
+         <div class="copyright">
+            <p>Copyright © Health Perigon 2020. All Rights Reserved</p>
+         </div>
+         <div class="footer-social-icons-holder">
+            <a class="footer-icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+            <a class="footer-icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+            <a class="footer-icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+            <a class="footer-icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+         </div>
+      </div>
+      <footer>
+      <script>
+        url = "{{ module.streaming_link }}";
+	    console.log(url);
+    	var id = url.substring(url.lastIndexOf('=') + 1);
+	    document.getElementById('sodmzs').src = "https://www.youtube-nocookie.com/embed/" + id;
+	    console.log(id);
+         function fullScreen() {
+                var x = document.getElementById("leftBanner");
+                    if (x.style.display === "none") {
+                    x.style.display = "block";
+                    } else {
+                    x.style.display = "none";
+                }
+                var y = document.getElementById("rightBanner");
+                    if (y.style.display === "none") {
+                    y.style.display = "block";
+                    } else {
+                    y.style.display = "none";
+                }
+                var z = document.getElementById("header");
+                    if (z.style.display === "none") {
+                    z.style.display = "block";
+                    } else {
+                    z.style.display = "none";
+                }
+                var b = document.getElementById("textchenge");
+                    if (b.innerHTML === "Normal") {
+                        b.innerHTML = "Full Screen";
+                    } else {
+                     b.innerHTML = "Normal";
+                 }
+               
+				var element = document.getElementById("videoSize");
+                    if (element.classList) { 
+                        element.classList.toggle("video-positionfullscreen");
+                       } else {
+                     var classes = element.className.split(" ");
+                     var i = classes.indexOf("video-positionfullscreen");
+
+                     if (i >= 0) 
+                     classes.splice(i, 1);
+                     else 
+                     classes.push("video-positionfullscreen");
+                     element.className = classes.join(" "); 
+                    }
+                }
+         
+      </script>
+        <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	    <script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+   </body>
+</html>

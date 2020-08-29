@@ -1,0 +1,81 @@
+{% load static %}
+{% url 'Custom_user_list' as Custom_user_list_url %}
+{% url 'coupon_code_list' as coupon_code_list_url %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>{% block title %} {% endblock %} - Health Perigon</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mastars.css' %}">
+		
+	    <link rel="stylesheet" type="text/css" href="{% static 'js/libs/DataTables/datatables.min.css' %}"/>
+	    <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css"/>
+	    <style>
+	    	.dataTables_filter { display: none; }
+	    </style>
+    </head>
+    <body>	
+	<nav class="header" >
+		<div class="container-fluid">
+		    <div class="row">
+		        <div class="col-md-12">
+				    <div class="navbar-expand-md logo-holder">
+					    <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon">
+				    </div>
+			        <div class="logout-btn-holder">
+		                <a class="logout" href="{% url 'logout_view' %}">Log Out</a>
+		            </div>  
+		        </div>
+		    </div>
+		</div>
+	</nav>
+
+	<div class="aside">
+	    <nav class="navbar navbar-expand-md">
+			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+			    <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+		    </button>
+			<div class="collapse navbar-collapse" id="navbarCollapse">
+				<div class=" navbar-nav" id="myDIV">
+				    <a class="nav-link {% ifequal request.path '#'%} active {% endifequal%}" href="#">Dashboard</a>
+					<a class="nav-link {% ifequal request.path '/existing_module_master/'%} active {% endifequal%}" href="{% url 'existing_module_master' %}">Subscription Master</a>
+					<a class="nav-link {% ifequal request.path '#'%} active {% endifequal%}" href="#">Subscriber Registry</a>
+					<a class="nav-link {% ifequal request.path '/pharmacy/'%} active {% endifequal%}" href="{% url 'pharmacy' %}">Pharmacy Master</a>
+					<a class="nav-link {% ifequal request.path '/laboratory/'%} active {% endifequal%}" href="{% url 'laboratory' %}">Laboratory Master</a>
+					<a class="nav-link {% ifequal request.path '#'%} active {% endifequal%}" href="#">Recently Added</a>
+					<a class="nav-link {% ifequal request.path '#'%} active {% endifequal%}" href="#">Reword Master</a>
+					<a class="nav-link {% ifequal request.path '#'%} active {% endifequal%}" href="#">Anncouncement </a>
+					<a class="nav-link {% ifequal request.path '/contact_master/'%} active {% endifequal%}" href="{% url 'contact_master' %}">Contact List </a>
+					<a class="nav-link {% ifequal request.path '/register1/'%} active {% endifequal%}" href="{% url 'register1' %}">User Registeration </a>
+					<a class="nav-link {% if request.path == Custom_user_list_url %}active {%endif%}" href="{% url 'Custom_user_list' %}">User List</a>
+					<a class="nav-link {% if request.path == coupon_code_list_url %}active {%endif%}" href="{% url 'coupon_code_list' %}">Coupon code List</a>
+					<a class="nav-link {% ifequal request.path '/partner_and_event_register/'%} active {% endifequal%}" href="{% url 'partner_and_event_register' %}">Event Registeration </a>
+					<a class="nav-link {% ifequal request.path '/eventtable/'%} active {% endifequal%}" href="{% url 'eventtable' %}">Event Table</a>
+
+				</div>
+			</div>
+		</nav>  
+	</div>
+    {% block body %}
+
+    {% endblock %}
+
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+	<script src="{% static 'js/libs/DataTables/datatables.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+
+
+
+    {% block javascript %}
+    {% endblock %}
+</body>
+</html>

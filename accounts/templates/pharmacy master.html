@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} service master {% endblock %}
+
+{% block body %}
+
+        <div class="main">
+            <div class="inner-navbar">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" href="Subscription_Master-Existing_Module_Master.html">Company Master</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Generic Master</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Drug Master</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-12">
+            <div class="content-holder">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div class="row">
+                    <div class="col-md-12 order-md-1">
+                        <h5 class="title-holder">Existing Company Master</h5>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-holder">
+                                    <a class="link-btn" href="{% url 'pharmacy' %}">Add New</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                <div class="content-holder" name="adress info">
+                                     <h5 class="title-holder">Company Address</h5>
+                                    <form class="needs-validation" method="post">
+                                        {% csrf_token %}
+                                         <div class="row">
+                                        
+                                        <div class="col-md-4 mb-3">
+                                                <label for=""> CompanyName <span class="red-color"> * </span></label>
+                                                {{ reg.companyname | add_class:'form-control' }}
+                                            </div>
+                                        
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>AddressLine1 <span class="red-color">  </span></label>
+                                                {{ reg.addresslineone | add_class:'form-control' }}
+                                            </div>
+
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Addressline2 <span class="red-color"> * </span></label>
+                                                {{ reg.addresslinetwo | add_class:'form-control' }}
+                                                </div>
+                                                    <div class="col-md-4 mb-3">
+                                                <label>Street <span class="red-color">  </span></label>
+                                                {{ reg.streetname | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label> City/District<span class="red-color">  </span></label>
+                                                {{ reg.city | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Country <span class="red-color">  </span></label>
+                                                {{ reg.country | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>State <span class="red-color">  </span></label>
+                                                {{ reg.state | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Pincode <span class="red-color"> </span></label>
+                                                {{ reg.pincode | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                   
+
+                               
+                                <h5 class="title-holder">National Head Information</h5>
+                                            <div class="content-holder">
+                                                   <div class="row">
+                                                    
+
+                                            
+                                            <div class="col-md-4 mb-3">
+                                                
+                                                <label>National Head <span class="red-color"> * </span></label>
+                                                {{ reg.nationalhead | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label>National Contact Number <span class="red-color"> </span></label>
+                                                {{ reg.contactnumber | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>National EmailAddress <span class="red-color"> * </span></label>
+                                                {{ reg.emailaddress | add_class:'form-control' }}
+                                            </div>
+
+                                            
+                                            <div class="col-md-4 mb-3">
+                                                <label>National Phone Number <span class="red-color"> * </span></label>
+                                                {{ reg.phonenumber | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                    
+                                    <h5 class="title-holder">Regional Head Information</h5>
+                                           <div class="content-holder">
+                                            <div class="row">
+                                           
+                                            <div class="col-md-4 mb-3">
+                                                <label>Regional National Head<span class="red-color"> * </span></label>
+                                                {{ reg.regionalhead | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Regional Contact Number <span class="red-color">  </span></label>
+                                        {{ reg.regionalcontactnumber | add_class:'form-control' }}
+                                            </div>
+                                             <div class="col-md-4 mb-3">
+                                                <label>Regional EmailAddress<span class="red-color">*  </span></label>
+                                        {{ reg.regionalemailaddress | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Regional PhoneNumber <span class="red-color"> * </span></label>
+                                        {{ reg.regionalphonenumber | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                            <h5 class="title-holder">Scientific Head Information</h5>
+                                            <div class="content-holder">
+                                                <div class="row">
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Scientific Head <span class="red-color">  </span></label>
+                                            {{ reg.scientifichead | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label> Scientific ContactNumber <span class="red-color">  </span></label>
+                                {{ reg.scientificcontactnumber | add_class:'form-control' }}
+                                            </div>
+                                            <div>
+                                                <label>Scientific Email Address <span class="red-color">  </span></label>
+                                        {{ reg.scientificemailaddress | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Scienntific Phone number <span class="red-color">  </span></label>
+                                        {{ reg.scientificphonenumber | add_class:'form-control' }}
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn" data-toggle="collapse" href="{% url 'addservice' %} data-target="#demo">Cancel</button>
+                                                    <button class="mybtn" type="submit">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+    {% block javascript %}  
+
+    {% endblock %}

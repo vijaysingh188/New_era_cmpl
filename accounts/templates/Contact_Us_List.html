@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Contact Master {% endblock %}
+
+{% block body %}
+	<div class="main">
+		<div class="col-md-12">
+			<div class="content-holder">
+				<div class="row">
+					<div class="col-md-12 order-md-1">
+						<h5 class="title-holder">Contact Us List</h5>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="table-responsive">
+									<table class="table table-bordered" id="datatable">
+										<thead>
+											<tr>
+												<th>Name</th>
+												<th>Mobile Number</th>
+												<th>Email id</th>
+												<th>Message </th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for module in module %}
+											<tr>
+												<td>{{ module.name }}</td>
+												<td>{{ module.phone_no }}</td>
+												<td>{{ module.email }}</td>
+												<td>{{ module.message }}</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+								
+                            </div>
+						</div>	
+				    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% block javascript %}		
+   <script>
+   		$(function() {
+		  var oTable = $('#datatable').DataTable({
+		  	"lengthMenu": [[10, 25, 50, -1], [10, 15, 20,25]],
+		    "pageLength": 10,
+		    "iDisplayLength": -1,
+		    "pagingType": "simple_numbers",
+		    "lengthChange": false,
+		  });
+		  $("#search_name").on('keyup', function (){
+		        $('#datatable').dataTable().fnFilter(this.value);
+		    });
+
+		});
+    </script>	
+    {% endblock %}

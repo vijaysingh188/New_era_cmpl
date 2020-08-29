@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} service master {% endblock %}
+
+{% block body %}
+
+        
+        <div class="main">
+            <div class="col-md-12">
+                <div class="content-holder">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+           
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <h5 class="title-holder">Create New Event</h5>
+                            <div class="btn-holder">
+                                <a class="link-btn" href="{% url 'eventtable' %}">Back to list</a>
+                            </div>
+                             <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            
+                                        
+                                        <div class="col-md-4 mb-3">
+                                                <label>Event Title <span class="red-color"> * </span></label>
+
+
+                                         {{ form.eventtitle | add_class:'form-control' }}
+                                                  </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label for=""> Target audience <span class="red-color"> * </span></label>
+                                              {{ form.targetaudiance | add_class:'form-control' }}
+
+
+
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label for=""> Event Type <span class="red-color"> * </span></label>
+
+
+                                                    {{ form.eventtype | add_class:'form-control' }}
+
+
+
+
+                                            </div>
+
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Event From Date / Time <span class="red-color"> * </span></label>
+                                                {{ form.created_on | add_class:'form-control' }}
+
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label>Event To Date / Time <span class="red-color"> * </span></label>
+                                                {{ form.end_on | add_class:'form-control' }}
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Chairpersons Name</label>
+                                               {{ form.Chairpersons | add_class:'form-control' }}
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Chairpersons Mobile Number</label>
+                                                {{ form.mobilenumber | add_class:'form-control' }}
+
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Chairpersons Email Address</label>
+                                                  {{ form.email | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Moderator Name</label>
+                                                  {{ form.Moderatorname | add_class:'form-control' }}
+
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Moderator Mobile Number</label>
+                                                 {{ form.mmobile | add_class:'form-control' }}
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Moderator Email Address</label>
+                                               {{ form.memail | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Contact Person Name</label>
+                                                 {{ form.ContactPersonanme | add_class:'form-control' }}
+
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Contact Person Mobile Number</label>
+
+                                                 {{ form.Cmobile | add_class:'form-control' }}
+                                            </div>
+
+                                             <div class="col-md-4 mb-3">
+                                                <label>Contact Person Email Address</label>
+                                             {{ form.Cemail| add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Organized by</label>
+                                                 {{ form.organisedby | add_class:'form-control' }}
+                                            </div>
+
+<!--                                            <div class="col-md-4 mb-3">-->
+<!--                                                <label>Supported by</label>-->
+<!--                                                 {{ form.sponserby | add_class:'form-control' }}-->
+<!--                                            </div>-->
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Registration Required</label>
+                                                 {{ form.Registerationrequired }}
+                                                <!--  <label for="{{ choice.id_for_label  }}">{{ choice.choice_label }}</label>-->
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Payment Required</label>
+                                                 {{ form.paymentrequired }}
+
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Partner Visibility</label>
+                                                 {{ form.partnerrequired }}
+
+
+                                            </div>
+
+
+
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn" data-toggle="collapse" data-target="#demo">Cancel</button>
+                                                    <button class="mybtn" type="submit">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+    {% endblock %}
+    {% block javascript %}
+
+    <script>
+  $(function() {
+    $( "#datetime_from" ).datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+  });
+});
+  </script>
+   <script>
+  $(function() {
+    $( "#datetime_to" ).datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+  });
+});
+  </script>
+
+
+<script>
+    $(document).ready(function(){
+    let formData = {
+                    eventtitle:"",
+                    targetaudiance:"",
+                    eventtype:"",
+
+                    datetime_from:"",
+                    Chairpersons:"",
+                    mobilenumber :"",
+
+                    email:"",
+                    Moderatorname:"",
+                    mmobile:"",
+
+                    memail:"",
+                    ContactPersonanme:"",
+                    Cmobile:"",
+
+                    Cemail:"",
+                    organisedby:"",
+                    sponserby:"",
+
+                    }
+
+
+        $("#id_eventtitle").on('change', function() {
+                    var eventtitle = $(this).val();
+
+                formData.eventtitle = $("#id_eventtitle").val();
+                });
+
+
+        $("#id_targetaudiance").on('change', function() {
+                var targetaudiance = $(this).val();
+
+            formData.targetaudiance = $('#id_targetaudiance').find(":selected").val();
+
+
+            });
+
+        $("#id_eventtype").on('change', function() {
+                var eventtype = $(this).val();
+
+            formData.eventtype = $('#id_eventtype').find(":selected").val();
+            });
+
+
+
+        $("#datetime_from").on('change', function() {
+            var datetime_from = $(this).val();
+
+        formData.datetime_from = $("#datetime_from").val();
+        });
+
+
+
+<!--        $("#datepicker_from").datepicker({-->
+<!--        altFormat: "yy-mm-dd",-->
+<!--        "onSelect": function(date) {-->
+<!--            $("#datepicker_from").datepicker(datepicker_from);-->
+<!--            alert();-->
+
+<!--            formData.datetime_from = $("#datetime_from").val();-->
+<!--        }-->
+<!--    });-->
+
+
+        $("#id_Chairpersons").on('change', function() {
+            var Chairpersons = $(this).val();
+
+        formData.Chairpersons = $("#id_Chairpersons").val();
+        });
+
+
+        $("#id_mobilenumber").on('change', function() {
+            var mobilenumber = $(this).val();
+
+        formData.mobilenumber = $("#id_mobilenumber").val();
+        });
+
+
+        $("#id_email").on('change', function() {
+                var email = $(this).val();
+
+            formData.email = $("#id_email").val();
+            });
+
+        $("#id_Moderatorname").on('change', function() {
+                var Moderatorname = $(this).val();
+
+            formData.Moderatorname = $("#id_Moderatorname").val();
+            });
+
+        $("#id_mmobile").on('change', function() {
+                var mmobile= $(this).val();
+
+            formData.mmobile = $("#id_mmobile").val();
+            });
+
+
+
+        $("#id_memail").on('change', function() {
+                var memail = $(this).val();
+
+            formData.memail = $("#id_memail").val();
+            });
+
+        $("#id_ContactPersonanme").on('change', function() {
+                var ContactPersonanme = $(this).val();
+
+            formData.ContactPersonanme = $("#id_ContactPersonanme").val();
+            });
+
+        $("#id_Cmobile").on('change', function() {
+                var Cmobile = $(this).val();
+
+            formData.Cmobile = $("#id_Cmobile").val();
+            });
+
+
+
+        $("#id_Cemail").on('change', function() {
+            var Cemail = $(this).val();
+
+        formData.Cemail = $("#id_Cemail").val();
+        });
+
+        $("#id_organisedby").on('change', function() {
+            var organisedby = $(this).val();
+
+        formData.organisedby = $("#id_organisedby").val();
+        });
+
+
+        $("#id_sponserby").on('change', function() {
+            var sponserby = $(this).val();
+
+        formData.sponserby = $("#id_sponserby").val();
+        });
+
+
+        $("input[name='partnerrequired']").click(function(){
+            var radioValue = $("input[name='partnerrequired']:checked").val();
+                if(radioValue=='Yes'){
+<!--                alert("Your are a - " + radioValue);-->
+                console.log(formData)
+<!--                alert(formData.eventtitle);-->
+
+                   $.ajax({
+                    type: "POST",
+                    url:  "/event_visibility/",
+
+                    data:{
+                    'eventtitle':formData.eventtitle,
+                    'targetaudiance':formData.targetaudiance,
+                    'eventtype':formData.eventtype,
+                    'created_on':formData.datetime_from,
+                    'Chairpersons':formData.Chairpersons,
+                    'mobilenumber':formData.mobilenumber,
+                    'email':formData.email,
+                    'Moderatorname':formData.Moderatorname,
+                    'mmobile':formData.mmobile,
+                    'memail':formData.memail,
+                    'ContactPersonanme':formData.ContactPersonanme,
+                    'Cmobile':formData.Cmobile,
+                    'Cemail':formData.Cemail,
+                    'organisedby':formData.organisedby,
+                    'sponserby':formData.sponserby,
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                     },
+                   success: function(response){
+                        alert("done");
+<!--                        console.log(formData)-->
+                         window.open("/partner_visibility/");
+
+                     }
+                });
+
+
+            }
+
+
+        });
+    });
+</script>
+
+    {% endblock %}

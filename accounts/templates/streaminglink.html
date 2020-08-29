@@ -1,0 +1,608 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>Health Perigon </title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+		
+		<style>
+			.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;   
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+.btn-facebook {
+    background-color: #405D9D;
+    color: #fff;
+}
+.btn-twitter {
+    background-color: #42AEEC;
+    color: #fff;
+}
+		</style>
+		
+		<style>
+			.center {
+    margin-top:50px;   
+}
+
+.modal-header {
+	padding-bottom: 5px;
+}
+.modal-content{
+	background-color:#f7f7f7 !important;
+
+}
+.modal-footer {
+    	padding: 0;
+	}
+    
+.modal-footer .btn-group button {
+	height:40px;
+	border-top-left-radius : 0;
+	border-top-right-radius : 0;
+	border: none;
+	border-right: 1px solid #ddd;
+}
+	
+.modal-footer .btn-group:last-child > button {
+	border-right: 0;
+}
+
+
+.form-signin
+{
+    max-width: 330px;
+    padding: 15px;
+    margin: 0 auto;
+}
+.form-signin .form-signin-heading, .form-signin .checkbox
+{
+    margin-bottom: 10px;
+}
+.form-signin .checkbox
+{
+    font-weight: normal;
+}
+.form-signin .form-control
+{
+    position: relative;
+    font-size: 16px;
+    height: auto;
+    padding: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.form-signin .form-control:focus
+{
+    z-index: 2;
+}
+.form-signin input[type="text"]
+{
+    margin-bottom: -1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"]
+{
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.account-wall
+{
+    margin-top: 0px;
+    padding: 40px 0px 20px 0px;
+    background-color: #f7f7f7;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+.login-title
+{
+    color: #cd2628;
+    font-size: 23px;
+    font-weight: 400;
+    display: block;
+}
+.profile-img
+{
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    
+}
+.need-help
+{
+    margin-top: 10px;
+}
+.new-account
+{
+    display: block;
+    margin-top: 10px;
+}
+		
+		</style>
+		
+		
+		<style>
+			.mid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top:1em;
+}
+
+
+/* Switch starts here */
+.rocker {
+  display: inline-block;
+  position: relative;
+  /*
+  SIZE OF SWITCH
+  ==============
+  All sizes are in em - therefore
+  changing the font-size here
+  will change the size of the switch.
+  See .rocker-small below as example.
+  */
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: #888;
+  width: 7em;
+  height: 4em;
+  overflow: hidden;
+  border-bottom: 0.5em solid #eee;
+}
+
+.rocker-small {
+  font-size: 0.75em; /* Sizes the switch */
+  margin: 1em;
+}
+
+.rocker::before {
+  content: "";
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #999;
+  border: 0.5em solid #eee;
+  border-bottom: 0;
+}
+
+.rocker input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-left,
+.switch-right {
+  cursor: pointer;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5em;
+  width: 3em;
+  transition: 0.2s;
+}
+
+.switch-left {
+  height: 2.4em;
+  width: 2.75em;
+  left: 0.85em;
+  bottom: 0.4em;
+  background-color: #ddd;
+  transform: rotate(15deg) skewX(15deg);
+}
+
+.switch-right {
+  right: 0.5em;
+  bottom: 0;
+  background-color: #76c306;
+  color: #fff;
+}
+
+.switch-left::before,
+.switch-right::before {
+  content: "";
+  position: absolute;
+  width: 0.4em;
+  height: 2.45em;
+  bottom: -0.45em;
+  background-color: #ccc;
+  transform: skewY(-65deg);
+}
+
+.switch-left::before {
+  left: -0.4em;
+}
+
+.switch-right::before {
+  right: -0.375em;
+  background-color: transparent;
+  transform: skewY(65deg);
+}
+
+input:checked + .switch-left {
+  background-color: #d0002b;
+  color: #fff;
+  bottom: 0px;
+  left: 0.5em;
+  height: 2.5em;
+  width: 3em;
+  transform: rotate(0deg) skewX(0deg);
+}
+
+input:checked + .switch-left::before {
+  background-color: transparent;
+  width: 3.0833em;
+}
+
+input:checked + .switch-left + .switch-right {
+  background-color: #ddd;
+  color: #888;
+  bottom: 0.4em;
+  right: 0.8em;
+  height: 2.4em;
+  width: 2.75em;
+  transform: rotate(-15deg) skewX(-15deg);
+}
+
+input:checked + .switch-left + .switch-right::before {
+  background-color: #ccc;
+}
+
+/* Keyboard Users */
+input:focus + .switch-left {
+  color: #333;
+}
+
+input:checked:focus + .switch-left {
+  color: #fff;
+}
+
+input:focus + .switch-left + .switch-right {
+  color: #fff;
+}
+
+input:checked:focus + .switch-left + .switch-right {
+  color: #333;
+}
+	
+	
+	
+	
+	
+	
+	
+:root {
+  --backgroundColor: rgba(246, 241, 209);
+  --colorShadeA: #a9a4a4;
+  --colorShadeB: rgb(121, 186, 156);
+  --colorShadeC: #4a4949d9;
+  --colorShadeD: #000;
+  --colorShadeE: #cd2628ba;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  font-size: 15px;
+  color: #e3d200;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: inherit;
+}
+
+button.big-button {
+  padding: 1% 8%;
+   border: 2px solid var(--colorShadeA);
+  border-radius: 1em;
+  background: var(--colorShadeE);
+transform-style: preserve-3d;
+   transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+button.big-button::before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--colorShadeC);
+  border-radius: inherit;
+    box-shadow: 0 0.25em 0 0 var(--colorShadeA);
+ transform: translate3d(0, 0.55em, -1em);
+     transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+
+button.big-button:hover {
+  background: var(--colorShadeD);
+  transform: translate(0, 0.375em);
+}
+
+button.big-button:hover::before {
+  transform: translate3d(0, 0.75em, -1em);
+}
+
+button.big-button:active {
+            transform: translate(0em, 0.75em);
+}
+
+button.big-button:active::before {
+  transform: translate3d(0, 0, -1em);
+  
+      box-shadow: 0 0.25em 0 0 var(--colorShadeB);
+
+}
+
+.hh{
+    background: #b2b2b2;
+    
+    min-height: 700px;
+	}
+	.threepart1{
+		display:none;
+		}
+		
+
+		</style>
+		
+		
+		<style>
+			@media only screen and (min-device-width : 200px) and (max-device-width : 575px) {
+				.threepart{
+					display:none;
+			}
+			
+			.hh{
+				
+				min-height: 200px;
+				}
+			
+			.threepart1{
+					display:block !important;
+					min-height:200px;
+			}
+		}
+
+	
+		</style>
+		
+		
+		
+		
+		
+		
+    </head>
+    <body>	
+    <!--<header>
+	    <div class="header" >
+		    <div class="container">
+			    <div class="header-left-side">
+				    <div class="logo-holder">
+					    <img src="images/logo.png" class="logo" alt="Health Perigon">
+				    </div>
+				</div>
+                <div class="header-right-side">
+				    <div class="social-icons-holder">
+				        <a class="icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+				    </div>
+				</div>
+				<div class="login-btn-holder">
+		            <a class="login-btn" href="login.html">Login</a>
+				</div>
+			    
+			</div>
+	    </div>
+		<div class="container">
+			<div class="Search-box-bg">
+			    <div class="form-group header-search">
+                    <span class="fa fa-search Search-box-icon"></span>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+			</div>
+		    <nav class="navbar navbar-expand-md">
+			    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+			        <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+			    </button>
+		         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+			        <div class=" navbar-nav">
+						<a class="nav-link" href="#">Home</a>
+						<a class="nav-link" href="#">About Us</a>
+						<a class="nav-link active" href="Events.html">Event</a>
+						<a class="nav-link" href="#">Register</a>
+						<a class="nav-link " href="#">Contact Us</a>
+			        </div>
+		        </div>
+	        </nav>
+        </div>	
+    </header>-->
+	<!-- main-->
+	<div style="margin-top:1%;" ></div>
+	<div class="container-fluid">
+		
+		<div style="background:#fff" class="main">
+		
+		
+		<div style="margin-top:3%" class="row">
+			<div class="col-md-12">
+					<img class="d-block w-100 " src="https://healthperigon.net/media/{{ object.streaming_header }}" alt="Health Perigon Event">
+			</div>
+		
+		</div>
+		
+		<div style="margin-top:1%" class="row">
+		
+
+			<div class="col-lg-3 col-md-3 col-sm-3">
+				<div class="hh">
+				    <img class="d-block w-100 " src="https://healthperigon.net/media/{{ object.streaming_leftpanel }}" alt="Health Perigon Event">
+				</div>
+			
+			</div>
+			
+			<div class="col-lg-6 col-md-6 col-sm-6">
+			
+			<iframe id="sodmzs" width="100%" height="700"  frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			
+			</div>
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 threepart">
+			<div class="hh">
+			    <img class="d-block w-100 " src="https://healthperigon.net/media/{{ object.streaming_rightpanel }}" alt="Health Perigon Event">
+			</div>
+			
+			</div>
+			
+			
+		
+		</div>
+		
+		
+		
+		
+	</div>
+	
+	<div style="margin-top:0px;border:none;background:#00a0e373" class="main">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+				<div class="mid">
+
+					  <label class="rocker rocker-small">
+						<input type="checkbox">
+						<span class="switch-left">OFF</span>
+						<span class="switch-right">ON</span>
+					  </label>
+
+					
+
+					</div>
+					
+					<div style="margin-bottom:5%" class="text-center">
+					<button class="big-button">Q & A</button>
+					<button class="big-button">Vote</button>
+					
+					
+					
+					
+					
+					</div>
+			
+			</div>
+			
+			<div class="col-lg-3 col-md-3 col-sm-3 threepart1">
+			<div class="hh"></div>
+			
+			</div>
+		
+		</div>
+	
+	</div>
+		
+		
+		
+		
+		
+		
+		
+	</div>
+	<footer  class="footer">
+	    <div class="container">
+		    <div class="copyright"> 
+			    <p>Copyright © Health Perigon 2020. All Rights Reserved</p>
+			</div>
+			<div class="footer-social-icons-holder">
+				<a class="footer-icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+			        <a class="footer-icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+		    </div>
+		</div>
+	</footer>
+
+	
+
+
+	
+	<script>
+	url = "{{ module.streaming_link }}";
+	console.log(url);
+	var id = url.substring(url.lastIndexOf('=') + 1);
+	document.getElementById('sodmzs').src = "https://www.youtube-nocookie.com/embed/" + id;
+	console.log(id);
+	    function selectFormType() {
+        if (document.getElementById('hdc').checked) {
+            document.getElementById('hdcform').style.display = 'block';
+        }
+         else document.getElementById('hdcform').style.display = 'none';
+		  
+		if (document.getElementById('individual').checked) {
+            document.getElementById('individualform').style.display = 'block';
+        }
+         else document.getElementById('individualform').style.display = 'none';
+		}
+	</script>
+
+    <script>
+	    function paymentCheck() {
+        if (document.getElementById('pay').checked) {
+            document.getElementById('payselect').style.display = 'inline-block';
+        }
+         else document.getElementById('payselect').style.display = 'none';
+        
+		if (document.getElementById('usecode').checked) {
+            document.getElementById('usecodeselect').style.display = 'inline-block';
+        }
+         else document.getElementById('usecodeselect').style.display = 'none';
+        }	
+	</script>
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>{% block title %} {% endblock %} - Health Perigon</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mastars.css' %}">
+
+	    <link rel="stylesheet" type="text/css" href="{% static 'js/libs/DataTables/datatables.min.css' %}"/>
+	    <link  rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />
+	    <style>
+	    	.dataTables_filter { display: none; }
+	    </style>
+    </head>
+    <body>
+	<nav class="header" >
+		<div class="container-fluid">
+		    <div class="row">
+		        <div class="col-md-12">
+				    <div class="navbar-expand-md logo-holder">
+					    <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon">
+				    </div>
+			        <div class="logout-btn-holder">
+		                <a class="logout" href="{% url 'logout_view' %}">Log Out</a>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</nav>
+
+    {% block body %}
+         <div class="content-holder">
+                    {% if messages %}
+					{% for message in messages %}
+						<div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+                </div>
+	<hr>
+                <div class="col 10">
+                <form method="POST" action="{% url 'Custom_user_list' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input value="submit" class="btn btn-primary" type="submit">
+
+                </form>
+            </div>
+    {% endblock %}
+
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+	<script src="{% static 'js/libs/DataTables/datatables.min.js' %}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+
+    {% block javascript %}
+    {% endblock %}
+</body>
+</html>

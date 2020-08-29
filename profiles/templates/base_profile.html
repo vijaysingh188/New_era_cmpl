@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %} {% endblock %} HDC - HOSPITAL</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/mastars.css' %}" />
+        <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/css/smoothness/jquery-ui-1.10.0.custom.min.css" />
+        <style>
+            .dataTables_filter { display: none; }
+
+            #sty1{
+            width:120px;
+            height:10px;
+            padding:10px;
+            }
+
+        </style>
+        
+    </head>
+    <body>
+        <nav class="header">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="navbar-expand-md logo-holder">
+                            <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon" />
+                        </div>
+                        <div class="logout-btn-holder">
+                            <a class="logout" href="{% url 'logout_view' %}">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="aside">
+            <nav class="navbar navbar-expand-md">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        {% if request.user.useraddebyindvidualdoctor %}
+                        <a class="nav-link {% ifequal request.path '/profile_individual_doctor/'%} active {% endifequal%}" href="{% url 'profile_individual_doctor' %}">User- My Profile</a>
+                        {% else %}
+                        <a class="nav-link {% ifequal request.path '/profile_individual_doctor/'%} active {% endifequal%}" href="{% url 'profile_individual_doctor' %}">User- My Profile</a>
+                        <a class="nav-link {% ifequal request.path 'individual_doctor_user_creation'%} active {% endifequal%}" href="{% url 'individual_doctor_user_creation' %}">User-Creation</a>
+                        <a class="nav-link {{page_act}}" href="{% url 'individual_doctor_user_list' %}">User-List</a>
+                        {%endif%}
+                        <!--<a class="nav-link active" href="Profile_HDC_Individual_Doctor.html">Another Tab</a>-->
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+    {% block body %}
+
+    {% endblock %}
+
+    <script src="{% static 'js/libs/DataTables/datatables.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+
+    {% block javascript %}
+    {% endblock %}
+</body>
+</html>

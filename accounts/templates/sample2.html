@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Subscription Master - Module Master {% endblock %}
+
+{% block body %}
+
+           <div class="main">
+            <div class="inner-navbar">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" href="Subscription_Master-Existing_Module_Master.html">Single Investigation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="Subscription_Master-Existing_Add-on_Services.html">Panel Investigation</a></li>
+                       
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="content-holder">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <h5 class="title-holder">Create Laboratory Module </h5>
+                            <div class="btn-holder">
+                                <a class="link-btn" href="{% url 'laboratorytable' %}">Back to list</a>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            
+                                           
+                                            <div class="col-md-4 mb-3">
+                                            <label for=""> Investigation Name <span class="red-color"> * </span></label>
+                                            {{ rag.investigationname | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label>Synonyms<span class="red-color">  </span></label>
+                                        {{ rag.synonyms |  add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Important Notes <span class="red-color">  </span></label>
+                                            {{ rag.importantnotes | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Display result Field <span class="red-color"> * </span></label>
+                                                <label><input type="radio"name="shipping" id="rd1">Empty Textbox</label>
+                                                <label><input type="radio" name="shipping" id="rd2">Pre-Define Dropdown</label>
+                                                
+                                           </div>
+                                           
+                                                 <div class="col-md-4 mb-3" id="sty1">
+                                                   <label>Display DropDownList</label>
+                                            
+                                              {{ rag.selectdropdownlist }}
+                                                   </div>
+                                            
+
+                                                 <div class="col-md-4 mb-3" id="sty1">
+                                          <label>Select<span class="red-color"> * </span></label>
+                                                {{ rag.select | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                   
+
+
+                                        
+                            <div class="row">
+                                <form method="post" id="insert_form">
+                            <div class="col-md-12" id="sty">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="datatable">
+                                        <thead>
+                                           
+                                                <th colspan="3" style="border-bottom: 0px; ">&nbsp;</th>
+                                                 <th colspan="2" style="border-bottom: 0px; "> Refrence range(UMO1)</th>
+                                                 <th colspan="1" style="border-bottom: 0px; "> Conversition To Digits</th>
+                                                 <th colspan="1" style="border-bottom: 0px; "> Refrence Range(UMO1)</th>
+                                                 <th colspan="1" style="border-bottom: 0px; "> Refrence Range(UMO2)</th>
+                                                  <th colspan="1" style="border-bottom: 0px; "> Action</th>
+                                               </thead>
+                                                 <tbody id = "data_table">
+                                                 </tr>
+                                            <tr id="input_row">
+                                                <th style="display: none;">Date</th
+                                                >
+                                             
+                                                <div class="col-md-1 mb-1" id="from">
+                                                <th id ="1">
+                                                <label>From <span class="red-color"> * </span></label>
+                                                {{ rag.froms | add_class:'form-control' }}
+                                                </th>
+                                                </div>
+                                                
+                                               
+                                                   
+                                                 <th id="2">
+                                                <label>To <span class="red-color" id="to"> * </span></label>
+                                              {{ reg.to | add_class:'form-control' }}
+                                            </th>
+                                                 <th id="3">
+                                                <label>Gender <span class="red-color" id="gen"> * </span></label>
+                                                {{ reg.gender | add_class:'form-control' }}
+                                            </th>
+                                                <th id="4">
+                                                <label>UMO1 <span class="red-color" >  </span></label>
+                                                {{ reg.umo1 | add_class:'form-control' }}
+                                            </th>
+                                                 <th id="5">
+                                                <label>UMO2 <span class="red-color" >  </span></label>
+                                                {{ reg.umo2 | add_class:'form-control' }}
+                                            </th>
+                                                 <th id="6">
+                                                    <label> <span class="red-color" >  </span></label>
+                                       
+                                              {{ reg.conversationfactor | add_class:'form-control' }}
+                                            
+                                                   
+                                                 </th>
+                                                 <th id="7">
+                                                
+                                                 <span class="red-color">  </span></label>
+                                                {{ reg.refrencerange }}
+                                            </th>
+                                                
+                                                  <th id="7">
+                                                
+                                                 <span class="red-color">  </span></label>
+                                                {{ reg.high  }}
+                                            </th>
+                                            <th>
+                                                
+                                            <div class="btn btn-danger btn-sm remove"><span class='glyphicon-minus'></span></div>
+                                        </th>
+                                            </tr>
+                                          </tbody>
+                                        
+                                        </table>
+
+       </div>
+   </div>
+</div>
+
+
+
+                                                </div>
+                                                <div class="text-right">
+                                                     <button class="remove" name="remove">Add New Row</button>
+                                                     <button id="newrow" >Update Row</button>
+                                                 </div>
+                                   
+                                            <div class="col-md-12">
+                                                <div class="text-center">
+                                                 
+                                                <div class="mybtn-holder">
+                                                  <button class="mybtn" data-toggle="collapse" data-target="#demo">Cancel</button>
+                                                    <button class="mybtn" type="submit">Add</button>
+                                                    
+                                                
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="text-right">
+                                                     
+                                                 </div>
+                                   
+
+                                            
+   {% endblock %}
+    
+    {% block javascript %}
+    <script>
+     $(function() {
+        $('#rd1').click('click',function(){
+            $('#sty1').toggle('#sty1');
+    });
+    });
+        $(function() {
+        $('#rd2').click('click',function(){
+            $('#sty').toggle();
+    });
+    })
+  
+ $(function() {
+            $('#newrow').click('.add',function() {
+                var froms="<tr id='data_table'>"
+                     
+                    froms+="<td><input type='text' name='empname' placeholder='Enter name' id='1' class='form-control' ></td>"
+                    
+                   
+                  
+                    froms+="<td><input type='text' name='froms' placeholder='Enter date from' id='2' class='form-control'></td>"
+                    froms+="<td><input type='text' name='to' placeholder='Enter Date to' id='3'class='form-control'></td>"
+                    froms+="<td><input type='text' name='gender' placeholder='Enter Gender' id='4'class='form-control'></td>"
+                    froms+="<td><input type='text' name='salary' placeholder='Enter UMO1'id='5' class='form-control'></td>"
+                    froms+="<td><input type='text' name='salary' placeholder='Enter UMO2' id='6'class='form-control'></td>"
+                     froms+="<td>High <input type='radio' name='high' placeholder='Enter sal' id='7'><br>Low<input type='radio' name='high' placeholder='Enter Conversation Digits'id='7' ></td>"
+                    
+                   
+                    froms+="<td>High <input type='radio' name='high' placeholder='click umo1' id='datatable'><br>Low<input type='radio' name='high' placeholder='click umo2' ></td>"
+                    froms+="<td><button type ='button' name ='remove' class='btn btn-danger btn-sm remove'><span class='glyphicon-minus'></span></button></td>";
+                    froms+="</tr>"
+                    var table_element = document.getElementById("data_table");
+                    tablebody=$("table tbody")
+                    tablebody.append(froms)
+                });
+       $(document).on('click', '.remove' ,function(){
+         document.getElementById("input_row").remove();
+                });
+        var table_element = document.getElementById("input_row");
+     table_element.innerHTML = table_element.innerHTML + data_row;
+      function save_row()
+  {
+     var field_val1 = document.getElementById("1").value;
+     var field_val2 = document.getElementById("2").value; 
+     var field_val3 = document.getElementById("3").value;
+     var field_val4= document.getElementById("4").value;  
+     var field_val5 = document.getElementById("5").value;
+     var field_val6 = document.getElementById("6").value;
+     var field_val7 = document.getElementById("7").value;
+     }    
+
+
+  
+
+      $.ajax({
+          method: 'POST',
+          url: '{% url 'update_database' %}',
+          data: { from:field_val1,
+                   to:field_val2,
+                   gender:field_val3,
+                   umo1:field_val4,
+                   umo2:field_val5,
+                   umo:field_val6,           
+                   refrencerange:field_val7,   
+
+                  },
+                  success:function(response){
+                  var table_element = document.getElementById("data_table");
+                  table_element.innerHTML = "";
+                },
+                 error: function (response) {
+
+                alert("Something Went Wrong")
+              },
+           });
+
+      });
+
+
+             
+  
+
+
+   
+
+
+  
+
+
+
+  
+  
+    </script>
+    {% endblock %}
+
+</body>
+</html>

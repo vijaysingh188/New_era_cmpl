@@ -1,0 +1,328 @@
+/* css Health perigon 2020*/
+ *{
+    padding:0;
+    margin:0;
+}
+body{
+    background:#fff;
+    color:#212529;
+    font-size:14px;
+    font-family: 'Roboto', Open Sans, sans-serif;
+}
+.form-control-inline {
+    display: inline-block;
+    width: 31%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.form-control-inline2 {
+    display: inline-block;
+    width: 48%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+.header{
+    border-bottom: 5px solid #D1232A;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display:block;
+    position: fixed;
+    width: 100%;
+    background: #FFF;
+    z-index: 10;
+}
+.logo-holder{
+	margin-left:25px;
+	float: left;
+}
+ .logo{
+    width:90px;
+    height:auto;
+    padding:5px;
+}
+ .logout-btn-holder{
+    text-align: end;
+    line-height: 80px;
+}
+ .logout{
+     color: rgba(0,0,0,.5);
+     background:#e5e4e2;
+     padding: 1px 45px;
+     border-radius: 100px;
+     border: 1px solid #fff;
+     box-shadow: 0px 0px 0px 6px #e5e4e2;
+}
+ .logout:hover{
+     background:#D1232A;
+     box-shadow: 0px 0px 0px 6px #D1232A;
+	 color:#fff;
+}
+ .social-icons-holder{
+    float:right;
+    margin-bottom: 30px;
+}
+ .social-icons-holder a{
+    float:left;
+}
+ .icon-style{
+     background: #5ac9f4;
+     color: #fff;
+     padding: 0px 8px;
+     font-size: 12px;
+     margin-left:8px;
+     border-radius: 50%;
+}
+ .icon{
+     width:8px;
+     height: 14px;
+}
+.aside{
+	height: 100%;
+    width:186px;
+    position:absolute;
+    z-index: 1;
+    left: 0;
+    top: 100px;
+    background-color:transparent;
+	border-right: 7px solid #e5e4e2;
+}
+.aside .navbar-expand-md .navbar-nav {
+    -ms-flex-direction:column;
+    flex-direction: column;
+}
+.aside .nav-link {
+    display: block;
+    padding: 0px;
+    background: #e5e4e2;
+    border-radius: 25px;
+    margin: 8px 0px;
+    border: 1px solid #fff;
+    box-shadow: 0px 0px 0px 4px #e5e4e2;
+    text-align: center;
+	transition: 0.3s all;
+}
+.aside .nav-link:hover{
+	box-shadow: 0px 0px 0px 4px #00adee;
+	background:#00adee;
+	color:#fff;
+	transition: 0.3s all;
+}
+.aside a{
+	color:#4d4d4d;
+}
+.aside .active{
+	background:#00ADEE;
+	box-shadow: 0px 0px 0px 4px #00adee;
+	color:#fff;
+}
+ .main{
+	padding: 103px 0px 0px 0px;
+     /*border-left: 7px solid #e5e4e2;
+	  background:#f2f2f2;*/
+	 margin-left:185px;
+}
+.content-holder{
+	background-color: #f2f2f2;
+    padding: 10px;
+    border-radius: 30px 0px 30px 0px;
+    margin-top: 10px;
+	border: 1px solid #00adee;
+}
+.bg{
+	background-color: #00adee;
+	padding: 10px;
+	border-radius: 25px 0px 25px 0px;
+}
+.inner-navbar{
+	background: #f2f2f2;
+}
+.nav-tabs .nav-link {
+    border: none;
+    background:#e5e4e2;
+    margin: 5px;
+    border-radius: 5px;
+	display: block;
+    padding: 5px 10px;
+}
+.nav-tabs .nav-link:hover {
+	background:#00adee;
+	color:#fff;
+    
+}
+.action-icons{
+	font-size:18px;
+}
+.nav-tabs {
+    border-bottom: 1px solid #00adee;
+}
+.nav-tabs a {
+	color:#4d4d4d;
+}
+
+.color{
+	color:#4d4d4d;
+}
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    background: #fff;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #00adee;
+    border-color: #dee2e6 #dee2e6 #e5e4e2;
+}
+ .navbar-toggler-icon {
+     box-shadow: 0px 0px 0px 6px #e5e4e2;
+     display: table-cell;
+     width: 79px;
+     height: 27px;
+     vertical-align: middle;
+     content: "";
+     background: #e5e4e2;
+     border: 1px solid #fff;
+     border-radius: 100px;
+}
+.tab-item{
+	margin: 10px 5px 7px 5px;
+    background: #e5e4e2;
+    padding: 5px;
+}
+.title-holder{
+	text-align: center;
+    border-bottom: 1px solid;
+    padding:5px 0px;
+	color:#4d4d4d;
+}
+.table thead th {
+    border-bottom: 1px solid #dee2e6;
+	vertical-align:middle;
+	background: #00adee;
+    color: #fff;
+}
+.table td, .table th {
+    padding:5px;
+    vertical-align:middle;
+    text-align: center;
+}
+.mybtn-holder{
+	text-align:center;
+	margin:10px;
+}
+.mybtn{
+	padding: 5px 10px;
+    background: #fff;
+    border: none;
+    box-shadow: 0px 0px 5px 0px;
+    border-radius: 5px;
+	margin: 0px 5px;
+}
+.btn-holder{
+	text-align: right;
+    padding: 0px 0px 10px 0px;
+}
+label {
+    display:block;
+    margin-bottom: 0px;
+}
+.custom-select {
+    display: inline-block;
+    width: 61%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem 1.75rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    vertical-align: inherit;
+    background: #fff url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right .75rem center/8px 10px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.red-color{
+	color:red;
+}
+.link-btn{
+	padding: 5px 10px;
+    background: #e5e4e2;
+    color: #4d4d4d;
+    box-shadow: 0px 0px 3px;
+    border-radius: 5px;
+}
+.add-btn{
+	padding: 5px 10px;
+    background: #fff;
+    border: none;
+    box-shadow: 0px 0px 5px 0px;
+    border-radius: 5px;
+}
+.input-group-text{
+	background:#fff;
+}
+.footer{
+    border-top:5px solid #D1232A;
+}
+ .copyright{
+     background:#043c50;
+     text-align:center;
+     border-radius: 100px;
+}
+ .copyright p{
+    padding:10px 5px;
+    color:#fff;
+}
+ @media (min-width: 768px) {
+   
+}
+ @media (min-width: 992px) {
+   
+}
+ @media (min-width: 1200px) {
+   
+}
+ @media (max-width:767px) {
+     .left-content{
+        width:100%;
+    }
+     .header-right-side {
+        float: right;
+        display: block;
+        width:60%;
+    }
+     .navbar-expand-md .navbar-nav .nav-link {
+        margin: 10px 30px;
+    }
+	.aside {
+		padding-top: 100px;
+		height: auto;
+		width: 100%;
+		display: block;
+		position: static;
+    }
+	 .main{
+		margin-left:0px;
+		padding-top:0px;
+}
+ 

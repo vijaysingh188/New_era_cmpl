@@ -1,0 +1,253 @@
+{% extends "base_profile.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Profile HDC - Individual Doctor {% endblock %}
+
+{% block body %}
+
+        <div class="main">
+            <div class="inner-navbar">
+
+            </div>
+            <div class="col-md-12">
+
+                <div class="content-holder mb-3">
+                    {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <h5 class="title-holder">Profile - Individual Doctor</h5>
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <form class="needs-validation" method="POST" enctype="multipart/form-data">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for="">Type of Doctor <span class="red-color"> * </span></label>
+                                                {{ form1.type_of_doctor | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label for="">Name <span class="red-color">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        {{ form1.title | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.first_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.middle_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.last_name | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="col-md-3 mb-3">
+                                                <label for="">Password <span class="red-color"> * </span></label>
+                                                {{ form1.password | add_class:'form-control' }}
+                                            </div>-->
+
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Gender <span class="red-color"> * </span></label>
+                                                {{ form2.gender | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">DOB <span class="red-color"> * </span></label>
+                                                {{ form2.dob | add_class:'form-control ' }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                Pay {{ form1.payment | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                Use Code {{ form1.usecode | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Qualification <span class="red-color"> * </span></label>
+                                                {{ form2.qualification | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Specialty 1<span class="red-color"> * </span></label>
+                                                {{ form2.speciality1 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Specialty 2 </label>
+                                                {{ form2.speciality2 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label>Specialty 3 </label>
+                                                {{ form2.speciality3 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="lastName">Practicing Since</label>
+                                                {{ form2.practicing_since | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="lastName">Medical Council Registration Number*<span class="red-color"> * </span></label>
+                                                <div class="row">
+                                                    <div class="col-md-4 padding-right">
+                                                        {{ form2.reg_no_state | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-4 padding-right-left">
+                                                        {{ form2.reg_no_number | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-4 padding-left">
+                                                        {{ form2.reg_no_year | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="lastName">Upload Medical Registration Certificate</label>
+                                                {{ form2.picture }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number <span class="red-color"> * </span></label>
+                                                {{ form1.phone_no | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number 2 </label>
+                                                {{ form2.phone_no1 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Email Address <span class="red-color"> * </span></label>
+                                                {{ form1.email | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label>Email Address 2 </label>
+                                                {{ form2.email1 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="lastName">Landline No (Clinic)</label>
+                                                {{ form2.landline_no | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="lastName">Landline No (Residence)</label>
+                                                {{ form2.landline_no1 | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for=""> Clinic Address <span class="red-color">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.house_no | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.street | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.area | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.city | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.taluka | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.district | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.state | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.pincode | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.country | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 mb-3">
+                                                <label for=""> Residence Address <span class="red-color">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_house_no | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_street | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_area | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_city | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_taluka | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_district | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_state | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_pincode | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form2.res_country | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn" formmethod="post" type="submit">UPDATE PROFILE</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    {% endblock %}
+    {% block javascript %}
+    <script>
+  $(function() {
+    $( "#datetime" ).datepicker({
+      dateFormat: 'dd/mm/yy',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+  });
+});
+  </script>
+
+    {% endblock %}

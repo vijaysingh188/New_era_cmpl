@@ -1,0 +1,662 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>Health Perigon </title>
+		<meta charset="UTF-8">
+		<meta property="og:image" content="{% static 'images/logo300200.jpg' %}">
+		<meta name="viewport" content="width=device-width, initial-scale=1">	
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900' %}" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.css">
+		
+		
+		<style>
+			.tile{
+	width: 100%;
+	background:#fff;
+	border-radius:5px;
+	box-shadow:0px 2px 3px -1px rgba(151, 171, 187, 0.7);
+	float:left;
+  	transform-style: preserve-3d;
+  	margin: 10px 5px;
+
+}
+
+.header1{
+	border-bottom:1px solid #ebeff2;
+	padding:19px 0;
+	text-align:center;
+	color:#59687f;
+	font-size:600;
+	font-size:19px;	
+	position:relative;
+}
+
+.banner-img {
+	padding: 5px 5px 0;
+}
+
+.banner-img img {
+	width: 100%;
+	border-radius: 5px;
+}
+
+.dates{
+	border:1px solid #ebeff2;
+	border-radius:5px;
+	padding: 20px 0px 0px 0px;
+	margin:10px 20px;
+	font-size:16px;
+	color:#5aadef;
+	font-weight:600;	
+	overflow:auto;
+}
+.dates div{
+	float:left;
+	width:50%;
+	text-align:center;
+	position:relative;
+}
+.dates strong,
+.stats strong{
+	display:block;
+	color:#adb8c2;
+	font-size:11px;
+	font-weight:700;
+}
+.dates span{
+	width:1px;
+	height:40px;
+	position:absolute;
+	right:0;
+	top:0;	
+	background:#ebeff2;
+}
+.stats{
+	border-top:1px solid #ebeff2;
+	background:#5aadf226;
+	overflow:visible;
+	height:250px;
+	padding:15px 20px 0px 20px;
+	font-size:14px;
+	color:#000;
+	font-weight:600;
+	border-radius: 0 0 5px 5px;
+}
+.stats div{
+	border-right:1px solid #ebeff2;
+	width: 33.33333%;
+	float:left;
+	text-align:center
+}
+
+.stats div:nth-of-type(3){border:none;}
+
+div.footer {
+	text-align: center;
+	position: relative;
+	margin: 20px 5px;
+}
+
+div.footer a.Cbtn{
+	padding: 10px 25px;
+	background-color: #DADADA;
+	color: #666;
+	margin: 10px 2px;
+	font-size:12px;
+	font-weight: bold;
+	text-decoration: none;
+	border-radius: 3px;
+}
+
+div.footer a.Cbtn-primary{
+	background-color: #5AADF2;
+	color: #FFF;
+}
+
+div.footer a.Cbtn-primary:hover{
+	background-color: #7dbef5;
+}
+
+div.footer a.Cbtn-danger{
+	background-color: #cd2628;
+	color: #FFF;
+}
+
+div.footer a.Cbtn-danger:hover{
+	background-color: #fd7676;
+}
+		
+.eventnavtab{
+	margin-left: 15%;
+	margin-right: 15%;
+	
+	}
+.nav-tabs .nav-link.active{
+	background:#cd2628;
+	}
+.nav-link{
+	  
+    padding: 10px 10px;
+	}
+.start p{
+	font-size:14px;
+	}
+.ends p{
+	font-size:14px;
+	}
+	
+
+		</style>
+		
+		<style>
+			.read-more-content {
+  max-height: 0;
+  width:100% !important;
+  text-align:left !important;
+  overflow: hidden;
+  transition: max-height .5s ease;
+}
+
+.read-more-toggle {
+  display: none;
+}
+
+.read-more-toggle-label {
+  display: inline-block;
+  user-select: none;
+  cursor: pointer;
+  border: none;
+  padding: 5px;
+  margin-top:3%;
+  margin-bottom:2%;
+  font-size: 14px;
+  background: none;
+  color: #cd2628;
+}
+
+.read-more-toggle-label:after {
+
+  content: "read more \f107";
+  font-family: "FontAwesome";
+  display: inline-block;
+  font-size:17px;
+}
+
+.read-more-toggle:checked + .read-more-content {
+  display: block;
+  /* css animation won't work with "auto"; set to some height larger
+	than the content */
+  max-height: 1000px;
+}
+
+.read-more-toggle:checked + .read-more-content + .read-more-toggle-label:after {
+  content: " read less \f106";
+  font-family: "FontAwesome";
+  font-size:17px;
+}
+
+article {
+  border-bottom: none;
+}
+
+article p {
+  margin-bottom: .5em;
+}
+
+
+
+
+
+
+.scroll_text{
+	height:100px;
+	overflow:auto;
+	padding:0px 0px;
+}
+.scroll_text::-webkit-scrollbar {  
+    width: 8px;  
+}  
+.scroll_text::-webkit-scrollbar-track {  
+    background-color: #E7E7E7
+}  
+.scroll_text::-webkit-scrollbar-thumb {  
+   background-color: rgba(223, 86, 86, 0.69);
+border: 1px solid rgba(92, 92, 92, 0.5);
+border-radius: 10px;
+}  
+.scroll_text::-webkit-scrollbar-thumb:hover {  
+    background-color: #000;  
+	
+}  
+
+
+		
+		</style>
+		
+		<style>
+			@media only screen and (min-device-width : 200px) and (max-device-width : 375px) {
+				div.footer a.Cbtn{
+					font-size:7px;
+				
+				}
+				.modal-content{
+					width:100% !important;
+					margin-left:0% !important;
+
+				}
+			}
+			
+			@media only screen and (min-device-width : 425px) and (max-device-width : 991px) {
+				div.footer a.Cbtn{
+					font-size:7px;
+					padding: 7px 20px;
+					
+				
+				}
+				.modal-content{
+					width:100% !important;
+					margin-left:0% !important;
+					
+
+				}
+			}
+		
+		</style>
+		
+		<style>
+		.modal .modal-header {
+  border-bottom: none;
+  position: relative;
+}
+.modal-content{
+	width:80%;
+	margin-left:10%;
+
+}
+.modal .modal-header .btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.modal .modal-footer {
+  border-top: none;
+  padding: 0;
+}
+.modal .modal-footer .btn-group > .btn:first-child {
+  border-bottom-left-radius: 0;
+}
+.modal .modal-footer .btn-group > .btn:last-child {
+  border-top-right-radius: 0;
+}
+		.modalbtn{
+		background: none;
+    border: none;
+    color: #cd2628;
+    float: right;
+    margin: 2% 0% 2% 0%;
+	text-decoration:underline;
+}
+	.modalbtn:hover{
+	background:none;
+	border:none;
+	color: #cd2628;
+	}
+	
+		</style>
+		
+		
+		
+		
+		
+        
+    </head>
+    <body>	
+     <header>
+	    <div class="header" >
+		    <div class="container">
+			    <div class="header-left-side">
+				    <div class="logo-holder">
+					    <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon">
+				    </div>
+				</div>
+                <div class="header-right-side">
+				    <div class="social-icons-holder">
+				        <a class="icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+				    </div>
+				</div>
+				<div class="login-btn-holder">
+		            <a class="login-btn" href="{% url 'login_view_admin' %}">Login</a>
+				</div>
+			    
+			</div>
+	    </div>
+		<div class="container">
+			<div class="Search-box-bg">
+			    <div class="form-group header-search">
+                    <span class="fa fa-search Search-box-icon"></span>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+			</div>
+		    <nav class="navbar navbar-expand-md">
+			    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+			        <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+			    </button>
+		         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+			        <div class=" navbar-nav">
+						<a class="nav-link" href="{% url 'home' %}">Home</a>
+						<a class="nav-link" href="{% url 'aboutus' %}">About Us</a>
+						<a class="nav-link active" href="{% url 'show_events' %}">Event</a>
+						<a class="nav-link" href="{% url 'register' %}">Register</a>
+						<a class="nav-link " href="{% url 'contact' %}">Contact Us</a>
+			        </div>
+		        </div>
+	        </nav>
+        </div>	
+    </header>
+	<div class="container">
+		<div class="main">
+		    <div class="AboutUs-section">
+				<div class="row">
+				    <div class="col-md-12">
+					
+					
+					<!--<div class="Aboutus-slider-content">
+						<img class="d-block w-100 carv" src="images/eventpagebanner.jpg" alt="Health Perigon Event">
+					</div>-->
+					
+					<br><br>
+						<nav>
+                          
+                    <div class="nav nav-tabs nav-fill eventnavtab" id="nav-tab" role="tablist">
+                      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Upcoming Events</a>
+                     
+                      <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Past Events</a>
+                      
+                    </div>
+                  </nav>
+                  <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                    <div class="tab-pane fade show Aboutus-text active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                      
+					  <div class="row">
+						{% for object in objects %}
+						<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+							<div class="tile">
+								<div class="wrapper">
+									<div class="header1">{{ object.webregister.eventtitle }}</div>
+
+									<div class="banner-img">
+										<img src="{% static 'images/event.jpg' %}" alt="Image 1">
+									</div>
+
+									<div class="dates">
+										<div class="start">
+											<strong>STARTS</strong>
+											<p>{{ object.webregister.created_on | date:"fA d M Y"}}</p>
+											<span></span>
+										</div>
+										<div class="ends">
+											<strong>ENDS</strong>
+											<p>{{ object.webregister.ends_on | date:"fA d M Y"}}</p>
+										</div>
+									</div>
+								
+									<div class="stats">
+									<h6 style="text-align:center">Webinar for {{ object.webregister.targetaudiance }}</h6>
+									
+									<hr>
+					                
+									{% if object.webregister.organizedby != "" %}
+									<p style="font-weight:500">Organized By: <span style="font-weight:300">{{ object.webregister.organizedby }}</span></p>
+									{%endif%}
+									{% if object.webregister.sponserby != "" %}
+									<p style="font-weight:500">Supported By: <span style="font-weight:300">{{ object.webregister.sponserby }}</span></p>
+									{%endif%}
+										<!--<a data-toggle="modal" href="#myModal1" class="modalbtn">Detailed Programme</a>-->
+	
+									</div>
+
+									<div style="background:none" class="footer">
+										<a href="{% url 'event_register_form' object.webregister.id %}" class="Cbtn Cbtn-primary">Register Now</a>a>
+										
+										{% if object.webregister.streaming_link != None %}
+										<a href="{% url 'streaming' object.webregister.id %}" class="Cbtn Cbtn-danger">Join Event</a>
+									    {%endif%}
+										
+									</div>
+								</div>
+							</div> 
+						</div>
+						{% endfor %}
+						
+						
+					</div>
+					
+					
+					  
+                    </div>
+                   
+                    <div class="tab-pane fade Aboutus-text" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                      <div class="row">
+					  {% for past in past_event %}
+					  <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+							<div class="tile">
+								<div class="wrapper">
+									<div class="header1">{{ past.webregister.eventtitle }}</div>
+
+									<div class="banner-img">
+										<img src="{% static 'images/event.jpg' %}" alt="Image 1">
+									</div>
+
+									<div class="dates">
+										<div class="start">
+											<strong>STARTS</strong>
+											<p>{{ past.webregister.created_on }}</p>
+											<span></span>
+										</div>
+										<div class="ends">
+											<strong>ENDS</strong>
+											<p>{{ past.webregister.ends_on }}</p>
+										</div>
+									</div>
+								
+									<div class="stats">
+									
+									<h6>Event Type: <span style="font-weight:300">{{ past.eventtype }}</span></h6>
+									
+									<h6>Target Audience: <span style="font-weight:300">{{ past.targetaudiance }}</span></h6>
+									
+									<h6>Speaker</h6>
+									<ul style="font-weight:300;margin-left:6%">
+										<li>{{ past.webregister.Moderatorname }}</li>
+										<li>{{ past.webregister.Chairpersons}}</li>
+										<li>{{ past.webregister.ContactPersonanme }}</li>
+									</ul>
+									<h6>Session Info</h6>
+										<p style="font-weight:300">Et et consectetur ipsum labore excepteur est proident excepteur ad velit occaecat qui minim occaecat veniam. </p>
+					 
+									</div>
+
+									<div style="background:none" class="footer">
+										<a href="javascript:void(0)" class="Cbtn Cbtn-primary">View Recoring</a>
+										
+									</div>
+								</div>
+							</div> 
+						</div>
+						{% endfor %}
+						
+					</div>
+                    </div>
+                    
+                  </div>
+                       
+						
+						
+						
+                       
+						
+					</div>
+				</div>	 
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<!-- Modal1 -->
+	<div id="myModal1" class="modal fade in">
+        <div class="modal-dialog">
+            <div class="modal-content">
+ 
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <!--<h4 class="modal-title">Event Title</h4>-->
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">×</span>
+					</button>
+                </div>
+                <div class="modal-body">
+					<div class="banner-img">
+						<img src="images/event.jpg" alt="Image 1">
+					</div>
+                    <h6 style="padding-top:2%" class="text-center">Event Name</h6>
+					<hr>
+					
+					<div class="scroll_text">
+						<p style="font-weight:500">Session Name: <span style="font-weight:300">Name of the person</span></p>
+									
+						<p style="font-weight:500">Chairperson Name: <span style="font-weight:300">Name of the person</span></p>
+						
+						<p style="font-weight:500">Topic Name: <span style="font-weight:300">Name of topic</span></p>
+									
+						<p style="font-weight:500">Topic Time: <span style="font-weight:300">28/09/2020 10:00AM</span></p>
+						
+						<p style="font-weight:500">Speaker Name: <span style="font-weight:300">Name of the speaker</span></p>
+					
+					</div>
+                    
+                </div>
+               
+ 
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+	
+	<!-- Modal1 -->
+	<div id="myModal2" class="modal fade in">
+        <div class="modal-dialog">
+            <div class="modal-content">
+ 
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <!--<h4 class="modal-title">Event Title</h4>-->
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">×</span>
+					</button>
+                </div>
+                <div class="modal-body">
+					<div class="banner-img">
+						<img src="images/event.jpg" alt="Image 1">
+					</div>
+                    <h6 style="padding-top:2%" class="text-center">Event Name</h6>
+					<hr>
+					
+					<div class="scroll_text">
+						
+									
+						<p style="font-weight:500">Chairperson Name: <span style="font-weight:300">Name of the person</span></p>
+						
+						<p style="font-weight:500">Topic Name: <span style="font-weight:300">Name of topic</span></p>
+									
+						<p style="font-weight:500">Topic Time: <span style="font-weight:300">28/09/2020 10:00AM</span></p>
+						
+						<p style="font-weight:500">Speaker Name: <span style="font-weight:300">Name of the speaker</span></p>
+					
+					</div>
+                    
+                </div>
+               
+ 
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+	
+	<!-- Modal1 -->
+	<div id="myModal3" class="modal fade in">
+        <div class="modal-dialog">
+            <div class="modal-content">
+ 
+                <div class="modal-header">
+                    <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
+                    <!--<h4 class="modal-title">Event Title</h4>-->
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					  <span aria-hidden="true">×</span>
+					</button>
+                </div>
+                <div class="modal-body">
+					<div class="banner-img">
+						<img src="images/event.jpg" alt="Image 1">
+					</div>
+                    <h6 style="padding-top:2%" class="text-center">Event Name</h6>
+					<hr>
+					
+					<div class="scroll_text">
+						<p style="font-weight:500">Session Name: <span style="font-weight:300">Name of the person</span></p>
+									
+						<p style="font-weight:500">Chairperson Name: <span style="font-weight:300">Name of the person</span></p>
+						
+						<p style="font-weight:500">Topic Name: <span style="font-weight:300">Name of topic</span></p>
+									
+						<p style="font-weight:500">Topic Time: <span style="font-weight:300">28/09/2020 10:00AM</span></p>
+						
+						<p style="font-weight:500">Speaker Name: <span style="font-weight:300">Name of the speaker</span></p>
+					
+					</div>
+                    
+                </div>
+               
+ 
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dalog -->
+    </div><!-- /.modal -->
+	
+	
+	
+	<footer class="footer">
+	    <div class="container">
+		    <div class="copyright"> 
+			    <p>Copyright © Health Perigon 2020. All Rights Reserved</p>
+			</div>
+			<div class="footer-social-icons-holder">
+				<a class="footer-icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+			        <a class="footer-icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+		    </div>
+		</div>
+	<footer>
+	
+	
+
+
+
+
+
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block title %} Subscription Master - Event Create {% endblock %}
+
+{% block body %}
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--    <head>-->
+<!--		<title>Health Perigon - Subscription Master - Module Master</title>-->
+<!--		<meta charset="UTF-8">-->
+<!--		<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>-->
+<!--		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">-->
+<!--		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">-->
+<!--		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >-->
+<!--		<link rel="stylesheet" type="text/css" href="{% static 'css/mastars.css' %}">-->
+
+		<style>
+			.table td, .table th {
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
+}
+		.modal-header{
+
+		padding: 5px 9px;
+		}
+
+		</style>
+<!--    </head>-->
+<!--    <body>-->
+<!--	<nav class="header" >-->
+<!--		<div class="container-fluid">-->
+<!--		    <div class="row">-->
+<!--		        <div class="col-md-12">-->
+<!--				    <div class="navbar-expand-md logo-holder">-->
+<!--					    <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon">-->
+<!--				    </div>-->
+<!--			        <div class="logout-btn-holder">-->
+<!--		                <a class="logout" href="#">Log Out</a>-->
+<!--		            </div>-->
+<!--		        </div>-->
+<!--		    </div>-->
+<!--		</div>-->
+<!--	</nav>-->
+<!--	<div class="aside">-->
+<!--	    <nav class="navbar navbar-expand-md">-->
+<!--			<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">-->
+<!--			    <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>-->
+<!--		    </button>-->
+<!--			<div class="collapse navbar-collapse" id="navbarCollapse">-->
+<!--				<div class=" navbar-nav">-->
+<!--				    <a class="nav-link " href="#">Dashboard</a>-->
+<!--					<a class="nav-link" href="#">Subscription Master</a>-->
+<!--					<a class="nav-link" href="#">Subscriber Registry</a>-->
+<!--					<a class="nav-link" href="#">Pharmacy Master</a>-->
+<!--					<a class="nav-link" href="#">Laboratory Master</a>-->
+<!--					<a class="nav-link" href="#">Recently Added</a>-->
+<!--					<a class="nav-link" href="#">Reword Master</a>-->
+<!--					<a class="nav-link" href="#">Anncouncement </a>-->
+<!--                    <a class="nav-link active" href="#">Event Registration</a>-->
+<!--				</div>-->
+<!--			</div>-->
+<!--		</nav>-->
+<!--	</div>-->
+	<div class="main">
+	    <!--<div class="inner-navbar">
+	    <div class="col-md-12">
+		    <ul class="nav nav-tabs">
+				<li class="nav-item"><a class="nav-link active" href="Event_Registration_Master-Existing_Module_Master.html">Module Master</a></li>
+				<li class="nav-item"><a class="nav-link" href="Subscription_Master-Existing_Add-on_Services.html">Add-on Services</a></li>
+				<li class="nav-item"><a class="nav-link" href="Subscription_Master-Existing_Subscription_Plan.html">Subscription Plan</a></li>
+			</ul>
+		</div>
+		</div>-->
+		<div class="col-md-12">
+			<div class="content-holder">
+				{% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+				<div class="row">
+					<div class="col-md-12 order-md-1">
+						<h5 class="title-holder">Existing Event List</h5>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="btn-holder">
+							        <a class="link-btn" href="{% url 'partner_and_event_register' %}">Add New</a>
+						        </div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+
+						<div class="col-md-3">
+							    <div class="form-group ">
+								    <span class="color">Event Type</span>
+									<div class="input-group">
+									    <input type="text" class="form-control border-right-0 border" id="search_name" name="eventtitle" placeholder="Event Title">
+								    </div>
+								</div>
+							</div>
+
+							<p id="date_filter">
+							<div class="col-md-3">
+							    <div class="form-group ">
+								    <span class="color">Start Date</span>
+									<div class="input-group">
+									    <input type="text" name="startDate" class="form-control border-right-0 border date_range_filter " id="datepicker_from" placeholder="dd/mm/yyyy">
+								    </div>
+								</div>
+							</div>
+							<div class="col-md-3" >
+
+								<div class="form-group">
+									<span class="color">End Date</span>
+									<div class="input-group">
+										<input type="text" name="endData" class="form-control border-right-0 border date_range_filter " id="datepicker_to" placeholder="dd/mm/yyyy">
+									</div>
+								</div>
+							</div>
+							</p>
+
+
+							<div class="col-md-3">
+							    <div class="form-group ">
+									<span class="color">&nbsp&nbsp</span>
+									<select class="custom-select d-block w-100" id="myDropDown" required>
+										<option value="">Target Audience</option>
+										<option value="HDC" id="HDC">HDC</option>
+										<option value="Individual" id="Individual">Individual
+										<option value="Both" id="Both">Both</option>
+
+									</select>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="table-responsive">
+									<table class="table table-bordered" id="datatable">
+										<thead>
+											<tr>
+												<th style="display: none;">Date</th>
+												<th style="display: none;">Date</th>
+												<th>Title</th>
+												<th>Event Type</th>
+												<th>Target Audience</th>
+												<th>Features(Registration\ Payment \Partner )</th>
+												<th>start Date</th>
+												<th>End date</th>
+
+												<th>Action</th>
+												<th>Streaming Link</th>
+											</tr>
+										</thead>
+										<tbody>
+                                        {% for module in module  %}
+											<tr>
+												<td style="display: none;">{{ module.created_on|date:"Y/m/d"  }}</td>
+												<td style="display: none;">{{ module.ends_on|date:"Y/m/d"  }}</td>
+												<td >{{ module.eventtitle }}</td>
+												<td>{{ module.eventtype }}</td>
+												<td>{{ module.targetaudiance }}</td>
+												<td><a href="{% url 'registerlink' module.id %}" >{{module.register_link}}</td>
+												<td>{{ module.created_on }}</td>
+												<td>{{ module.ends_on }}</td>
+
+												<td>
+													<a href="{% url 'destroyevent' module.id %}"><i class="fa fa-trash action-icons" aria-hidden="true" onclick="return confirm('Are you sure you want to delete this?')"></i></a>
+				                                    <a href="{% url 'editevent' module.id %}" tooltip="Adit"><i class="fa fa-pencil-square action-icons" aria-hidden="true"></i></a>
+												</td>
+
+												<td>
+													<a data-toggle="modal" data-target="#myModal" class="link-btn" href="#">ADD</a>
+												</td>
+
+											</tr>
+
+                                            {% endfor %}
+										</tbody>
+									</table>
+								</div>
+
+                            </div>
+						</div>
+				    </div>
+                </div>
+            </div>
+        </div>
+
+
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+
+      </div>
+      <div class="modal-body">
+
+
+
+
+                <form action="" method="post">
+                    <div class="input-group">
+
+  <input type="text" name="streaming_link" id="streaming_link" class="form-control" placeholder="Enter the streaming link">
+   <button style="line-height:1.2" id="myBtnSave" type="submit" value="sub" name="sub" class="btn btn-primary"><i class="fa fa-share"></i>ADD</button>
+</div>
+
+
+              </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+    </div>
+    {% endblock %}
+{% block javascript %}
+
+<script>
+   	$(function() {
+  var oTable = $('#datatable').DataTable({
+  	"lengthMenu": [[10, 25, 50, -1], [10, 15, 20,25]],
+    "pageLength": 10,
+    "iDisplayLength": -1,
+    "pagingType": "simple_numbers",
+    "lengthChange": false,
+  });
+  $("#search_name").on('keyup', function (){
+        $('#datatable').dataTable().fnFilter(this.value);
+    });
+
+  $("#myDropDown").change(function (event) {
+			var x = $(this).val();
+			$('#datatable').dataTable().fnFilter(x);
+	});
+
+  $("#datepicker_from").datepicker({
+    "onSelect": function(date) {
+      minDateFilter = new Date(date).getTime();
+      console.log("minDateFilter"+minDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    minDateFilter = new Date(this.value).getTime();
+    console.log("minDateFilterSecond"+minDateFilter)
+    oTable.draw();
+  });
+
+  $("#datepicker_to").datepicker({
+    "onSelect": function(date) {
+      maxDateFilter = new Date(date).getTime();
+      console.log("maxDateFilter"+maxDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    maxDateFilter = new Date(this.value).getTime();
+    oTable.draw();
+  });
+
+});
+
+// Date range filter
+minDateFilter = "";
+maxDateFilter = "";
+
+$.fn.dataTableExt.afnFiltering.push(
+  function(oSettings, aData, iDataIndex) {
+    if (typeof aData._date == 'undefined') {
+      aData._date = new Date(aData[0]).getTime();
+    }
+
+    if (minDateFilter && !isNaN(minDateFilter)) {
+    	console.log("CHECK"+aData._date)
+      if (aData._date < minDateFilter) {
+        return false;
+      }
+    }
+
+    if (maxDateFilter && !isNaN(maxDateFilter)) {
+      if (aData._date > maxDateFilter) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+);
+    </script>
+
+<script>
+
+
+
+$(document).ready(function() {
+	let formData = {
+		eventtitle: "",
+		eventtype:"",
+		targetaudiance:"",
+		streaming_link: "",
+
+	};
+
+
+	$("#datatable").on('click', 'tr', function() {
+
+		var trValue = $(this).attr('value');
+
+		var tdValue = $(this).children('td').map(function(index, val) {
+			return $(this).text();
+
+		}).toArray();
+		formData.eventtitle = tdValue[2];
+		formData.eventtype = tdValue[3];
+		formData.targetaudiance = tdValue[4];
+<!--		alert(formData.eventtitle);-->
+		console.log(formData)
+
+		$("#myBtnSave").click(function()  {
+
+			var streaming_link = $("#streaming_link").val();
+
+<!--			  code to disable datatable-->
+
+			formData.streaming_link = streaming_link;
+			$.ajax({
+				url: "{% url 'Add_streaming_link' %}",
+				type: "POST",
+				data: {
+					'eventtitle': formData.eventtitle,
+					'eventtype':formData.eventtype,
+					'targetaudiance':formData.targetaudiance,
+					'streaming_link': formData.streaming_link,
+
+				},
+
+				headers: {
+					"X-CSRFToken": "{{ csrf_token }}"
+				},
+
+				success: function(response) {
+					alert("Streaming link added succesfully");
+
+
+
+				}
+
+			});
+
+		});
+
+
+	});
+});
+</script>
+{% endblock %}

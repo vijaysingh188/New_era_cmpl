@@ -1,0 +1,179 @@
+{% extends "base_profile.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Profile Individual {% endblock %}
+
+{% block body %}
+
+        <div class="main">
+            <div class="col-md-12">
+                <div class="content-holder mb-3">
+                    {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <h5 class="title-holder">Profile - Individual </h5>
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <form class="needs-validation" method="POST">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for="">Name <span class="red-color">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        {{ form1.title | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.first_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.middle_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        {{ form1.last_name | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="col-md-3 mb-3">
+                                                <label for="">Password <span class="red-color"> * </span></label>
+                                                {{ form1.password | add_class:'form-control' }}
+                                            </div>-->
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Use Code <span class="red-color"> * </span></label>
+                                                {{ form1.usecode | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Gender <span class="red-color"> * </span></label>
+                                                {{ form2.gender | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">DOB <span class="red-color"> * </span></label>
+                                                {{ form2.dob | add_class:'form-control Contact-textbox' }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number <span class="red-color"> * </span></label>
+                                                {{ form1.phone_no | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number 2 </label>
+                                                {{ form2.phone_no1 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Email Address <span class="red-color"> * </span></label>
+                                                {{ form1.email | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label>Email Address 2 </label>
+                                                {{ form2.email1 | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label for="lastName">Landline No</label>
+                                                {{ form2.landline_no | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for=""> Residence Address <span class="red-color">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.house_no | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.street | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.area | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.city | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.taluka | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.district | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.state | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.pincode | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{ form1.country | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Relationship <span class="red-color"> * </span></label>
+                                                {{ form2.relationship | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label>Relation Name  <span class="red-color"> * </span></label>
+                                                {{ form2.relation_name | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label> Relation Mobile Number </label>
+                                                {{ form2.relation_phone_no | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-3 mb-3">
+                                                <label>Relation Email Address</label>
+                                                {{ form2.relation_email | add_class:'form-control' }}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn" type="submit">UPDATE PROFILE</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+    {% block javascript %}
+    <script>
+  $(function() {
+    $( "#datetime" ).datepicker({
+      dateFormat: 'dd/mm/yy',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+  });
+});
+  </script>
+
+    {% endblock %}

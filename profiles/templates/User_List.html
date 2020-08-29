@@ -1,0 +1,205 @@
+
+{% extends "base_profile.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Health Perigon - Individual Doctor - User List{% endblock %}
+
+{% block body %}
+{% load static %}
+    <div class="main">
+        <div class="col-md-12">
+            <div class="content-holder">
+                <div class="row">
+                    <div class="col-md-12 order-md-1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-holder">
+                                    <br>
+                                    <a class="link-btn" href="{% url 'individual_doctor_user_creation' %}">Add User</a>
+                                    <h4 class="title-holder">User List</h4>
+                                    </br>
+                                    <div class="alert alert-success text-center" id="active" role="alert" style="display:none;" >Account Active Successfully</div>
+                                    <div class="alert alert-success text-center" id="inactive" role="alert" style="display:none;" >Account Inctive Successfully</div>
+                                    <!-- <hr class="hrstyle" /> -->
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                        <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-12 form-group">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search by Perigon ID, Name, Email id, Phone Number" id="search_name">
+                                    <span class="input-group-append">
+                                    </span>
+                                </div> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="datatable" >
+                                        <thead>
+                                            <tr >
+                                                <th>S.No</th>
+                                                <th >Perigon ID</th>
+                                                <th>User Name</th>
+                                                <th>User Type</th>
+                                                <th>Email Address</th>
+                                                <th>Phone Number</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                            {% for coustmore in user_data %}
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ coustmore.special_id }}</td>
+                                                <td>{{ coustmore.first_name }} {{ coustmore.middle_name }}   {{ coustmore.last_name }}</td>
+                                                <td>{{ coustmore.type_of_doctor }}</td>
+                                                <td>{{ coustmore.email }}</td>
+                                                <td>{{ coustmore.phone_no }}</td>
+                                                <td>
+                                                    <select class="form-control"  name="status1" id="status1">
+                                                        {% if coustmore.is_active is True %}
+                                                    
+                                                        <option value="Active">Active</option>
+                                                        <option value="Inactive"> Inactive</option>
+                                                        {% else %}
+                                                        
+                                                        
+                                                        <option value="Inactive">Inactive</option>
+                                                        <option value="Active">Active</option>
+                                                        
+                                                        {%endif%}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>  
+    {% endblock %}
+    {% block javascript %}
+
+    <script src="{% static 'js/libs/DataTables/datatables.min.js' %}"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.0/jquery-ui.js"></script>
+    <script>
+   $(function() {
+  var oTable = $('#datatable').DataTable({
+    "lengthMenu": [[10, 25, 50, -1], [10, 15, 20,25]],
+    "pageLength": 3,
+    "iDisplayLength": -1,
+    "pagingType": "simple_numbers",
+    "lengthChange": false,
+  });
+  $("#search_name").on('keyup', function (){
+        $('#datatable').dataTable().fnFilter(this.value);
+    });
+
+  $("#datepicker_from").datepicker({
+    "onSelect": function(date) {
+      minDateFilter = new Date(date).getTime();
+      console.log("minDateFilter"+minDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    minDateFilter = new Date(this.value).getTime();
+    console.log("minDateFilterSecond"+minDateFilter)
+    oTable.draw();
+  });
+
+  $("#datepicker_to").datepicker({
+    "onSelect": function(date) {
+      maxDateFilter = new Date(date).getTime();
+      console.log("maxDateFilter"+maxDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    maxDateFilter = new Date(this.value).getTime();
+    oTable.draw();
+  });
+
+});
+
+// Date range filter
+minDateFilter = "";
+maxDateFilter = "";
+
+$.fn.dataTableExt.afnFiltering.push(
+  function(oSettings, aData, iDataIndex) {
+    if (typeof aData._date == 'undefined') {
+      aData._date = new Date(aData[0]).getTime();
+    }
+
+    if (minDateFilter && !isNaN(minDateFilter)) {
+        console.log("CHECK"+aData._date)
+      if (aData._date < minDateFilter) {
+        return false;
+      }
+    }
+
+    if (maxDateFilter && !isNaN(maxDateFilter)) {
+      if (aData._date > maxDateFilter) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+);
+</script>
+    <script>
+        
+        $('#datatable').find('tr').change( function(data){
+            console.log(data);
+            console.log("Clicked data");
+            var row = $(this).find('td:eq(1)').text();
+            console.log(row,"this is row");
+            // confirm("Are you sure")
+
+        $.ajax({
+          url: "{% url 'account_status_change' %}",
+          type: "GET",
+          data: {"id":row},
+          headers: { "X-CSRFToken": "{{ csrf_token }}" }, // for csrf token
+          success: function (data) {
+            console.log(data)
+            debugger;
+            if (!data.Inactive){
+                setTimeout(function(){ $('#active').show() });
+                setTimeout(function(){ $('#active').hide() },2000)
+            }
+            else{
+                setTimeout(function(){ $('#inactive').show() });
+                setTimeout(function(){ $('#inactive').hide() },2000);
+
+            }
+            
+            // location.reload()
+          },
+        });
+
+        });
+            // accountstatus
+
+        
+</script>
+    
+
+
+    {% endblock %}  

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Add-on Services {% endblock %}
+
+{% block body %}
+        <div class="main">
+            <div class="inner-navbar">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+
+                       <li class="nav-item"><a class="nav-link " href="{% url 'create_module_master' %}">Module Master</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'addservice' %}">Add-on Services</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#">Subscription Plan</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="content-holder">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <h5 class="title-holder">Generate Add-on Services</h5>
+                            <div class="btn-holder">
+                                <a class="link-btn" href="{% url 'addonservice' %}" >Back to list</a>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form class="needs-validation" method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                            <label for=""> Add-on Service <span class="red-color"> * </span></label>
+                                                {{ reg.add_onservices | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-4 mb-3">
+                                                <label>Add-on Service code<span class="red-color"> * </span></label>
+                                        {{ reg.add_on_servicescode |  add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Amount <span class="red-color"> * </span></label>
+                                                {{ reg.amount | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>CGST <span class="red-color">  </span></label>
+                                                {{ reg.cgst | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>SGST <span class="red-color">  </span></label>
+                                                {{ reg.sgst | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>GST <span class="red-color"> * </span></label>
+                                                {{ reg.gst | add_class:'form-control' }}
+                                            </div>
+
+                                            <div class="col-md-4 mb-3">
+                                                <label>Total Amount <span class="red-color"> *</span></label>
+                                                {{ reg.total_amount | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                <button class="mybtn" data-toggle="collapse" href="{% url 'addservice' %}" data-target="#demo">Cancel</button>
+                                                    <button class="mybtn" type="submit">Add</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+   {% block javascript %}
+   <script>
+function sum() {
+    var result=0;
+       var txtFirstNumberValue =document.getElementById('cgst').value;
+       var txtSecondNumberValue = document.getElementById('sgst').value;
+    if (txtFirstNumberValue !="" && txtSecondNumberValue ==""){
+        result = parseFloat(txtFirstNumberValue);
+    }else if(txtFirstNumberValue == "" && txtSecondNumberValue != ""){
+        result= parseFloat(txtSecondNumberValue);
+    }else if (txtSecondNumberValue != "" && txtFirstNumberValue != ""){
+        result = parseFloat(txtFirstNumberValue) + parseFloat(txtSecondNumberValue);
+    }
+       if (!isNaN(result)) {
+           document.getElementById('gst').value = result;
+       }
+   }
+   function sum1() {
+      // Get the ex-GST price from its form element
+var exPrice = document.getElementById("gst").value;
+var gstPrice = document.getElementById("amount").value;
+
+// Get the GST price
+var exPrice = (gstPrice* exPrice/100) ;
+var TPrice = parseFloat(gstPrice) + parseFloat(exPrice);
+
+// Set the GST price in its form element
+document.getElementById("tot_amount").value = TPrice;
+
+}
+  </script>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+     <head>
+		<title>Health Perigon </title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+    </head>
+    <body>
+	<nav class="header" >
+		<div class="container-fluid">
+		    <div class="row">
+		        <div class="col-md-12">
+				    <div class="navbar-expand-md logo-holder">
+					    <img src="{% static 'images/logo.png' %}" class="logo" alt="Health Perigon">
+				    </div>
+			        <div class="logout-btn-holder">
+		                <a class="iconstyle" href="login.html"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</nav>
+        <div class="aside">
+            <nav class="navbar navbar-expand-md">
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav">
+                        <a class="profile" href="#">
+                        <a class="profile" href="#">
+						 <i class="fa fa-user-md profileicon" aria-hidden="true"></i>
+						  <Span class="profiletext">Name</span>
+                           <span class="profiletext">Designation</span>
+						</a>
+                        <a class="nav-link active" href="#">User Creation</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="main">
+            <div class="col-md-12">
+                <div class="content-holder mb-3">
+				    <div class="btn-holder">
+                        <a class="link-btn-2" href="">Back to List</a>
+						<hr class="hrstyle" />
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <form class="needs-validation" method="POST" action="{% url 'Custom_user_list' %}">
+                                        {% csrf_token %}
+                                        <div class="row">
+										    <div class="col-md-2 col-sm-6">
+											    <label for="">User Type<span class="red-color"> * </span> :</label>
+											</div>
+										    <div class="col-md-3 mb-3">
+                                                <select class="custom-select d-block w-100" id="" required>
+                                                    <option value="">Select User Type</option>
+                                                    <option value="">Jr.Doctor</option>
+                                                    <option value="">Front desk</option>
+                                                </select>
+                                            </div>
+										</div>
+										<div class="row">
+                                            <div class="col-md-2">
+											    <label for="lastName">Name <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-8 mb-3">
+
+                                                <div class="row">
+													<div class="col-md-2 padding-right">
+                                                        <select class="custom-select d-block  w-100" id="" required>
+														    <option value="">Title</option>
+														    <option value="">Mr.</option>
+															<option value="">Mrs.</option>
+															<option value="">Ms.</option>
+															<option value="">Miss.</option>
+														</select>
+                                                    </div>
+													<div class="col-md-3 padding-right-left">
+                                                        <input type="text" class="form-control" id="" placeholder="First Name" name="first_name" value="" required />
+                                                    </div>
+													<div class="col-md-3 padding-right-left">
+                                                        <input type="text" class="form-control" id="" placeholder="Middle Name" value="" required />
+                                                    </div>
+													<div class="col-md-4 padding-left">
+                                                        <input type="text" class="form-control" id="" placeholder="Last Name" value="" required />
+                                                    </div>
+                                                </div>
+                                            </div>
+										</div>
+										<div class="row">
+										     <div class="col-md-2">
+											    <label for="">Mobile Number <span class="red-color"> * </span> : </label>
+											</div>
+										    <div class="col-md-3 mb-3">
+
+                                                <input type="text"  class="form-control" id="" value="" required />
+                                            </div>
+									    </div>
+										<div class="row">
+                                             <div class="col-md-2">
+											    <label for="">Email Address <span class="red-color"> * </span> : </label>
+											</div>
+											<div class="col-md-3 mb-3">
+
+                                                <input type="text"  class="form-control" id=""  value="" required />
+                                            </div>
+										</div>
+                                        <hr class="hrstyle" />
+										<div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn btn" type="submit">Add User</button>
+													<a class="mybtn btn" href="#">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <script>
+		function specialty2Show() {
+		  var x = document.getElementById("hide1");
+		  if (x.style.display === "none") {
+			x.style.display = "block";
+		  } else {
+			x.style.display = "none";
+		  }
+		}
+		</script>
+     <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>

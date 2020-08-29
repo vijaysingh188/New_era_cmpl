@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Subscription Master - Module Master {% endblock %}
+
+{% block body %}
+	<div class="main">
+	    <div class="inner-navbar">
+	    <div class="col-md-12">
+		    <ul class="nav nav-tabs">
+				<li class="nav-item"><a class="nav-link " href="{% url 'existing_module_master'  %}">Module Master</a></li>
+				<li class="nav-item"><a class="nav-link active a" href="{% url 'addservice' %}">Add-on Services</a></li>
+				<li class="nav-item"><a class="nav-link" href="Subscription_Master-Existing_Subscription_Plan.html">Subscription Plan</a></li>
+			</ul>
+		</div>
+		</div>
+		<div class="col-md-12">
+			<div class="content-holder">
+				{% if messages %}
+					{% for message in messages %}
+						<div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+							{{ message }}
+						</div>
+					{% endfor %}
+				{% endif %}
+				<div class="row">
+					<div class="col-md-12 order-md-1">
+						<h5 class="title-holder">Existing Add-On Services </h5>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="btn-holder">
+							        <a class="link-btn" href="{% url 'addservice' %}">Add New</a>
+						        </div>
+							</div>
+						</div>
+						<div class="row justify-content-center">
+							<p id="date_filter">
+							<div class="col-md-3">
+							    <div class="form-group ">
+								    <span class="color">Start Date</span>
+									<div class="input-group">
+									    <input type="text" class="form-control border-right-0 border date_range_filter " id="datepicker_from" placeholder="dd/mm/yyyy">
+								    </div>
+								</div>
+							</div>
+							<div class="col-md-3">
+								<div class="form-group">
+									<span class="color">End Date</span>
+									<div class="input-group">
+										<input type="text" class="form-control border-right-0 border date_range_filter " id="datepicker_to" placeholder="dd/mm/yyyy">
+									</div>
+								</div>
+							</div>
+							</p>
+							<div class="col-md-3">
+							    <div class="form-group ">
+							    	<span class="color" style="visibility: hidden;">Search Service</span>
+							    	<div class="input-group">
+									<input type="text" class="form-control border-right-0 border" id="search_name" placeholder="Search Service">
+								</div>
+								</div>
+							</div>
+							
+						</div>
+						<div class="row">
+							<div class="col-md-12">
+							    <div class="table-responsive">
+									<table class="table table-bordered" id="datatable">
+										<thead>
+
+											<tr>
+												<th style="display: none;">Date</th>
+												<th>Add-od Services</th>
+												<th>Add_on services code</th>
+												<th>Amount</th>
+												<th>GST</th>
+												<th>CGST</th>
+												<th>SGST</th>
+												<th>Total Amount</th>
+												<th>Action</th>
+												
+											</tr>
+										</thead>
+										<tbody>
+											{% for module in module  %}
+											<tr>
+												<td style="display: none;">{{ module.created_on|date:"m/d/Y"  }}</td>
+												<td>{{ module.add_onservices }}</td>
+												<td>{{ module.add_on_servicescode }}</td>
+												<td>{{ module.amount }}</td>
+												<td>{{ module.gst }}</td>
+												<td>{{ module.cgst }}</td>
+												<td>{{ module.sgst }}</td>
+												<td>{{ module.total_amount }}</td>
+												<td>
+													<a href="{% url 'destroyonservice' module.id %}"><i class="fa fa-trash action-icons" aria-hidden="true" onclick="return confirm('Are you sure you want to delete this?')"></i></a>
+				                                    <a href="{% url 'edit_service' module.id %}" tooltip="Adit"><i class="fa fa-pencil-square action-icons" aria-hidden="true"></i></a>
+												</td>
+											</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+								
+                            </div>
+						</div>	
+				    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+    {% block javascript %}	
+   <script>
+   	$(function() {
+  var oTable = $('#datatable').DataTable({
+  	"lengthMenu": [[10, 25, 50, -1], [10, 15, 20,25]],
+    "pageLength": 10,
+    "iDisplayLength": -1,
+    "pagingType": "simple_numbers",
+    "lengthChange": false,
+  });
+  $("#search_name").on('keyup', function (){
+        $('#datatable').dataTable().fnFilter(this.value);
+    });
+
+  $("#datepicker_from").datepicker({
+    "onSelect": function(date) {
+      minDateFilter = new Date(date).getTime();
+      console.log("minDateFilter"+minDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    minDateFilter = new Date(this.value).getTime();
+    console.log("minDateFilterSecond"+minDateFilter)
+    oTable.draw();
+  });
+
+  $("#datepicker_to").datepicker({
+    "onSelect": function(date) {
+      maxDateFilter = new Date(date).getTime();
+      console.log("maxDateFilter"+maxDateFilter)
+      oTable.draw();
+    }
+  }).keyup(function() {
+    maxDateFilter = new Date(this.value).getTime();
+    oTable.draw();
+  });
+
+});
+
+// Date range filter
+minDateFilter = "";
+maxDateFilter = "";
+
+$.fn.dataTableExt.afnFiltering.push(
+  function(oSettings, aData, iDataIndex) {
+    if (typeof aData._date == 'undefined') {
+      aData._date = new Date(aData[0]).getTime();
+    }
+
+    if (minDateFilter && !isNaN(minDateFilter)) {
+    	console.log("CHECK"+aData._date)
+      if (aData._date < minDateFilter) {
+        return false;
+      }
+    }
+
+    if (maxDateFilter && !isNaN(maxDateFilter)) {
+      if (aData._date > maxDateFilter) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+);
+    </script>
+    {% endblock %}

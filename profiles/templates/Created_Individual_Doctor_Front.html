@@ -1,0 +1,262 @@
+{% extends "base_profile.html" %}
+{% load widget_tweaks %}
+
+{% block title %} Profile HDC - Individual Doctor {% endblock %}
+
+{% block body %}
+        <div class="main">
+            <div class="col-md-12">
+                <div class="content-holder mb-3">
+                    <div class="row">
+                        <div class="col-md-12 order-md-1">
+                             {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                     <h5 class="title-holder">HDC - Front Desk Profile</h5>
+                                     <div class="alert alert-danger text-center" id="Inumber" role="alert" style="display:none;" >Invalid Mobile Number</div>
+                                     <div class="alert alert-danger text-center" id="gender" role="alert" style="display:none;" >Please Select Gender</div>
+                                     <div class="alert alert-success text-center" id="success" role="alert" style="display:none;" >Profile Successfully Updated</div>
+                                    <form class="needs-validation" id="useradd_form" method="POST" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for=""><span class="red-color"> </span></label>
+                                                {{ form2.type_of_doctor.as_hidden  }}
+                                            </div>
+                                            <div class="col-md-9 mb-3">
+                                                <label for="">Name <span class="red-color">*</span></label>  
+                                                 <div class="row">
+
+                                                    <div class="col-md-2 padding-right">
+                                                        {{ form1.title | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 padding-right-left">
+                                                        {{ form1.first_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-3 padding-right-left">
+                                                        {{ form1.middle_name | add_class:'form-control' }}
+                                                    </div>
+                                                    <div class="col-md-4 padding-left">
+                                                        {{ form1.last_name | add_class:'form-control' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Perigon ID <span class="red-color"> * </span></label>
+                                                <input type="text" disabled class="form-control" id="" value="{{ form3.special_id }}" required />
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Gender <span class="red-color"> * </span></label>
+                                                {{ form2.gender | add_class:'form-control' }}
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">DOB <span class="red-color"> * </span></label>
+                                                {{ form2.dob | add_class:'form-control' }}
+                                            </div>  
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Age <span class="red-color"> </span></label>
+                                                {{ form2.age | add_class:'form-control' }}
+                                            </div>
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Qualification <span class="red-color"> * </span></label>
+                                                {{ form2.qualification | add_class:'form-control' }}
+                                            </div>   
+                                        </div>  
+                                        <hr class="hrstyle" />
+                                        <div class="row">                                              
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number <span class="red-color"> * </span></label>
+                                                 {{form1.phone_no| attr:"readonly:readonly"|add_class:'form-control'}}
+                                            </div>                                      
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Mobile Number 2 </label>
+                                                {{form2.phone_no2| add_class:'form-control'}}
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label for="">Email Address <span class="red-color"> * </span></label>
+                                                {{form1.email| attr:"readonly:readonly"|add_class:'form-control'}}
+                                            </div>
+                                            
+                                            <div class="col-md-3 mb-3">
+                                                <label>Email Address 2 </label>
+                                                {{form2.email2| add_class:'form-control'}}
+                                                {{form2.email2.errors}}
+                                            </div>
+                                        </div>
+                                        <hr class="hrstyle" />                                      
+                                        <div class="row">
+                                            <div class="col-md-12 mb-3">
+                                                <label for=""> Residence Address </label>
+                                                <div class="row">
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.house_no| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.street| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.area| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.pincode| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                       {{form2.country| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.state| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.district| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.taluka| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-1">
+                                                        {{form2.city| add_class:'form-control'}}
+                                                    </div>
+                                                    <div class="col-md-3 mb-3">
+                                                        {{form2.landline_no| add_class:'form-control'}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr class="hrstyle" />
+                                        <div class="row">             
+                                            <div class="col-md-12">
+                                                <div class="mybtn-holder">
+                                                    <button class="mybtn btn" type="submit" value="submit">Update Profile</button>
+                                                    <a class="mybtn btn" href="#">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endblock %}
+    {% block javascript %}
+    <script>
+   $(document).on('submit','#useradd_form',function(e){
+    e.preventDefault();
+    console.log("here")
+
+    $.ajax({
+        type:'POST',
+        url:"{% url 'useraddebyindvidualdoctor' %}",
+        data:new FormData(this),
+        contentType:false,
+        cache:false,
+        processData:false,
+        success:function(data){
+            if (data.status=='IM'){
+                console.log("Inumber")
+                $('#Inumber').show();
+                setTimeout(function(){ $('#Inumber').show() });
+                setTimeout(function(){ $('#Inumber').hide() },4000)
+            }
+            if (data.status=='success'){
+                console.log("success")
+                $('#success').show();
+                setTimeout(function(){ $('#success').show() });
+                setTimeout(function(){ $('#success').hide() },4000)
+            }
+            if (data.status=='GNS'){
+                console.log("gender")
+                $('#gender').show();
+                setTimeout(function(){ $('#gender').show() });
+                setTimeout(function(){ $('#gender').hide() },2000)
+            }
+            }
+
+})
+          })
+
+  $(function() {
+    $( "#datetime_from1" ).datepicker({
+      dateFormat: 'dd/mm/yy',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+  });
+});
+
+$(document).ready(function() {
+
+    $('#datetime_from1').change(function() {
+        var today = new Date();
+        var dd = Number(today.getDate());
+        var mm = Number(today.getMonth() + 1);
+        var yyyy = Number(today.getFullYear());
+        var myBD = $('#datetime_from1').val();
+        var myBDM = Number(myBD.split("/")[0])
+        console.log(myBDM,"userdate")
+        var myBDD = Number(myBD.split("/")[1])
+        var myBDY = Number(myBD.split("/")[2])
+        var age = yyyy - myBDY;
+        if (age==0){
+            var blank=''
+           
+        }
+        if(myBDM > dd & myBDD==mm & myBDY==yyyy){
+            console.log("done2")
+            $('#bday').show();
+            setTimeout(function(){ $('#bday').show() });
+            setTimeout(function(){ $('#bday').hide() },4000)
+        
+            $('#age').val(blank);
+        }
+        console.log(age,"age")
+        $('#age').val(age);
+    });
+
+});
+
+$(document).ready(function() {
+
+    $('#age').change(function() {
+        var ageee = document.getElementById("age").value;
+        console.log(ageee,"ageee")
+        var today = new Date();
+        // console.log(today,"today")
+        var dd = Number(today.getDate());
+        var mm = Number(today.getMonth() + 1);
+        var yyyy = Number(today.getFullYear());
+        console.log(dd,"dd")
+        console.log(mm,"mm")
+        console.log(typeof(yyyy),"yyyy")
+        console.log(Number(yyyy)-Number(ageee))
+        var final =Number(yyyy)-Number(ageee)
+        const user_date= dd+"/"+mm+"/"+final
+        console.log(user_date,"user_date")
+        $('#datetime_from1').val(user_date);
+       
+    });
+
+});
+
+  </script>
+
+    {% endblock %}
+
+        
+
+
+    
