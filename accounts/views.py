@@ -1577,6 +1577,7 @@ def event_register_form(request, module_id):
     link = module.register_link
     print(module.register_link, 'reglink')  # www.healthperigon.net/2
     object = Eventregisterationuser.objects.get(webregister=module)
+    print(object,'object')
 
     check_category = Webregister.objects.get(id=module_id)
     target = check_category.targetaudiance
@@ -1653,7 +1654,7 @@ def event_register_form(request, module_id):
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
             else:
                 return redirect('/event_register_form/' + str(module_id),
-                                messages.success(request, ("Form is invalid"), 'alert-danger'))
+                                messages.error(request, ("Form is invalid"), 'alert-danger'))
         if 'individual' in request.POST:
             print('individual')
             form1 = IndivdualUserForm(request.POST)
@@ -1723,14 +1724,20 @@ def event_register_form(request, module_id):
                     login(request, user)
                     print("fine work")
                     for_link = CustomUser.objects.filter(email=username).update(register_link=link)
-                    # for_link = CustomUser.objects.filter(email=username).append(register_link=link)
-                    print(for_link, 'linkkk')
-                return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
+                    # for_link = CustomUser.objects.filter(email=username).values()[0]
+                    #
+                    # print(for_link,'for_link')
+                    #
+                    # add_link = for_link['register_link']
+                    # print(add_link,'add_link')
+                    # Json.update(link)
+
+                return redirect('/streaming/'+str(module_id), messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
             else:
-                return redirect('/event_register_form/' + str(module_id),
-                                messages.success(request, "Form is invalid", 'alert-success'))
+                return redirect('/event_register_form/' + str(module_id),messages.error(request, "Form is invalid"))
+
 
     else:
         form = IndivdualDoctorForm()

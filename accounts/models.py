@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+# from jsonfield import JSONField
+# from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields.jsonb import JSONField
 from django.utils.translation import ugettext_lazy as _
 from .managers import CustomUserManager
 from django.db.models.signals import post_save
@@ -7,6 +10,8 @@ from django.dispatch import receiver
 from django.utils import timezone
 import requests
 from django_countries.fields import CountryField
+from django.db import models
+import jsonfield
 
 class CustomUser(AbstractUser):
 	username = None
@@ -39,7 +44,8 @@ class CustomUser(AbstractUser):
 	is_hdc_nursing_home = models.BooleanField(default=False)
 	useraddebyindvidualdoctor=models.BooleanField(default=False)
 	special_id = models.CharField(max_length=255, null=True, default=None)
-	register_link = models.CharField(max_length=255, blank=True, null=True)
+	# register_link = models.CharField(max_length=255, blank=True, null=True)
+	register_link = jsonfield.JSONField()
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = []

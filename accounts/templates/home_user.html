@@ -275,6 +275,13 @@ button.btn-check-login:hover {
     <body>
 
 	<div class="container-fluid">
+		{% if messages %}
+				{% for message in messages %}
+					<div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endif %}
 
 		<div class="main">
 
@@ -333,7 +340,7 @@ button.btn-check-login:hover {
 								</div> <!-- form-group// -->
 
 								<div class="form-group">
-									<button style="background:#00adee" type="submit" formmethod="post" class="btn btn-primary btn-block" name="loginForm" id="saveBtn"> Register For Event </button>
+									<button style="background:#00adee"  type="submit" formmethod="post" class="btn btn-primary btn-block" name="loginForm" id="saveBtn"> Register For Event </button>
 								</div> <!-- form-group// -->
 								 <a style="color:#d1232a;font-weight:600" href="{% url 'password_reset_user_for_event' %}" class="pull-right need-help">Forget Password? </a><span class="clearfix"></span>
 
