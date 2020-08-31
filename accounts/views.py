@@ -1804,47 +1804,24 @@ def user_login(request):
         return redirect('/sign_up/')
 
 
-# @csrf_exempt
-# def streaming(request, id):
-#     module = Webregister.objects.get(id=id)
-#     object = Eventregisterationuser.objects.get(webregister=module)
-#     return render(request, "video_streaming.html", {'module':module,'object':object})
-    
-# def streaming(request, id):
-#     module = Webregister.objects.get(id=id)
-#     object = Eventregisterationuser.objects.get(webregister=module)
-#     link_check = module.register_link
-#     print(module.register_link, 'register_link')  # www.healthperigon.net/2
-#     check_auth = CustomUser.objects.filter(email=request.user, register_link__icontains=link_check).exists()
-#     print(check_auth,"check_auth")
-#     if check_auth == False:
-#         return redirect('/event_register_form/' + str(id))
-#     else:
-#         return render(request, "video_streaming.html", {'module': module, 'object': object})
-
-
 @csrf_exempt
 def streaming(request, id):
     module = Webregister.objects.get(id=id)
-    # print(module,'module')
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
-    print(module.register_link, 'register_link')  # www.healthperigon.net/2
-    for_link = CustomUser.objects.filter(email=request.user)
-    print(for_link, 'for_link')
+    print(module.register_link, 'register_link')
+    check_auth = CustomUser.objects.filter(email=request.user)
+    data_exists = False
+    for i in check_auth:
+        my_json_data = i.register_link
+        if link_check in my_json_data:
+            data_exists = True
 
-    previous_data = []
-    for i in for_link:
-        previous_data = i.register_link
-        if previous_data:
-            previous_data.append(link_check)
+    print(data_exists, 'data_exists')
 
-    for_link.update(register_link=previous_data)
-
-    check_auth = CustomUser.objects.filter(email=request.user, register_link__icontains=link_check).exists()
-    print(check_auth, "check_auth")
     obj = Question.objects.create(webregister=module)
-    form = QuestionForm(request.POST,instance=obj)
+    form = QuestionForm(request.POST, instance=obj)
+
     if request.method == "POST":
         que = request.POST.get('que')
         print(que,'que')
@@ -1855,9 +1832,11 @@ def streaming(request, id):
             print("sve")
     else:
         form = QuestionForm()
-
-    if check_auth == False:
+    if data_exists == False:
         return redirect('/event_register_form/' + str(id))
     else:
-
         return render(request, "video_streaming.html", {'module': module, 'object': object,'form':form})
+
+
+
+
