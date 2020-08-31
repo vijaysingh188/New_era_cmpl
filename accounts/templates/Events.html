@@ -481,9 +481,9 @@ border-radius: 10px;
 								
 									<div class="stats">
 									
-									<h6>Event Type: <span style="font-weight:300">{{ past.eventtype }}</span></h6>
+									<h6>Event Type: <span style="font-weight:300">{{ past.webregister.eventtype }}</span></h6>
 									
-									<h6>Target Audience: <span style="font-weight:300">{{ past.targetaudiance }}</span></h6>
+									<h6>Target Audience: <span style="font-weight:300">{{ past.webregister.targetaudiance }}</span></h6>
 									
 									<h6>Speaker</h6>
 									<ul style="font-weight:300;margin-left:6%">
@@ -491,13 +491,14 @@ border-radius: 10px;
 										<li>{{ past.webregister.Chairpersons}}</li>
 										<li>{{ past.webregister.ContactPersonanme }}</li>
 									</ul>
-									<h6>Session Info</h6>
-										<p style="font-weight:300">Et et consectetur ipsum labore excepteur est proident excepteur ad velit occaecat qui minim occaecat veniam. </p>
+<!--									<h6>Session Info</h6>-->
+<!--										<p style="font-weight:300">Et et consectetur ipsum labore excepteur est proident excepteur ad velit occaecat qui minim occaecat veniam. </p>-->
 					 
 									</div>
-
+									{% if object.webregister.streaming_link != None %}
 									<div style="background:none" class="footer">
 										<a href="javascript:void(0)" class="Cbtn Cbtn-primary">View Recoring</a>
+										{% endif %}
 										
 									</div>
 								</div>

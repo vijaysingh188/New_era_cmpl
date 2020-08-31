@@ -349,7 +349,8 @@ button.btn-check-login:hover {
                   </div>
 
                   <div id="event-details" class="container tabsyesno tab-pane fade">
-						{% if target == 'HDC' or target == 'Both' %}
+
+					  {% if target != 'Individual'%}
 						 <form method="POST">
 
 								<div class="form-group input-group">
