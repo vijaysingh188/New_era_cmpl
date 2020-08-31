@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from .forms import UserLoginForm, PasswordVerificationAdminForm, SecurityQuestionsForm, PasswordForm, SignUpForm, IndivdualUserForm, IndivdualDoctorForm, HospitalForm, NursingHomeForm, ModuleMasterForm, ContactForm, PasswordVerificationForm, AddServices,pharamcy, CouponForm, EventregisteruserForm,Eventregistertable
+from .forms import UserLoginForm,QuestionForm, PasswordVerificationAdminForm, SecurityQuestionsForm, PasswordForm, SignUpForm, IndivdualUserForm, IndivdualDoctorForm, HospitalForm, NursingHomeForm, ModuleMasterForm, ContactForm, PasswordVerificationForm, AddServices,pharamcy, CouponForm, EventregisteruserForm,Eventregistertable
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import SecurityQuestions, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
+from .models import SecurityQuestions,Question, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
 from django.http import Http404
 from django.http import Http404
 from django.contrib import messages
@@ -1795,17 +1795,43 @@ def user_login(request):
 #     object = Eventregisterationuser.objects.get(webregister=module)
 #     return render(request, "video_streaming.html", {'module':module,'object':object})
     
+# def streaming(request, id):
+#     module = Webregister.objects.get(id=id)
+#     object = Eventregisterationuser.objects.get(webregister=module)
+#     link_check = module.register_link
+#     print(module.register_link, 'register_link')  # www.healthperigon.net/2
+#     check_auth = CustomUser.objects.filter(email=request.user, register_link__icontains=link_check).exists()
+#     print(check_auth,"check_auth")
+#     if check_auth == False:
+#         return redirect('/event_register_form/' + str(id))
+#     else:
+#         return render(request, "video_streaming.html", {'module': module, 'object': object})
+
+
+@csrf_exempt
 def streaming(request, id):
     module = Webregister.objects.get(id=id)
+    print(module,'module')
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
     print(module.register_link, 'register_link')  # www.healthperigon.net/2
-    # some_auth = CustomUser.objects.filter(email=request.user, register_link=link_check)
-    # print(some_auth,'auth')
-    # check_auth = CustomUser.objects.filter(email=request.user, register_link=link_check).exists()
     check_auth = CustomUser.objects.filter(email=request.user, register_link__icontains=link_check).exists()
-    print(check_auth,"check_auth")
+    print(check_auth, "check_auth")
+    obj = Question.objects.create(webregister=module)
+    form = QuestionForm(request.POST,instance=obj)
+    if request.method == "POST":
+        que = request.POST.get('que')
+        print(que,'que')
+        print(form.errors)
+        if form.is_valid():
+
+            form.save()
+            print("sve")
+    else:
+        form = QuestionForm()
+
     if check_auth == False:
         return redirect('/event_register_form/' + str(id))
     else:
-        return render(request, "video_streaming.html", {'module': module, 'object': object})
+
+        return render(request, "video_streaming.html", {'module': module, 'object': object,'form':form})

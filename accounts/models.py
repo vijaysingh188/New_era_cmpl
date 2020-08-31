@@ -47,6 +47,7 @@ class CustomUser(AbstractUser):
 	# register_link = models.CharField(max_length=255, blank=True, null=True)
 	register_link = jsonfield.JSONField()
 
+
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = []
 
@@ -265,6 +266,12 @@ class Eventregisterationuser(models.Model):
         return str(self.pk)
 
 
+class Question(models.Model):
+	webregister = models.ForeignKey(Webregister, on_delete=models.CASCADE)
+	que = models.CharField(max_length=255,null=True, blank=True)
+
+	def __str__(self):
+		return str(self.pk)
 
 
 

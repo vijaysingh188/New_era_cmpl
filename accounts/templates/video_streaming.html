@@ -2,6 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
    <head>
+       <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176786078-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-176786078-1');
+</script>
       <title>Health Perigon </title>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +19,27 @@
 		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
 		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
       <style>
+	   .modal-header{
+	  padding:10px;
+	  }
+	  .modal-dialog {
+
+    margin: 11.75rem auto;
+}
+
+.modal-dialogqa {
+    margin: 6.75rem auto;
+}
+
+
          .video-streaming{display: flex;}
          .leftside{width:220px;float: left;margin:0 5px;}
          .rightside{width:220px;float: right;margin:0 5px;display:block;}
@@ -19,7 +48,7 @@
 		 .video-positionfullscreen{height:90vh;}
          .banner-img-left{width:194px;height:auto;padding:11px;float:left;display:block;}
          .banner-img-left-mob{display:none;}
-         .banner-img-right{width:194px;height:auto;padding:11px;float: right;}
+         .banner-img-right{width:194px;height:auto;padding:5px;float: right;}
          .header-img{width:100%;height:85px;}
          .button-holder{padding: 10px;text-align:left;margin-bottom:25px; margin-top:0px;}
          :root {
@@ -82,19 +111,19 @@
          transform: translate3d(0, 0, -1em);
          box-shadow: 0 0.5em 0 0 var(--colorShadeB);
          }
-		 
-		 @media (max-width:1200px) { 
+
+		 @media (max-width:1200px) {
          .banner-img-left{width:175px;}
          .banner-img-right{width:175px;}
          .md-panal{width:100%;}
          }
-		  @media (max-width:996px) { 
+		  @media (max-width:996px) {
          .banner-img-left{width:160px;}
          .banner-img-right{width:160px;}
          .md-panal{width:100%;}
          }
-		 
-         @media (max-width: 786px) { 
+
+         @media (max-width: 786px) {
          .leftside{width:140px;margin:0;}
          .rightside{width:140px;margin:0;}
          .md-panal{width:100%;padding:10px;margin:0;}
@@ -122,6 +151,67 @@
       <header id="header">
          <img src="https://healthperigon.net/media/{{ object.streaming_header }}" class="header-img" alt="">
       </header>
+
+	  <div class="container">
+
+
+  <!-- The Modal -->
+  <div class="modal" id="logoutModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+
+      </div>
+      <div class="modal-body">
+        <p class="text-center"><i class="fa fa-question-circle"></i> Are you sure you want to log-out? <br /></p>
+        <div class="actionsBtns text-center">
+            <form action="{% url 'show_events' %}">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <input type="submit" class="btn btn-default btn-primary" data-dismiss="modal" onclick="window.location.replace('{% url 'show_events' %}')"; value="Yes" />
+	                <button class="btn btn-default" data-dismiss="modal">No</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+<!-- line modal -->
+<div class="modal fade" id="squarespaceModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialogqa">
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+
+		</div>
+		<div class="modal-body">
+			<h5 class="modal-title text-center" id="lineModalLabel">Event Name</h5><br>
+            <!-- content goes here -->
+			<form style="text-align:center" method="POST">
+              <div class="form-group">
+                <textarea class="form-control" name="que" placeholder="Enter your question here....."></textarea>
+
+              </div>
+
+              <button type="submit" class="big-button" name="questionUser">Submit</button>
+            </form>
+
+		</div>
+
+	</div>
+  </div>
+</div>
+
+
+
+
+
+
+
       <div class="video-streaming">
          <div class="leftside" id="leftBanner">
             <img src="https://healthperigon.net/media/{{ object.streaming_leftpanel }}" class="banner-img-left" alt="Health Perigon Event">
@@ -132,11 +222,11 @@
                <iframe id="sodmzs" class="embed-responsive-item" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
             </div>
             <div class="button-holder">
-               <button class="big-button">Q & A</button>
+               <button data-toggle="modal" data-target="#squarespaceModal" class="big-button">Q & A</button>
                <button class="big-button">Vote</button>
                <button class="big-button" onclick="fullScreen()"><span id="textchenge">Full Screen </span></button>
 			   <div class="" style="float:right">
-			       <a class="footer-icon-style " href="{% url 'show_events' %}" title="Logout"> <img src="{% static 'images/logout.png' %}" width="32px;" alt="Health Perigon Event"></a>
+			       <a class="footer-icon-style " data-toggle="modal" data-target="#logoutModal" href="{% url 'show_events' %}" title="Logout"> <img src="{% static 'images/logout.png' %}" width="32px;" alt="Health Perigon Event"></a>
             </div>
             </div>
          </div>
@@ -200,11 +290,12 @@
                      classes.splice(i, 1);
                      else 
                      classes.push("video-positionfullscreen");
-                     element.className = classes.join(" "); 
+                     element.className = classes.join(" ");
                     }
                 }
          
       </script>
+
         <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
 	    <script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
