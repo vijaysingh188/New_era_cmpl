@@ -193,11 +193,11 @@
             <!-- content goes here -->
 			<form style="text-align:center" method="POST">
               <div class="form-group">
-                <textarea class="form-control" name="que" placeholder="Enter your question here....."></textarea>
+                <textarea class="form-control" name="que" id="que" placeholder="Enter your question here....."></textarea>
 
               </div>
 
-              <button type="submit" class="big-button" name="questionUser">Submit</button>
+              <button type="submit" class="big-button" id="someAddsubmit">Submit</button>
             </form>
 
 		</div>
@@ -291,10 +291,13 @@
                      else 
                      classes.push("video-positionfullscreen");
                      element.className = classes.join(" ");
+                     console.log("someAddsubmit")
                     }
                 }
          
       </script>
+
+
 
         <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
 	    <script src="{% static 'js/popper-1.16.0.min.js' %}"></script>

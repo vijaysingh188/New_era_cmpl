@@ -45,7 +45,7 @@ class CustomUser(AbstractUser):
 	useraddebyindvidualdoctor=models.BooleanField(default=False)
 	special_id = models.CharField(max_length=255, null=True, default=None)
 	# register_link = models.CharField(max_length=255, blank=True, null=True)
-	register_link = jsonfield.JSONField()
+	register_link = jsonfield.JSONField(blank=True)
 
 
 	USERNAME_FIELD = 'email'

@@ -396,6 +396,9 @@ def register1(request):
                     user.type_of_doctor = type
                     user.set_password(password)
                     user.is_hdc_individual = True
+                    rt = []
+                    rt.append(link)
+                    user.register_link = rt
                     user.save()
                     email_subject = 'Welcome To Health Perigon!'
                     valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
@@ -469,7 +472,11 @@ def register1(request):
                     user.payment = payment
                     user.set_password(password)
                     user.is_hdc_hospital = True
+                    rt = []
+                    rt.append(link)
+                    user.register_link = rt
                     user.save()
+
                     email_subject = 'Welcome To Health Perigon!'
                     valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
                     date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
@@ -540,8 +547,11 @@ def register1(request):
                     password = form3.cleaned_data.get('password')
                     user.set_password(password)
                     user.is_hdc_nursing_home = True
-
+                    rt = []
+                    rt.append(link)
+                    user.register_link = rt
                     user.save()
+
                     email_subject = 'Welcome To Health Perigon!'
                     valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
                     date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
@@ -604,6 +614,9 @@ def register1(request):
 
                 user.set_password(password)
                 user.is_individual = True
+                rt = []
+                rt.append(link)
+                user.register_link = rt
 
                 user.save()
                 email_subject = 'Welcome To Health Perigon!'
@@ -1617,7 +1630,7 @@ def event_register_form(request, module_id):
                 user.register_link = rt
                 user.save()
 
-                user.save()
+
                 email_subject = 'Welcome To Health Perigon!'
                 valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
                 date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
@@ -1646,15 +1659,13 @@ def event_register_form(request, module_id):
                 print(data, 'data')
 
                 try:
-                    # IndivdualDoctorProfile.objects.create(user=request.user)
-                    # print("done")
+
                     new_user = CustomUser.objects.get(email=to_email)
                     obj = IndivdualDoctorProfile.objects.create(user=new_user)  # ,register_link=link
                     print("obj", obj)
                 except:
                     pass
 
-                # +str(module_id)
 
                 return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
@@ -1747,8 +1758,9 @@ def event_register_form(request, module_id):
                     return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
                         "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
-                # return redirect('/streaming/'+str(module_id), messages.success(request, '{}{}{}'.format(
-                #     "You have succesfully registered for this ", title, " event"), 'alert-success'))
+                return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                    "You have succesfully registered for this ", title, " event"), 'alert-success'))
+
 
             else:
                 return redirect('/event_register_form/' + str(module_id),messages.error(request, "Form is invalid"))
@@ -1761,6 +1773,39 @@ def event_register_form(request, module_id):
 
         return render(request, 'home_user.html',
                       {'form': form, 'object': object, 'target': target, 'form1': form1, 'form2': form2})
+
+@csrf_exempt
+def streaming(request, id):
+    module = Webregister.objects.get(id=id)
+    object = Eventregisterationuser.objects.get(webregister=module)
+    link_check = module.register_link
+    print(module.register_link, 'register_link')
+    check_auth = CustomUser.objects.filter(email=request.user)
+    data_exists = False
+    for i in check_auth:
+        my_json_data = i.register_link
+        print(i.register_link,'i.register_link')
+        if my_json_data == None:
+            return redirect('/event_register_form/' + str(id))
+        if link_check in my_json_data:
+            data_exists = True
+
+    # obj = Question.objects.create(webregister=module)
+    # form = QuestionForm(request.POST, instance=obj)
+    #
+    # if request.method == "POST":
+    #     que = request.POST.get('que')
+    #     print(que,'que')
+    #     print(form.errors)
+    #     if form.is_valid():
+    #         form.save()
+    #
+    # else:
+    #     form = QuestionForm()
+    if data_exists == False:
+        return redirect('/event_register_form/' + str(id))
+    else:
+        return render(request, "video_streaming.html", {'module': module, 'object': object}) #,'form':form
 
 @csrf_exempt
 def password_reset_user_for_event(request):
@@ -1804,39 +1849,30 @@ def user_login(request):
         return redirect('/sign_up/')
 
 
-@csrf_exempt
-def streaming(request, id):
-    module = Webregister.objects.get(id=id)
-    object = Eventregisterationuser.objects.get(webregister=module)
-    link_check = module.register_link
-    print(module.register_link, 'register_link')
-    check_auth = CustomUser.objects.filter(email=request.user)
-    data_exists = False
-    for i in check_auth:
-        my_json_data = i.register_link
-        if link_check in my_json_data:
-            data_exists = True
 
-    print(data_exists, 'data_exists')
 
-    obj = Question.objects.create(webregister=module)
-    form = QuestionForm(request.POST, instance=obj)
 
-    if request.method == "POST":
-        que = request.POST.get('que')
-        print(que,'que')
-        print(form.errors)
-        if form.is_valid():
 
-            form.save()
-            print("sve")
-    else:
-        form = QuestionForm()
-    if data_exists == False:
-        return redirect('/event_register_form/' + str(id))
-    else:
-        return render(request, "video_streaming.html", {'module': module, 'object': object,'form':form})
-
+# @csrf_exempt
+# def que_sub(request,id):
+#     if request.method == "POST" and request.is_ajax():
+#         print("yes")
+#         module = Webregister.objects.get(id=id)
+#         object = Eventregisterationuser.objects.get(webregister=module)
+#         link_check = module.register_link
+#         obj = Question.objects.create(webregister=module)
+#         print("skjjbsjknc")
+#         form = QuestionForm(request.POST, instance=obj)
+#         que = request.POST.get('que')
+#         print(que, 'que')
+#         print(form.errors)
+#         if form.is_valid():
+#             form.save()
+#             print("skjbejknjs")
+#             return JsonResponse({"success": True}, status=200)
+#         else:
+#             return JsonResponse({"success": False}, status=400)
+#     # return JsonResponse({"success": False}, status=400)
 
 
 
