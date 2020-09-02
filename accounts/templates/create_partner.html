@@ -522,7 +522,7 @@ span.switch-label:after {
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <form class="needs-validation some_form" method="post" enctype="multipart/form-data">
+                                    <form class="needs-validation some_form" method="post" id="formSubmission" enctype="multipart/form-data">
                                         <div class="row">
 
                                         <div class="col-md-4 mb-3">
@@ -786,10 +786,12 @@ span.switch-label:after {
 
                                 <div class="col-md-4 text-justify">
 
-
-                              Right Panel &nbsp; <input style="width:70%;" type='file' name="streaming_rightpanel" id="streaming_rightpanel"  /><br>
+                                                <span id="file_error"></span>
+                              Right Panel &nbsp; <input style="width:70%;" type='file' name="file_upload1" class="file_upload1" id="filePHOTO"  /><br>
 							  <span style="font-size:11px;color:#cd2628"> (Upload image of .png or .jpeg format with 200*700 Pixel and maximum size of 1MB)</span>
 								<hr>
+
+
 
                                             </div>
                             </div>
@@ -924,47 +926,23 @@ given frequency)</span></label>
     });
 });
 
-		</script>
+</script>
 <script>
-    $('#streaming_rightpanel').bind('change', function() {
-
-    var ht = $(this).height()
-     var wt = $(this).width()
-     console.log(ht,wt)
-
-
-
-
-	var ext = $('#streaming_rightpanel').val().split('.').pop().toLowerCase();
-	alert(ext);
-
-	if (ext == 'PNG' || ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
-
-		var ext = (this.files[0].size);
-		if (ext < 80000) {
-			console.log(ext);
-			if (ht < 100 && wt < 1000){
-
-		       console.log("go to go");
-
-                }
-            else{
-            console.log("image should be configured");
-            }
-
+$(document).ready(function() {
+	$("#filePHOTO").change(function() {
+		$("#file_error").html("");
+		$(".file_upload1").css("border-color", "#F0F0F0");
+		var file_size = $('#filePHOTO')[0].files[0].size;
+		if (file_size > 300) {
+			$("#file_error").html("<p style='color:#FF0000'>File size is greater than 300kb</p>");
+			$(".file_upload1").css("border-color", "#FF0000");
+			return false;
 
 		}
-
-		else{
-		    console.log("file is too large");
-		}
-	}
-	else{
-        console.log("image should be format of PNG,png,jpeg,jpg");
-    }
+		return true;
+	});
 });
 </script>
-
 
   {% endblock %}
 

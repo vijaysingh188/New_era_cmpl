@@ -3,6 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="150f13fd-4bd4-40a7-ac79-a76364d60744" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/Events.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/Events.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/create_partner.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/create_partner.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/eventtable.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/eventtable.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/home_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/home_user.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,7 +30,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -43,6 +50,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="119" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1598945774846" />
+    <state x="184" y="6" key="SettingsEditor" timestamp="1599048925241">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="6" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1599048925241" />
     <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1599023768679">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

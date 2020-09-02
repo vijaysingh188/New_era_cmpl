@@ -44,7 +44,6 @@ class CustomUser(AbstractUser):
     is_hdc_nursing_home = models.BooleanField(default=False)
     useraddebyindvidualdoctor=models.BooleanField(default=False)
     special_id = models.CharField(max_length=255, null=True, default=None)
-    # register_link = models.CharField(max_length=255, blank=True, null=True)
     register_link = jsonfield.JSONField(blank=True)
 
 
@@ -275,8 +274,11 @@ class Question(models.Model):
 
 
 class Rlink(models.Model):
-	r_link = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-	register_link = jsonfield.JSONField(blank=True)
+    customUser = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    webregister = models.ForeignKey(Webregister, on_delete=models.CASCADE)
+    register_link = models.CharField(max_length=255,null=True, blank=True)
+    def __str__(self):
+        return str(self.pk)
 
 
 

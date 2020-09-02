@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import SecurityQuestions,Question, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
+from .models import Rlink,SecurityQuestions,Question, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
 from django.http import Http404
 from django.http import Http404
 from django.contrib import messages
@@ -1487,88 +1487,14 @@ def partner_and_event_register(request):
 
 
             if form1.is_valid():
-                header_eventimage = form.cleaned_data.get('header_eventimage')
-                footer_eventimage = form.cleaned_data.get('footer_eventimage')
-                streaming_header = form.cleaned_data.get('streaming_header')
-                streaming_leftpanel = form.cleaned_data.get('streaming_leftpanel')
-                streaming_rightpanel = form.cleaned_data.get('streaming_rightpanel')
-                types = ['.jpg', '.png', '.jpeg', '.PNG']
-
-                import pathlib
-                if header_eventimage:
-                    a = pathlib.Path(str(header_eventimage)).suffix
-
-                    if a not in types:
-                        return redirect('/partner_and_event_register',
-                                        messages.error(request, 'Please proper format for header_eventimage','alert-danger'))
-                        if header_eventimage:
-                            if header_eventimage.size > 1000 * 100:  # 41937
-                                return redirect("/partner_and_event_register", messages.error(request, 'Images should have proper configuration for footer_eventimage ', 'alert-danger'))
-
-                    if footer_eventimage:
-                        b = pathlib.Path(str(footer_eventimage)).suffix
-
-                        if b not in types:
-                            return redirect('/partner_and_event_register',
-                                            messages.error(request, 'Please proper format for footer_eventimage',
-                                                           'alert-danger'))
-
-                        if footer_eventimage:
-                            if footer_eventimage.size > 1000 * 100:  # 41937
-                                return redirect('/partner_and_event_register', messages.error(request,
-                                                                                      'Images should have proper configuration for footer_eventimage ',
-                                                                                      'alert-danger'))
-
-                    if streaming_header:
-                        c = pathlib.Path(str(streaming_header)).suffix
-
-                        if c not in types:
-                            return redirect('/partner_and_event_register',
-                                            messages.error(request, 'Please proper format for streaming_header',
-                                                           'alert-danger'))
-
-                        if streaming_header:
-                            if streaming_header.size > 1000 * 100:  # 41937
-                                return redirect('/partner_and_event_register', messages.error(request,
-                                                                                      'Images should have proper configuration for streaming_header',
-                                                                                      'alert-danger'))
-
-                    if streaming_leftpanel:
-                        d = pathlib.Path(str(streaming_leftpanel)).suffix
-
-                        if d not in types:
-                            return redirect('/partner_and_event_register',
-                                            messages.error(request, 'Please proper format for streaming_leftpanel',
-                                                           'alert-danger'))
-
-                        if streaming_leftpanel:
-                            if streaming_leftpanel.size > 200 * 700:  # 41937
-                                return redirect('/partner_and_event_register', messages.error(request,
-                                                                                      'Images should have proper configuration for streaming_leftpanel',
-                                                                                      'alert-danger'))
-                    if streaming_rightpanel:
-                        e = pathlib.Path(str(streaming_rightpanel)).suffix
-
-                        if e not in types:
-                            return redirect('/partner_and_event_register',
-                                            messages.error(request, 'Please proper format for streaming_leftpanel',
-                                                           'alert-danger'))
-
-                        if streaming_rightpanel:
-                            if streaming_rightpanel.size > 200 * 700:  # 41937
-                                return redirect('/partner_and_event_register', messages.error(request,
-                                                                                      'Images should have proper configuration for streaming_rightpanel',
-                                                                                      'alert-danger'))
-
 
 
                 form1.save()
                 return redirect('/partner_and_event_register',
-                                messages.success(request, 'Event Created Successfully.', 'alert-success'))
-
-
-            return redirect('/partner_and_event_register',
-                                messages.success(request, 'Event Created Successfully.', 'alert-success'))
+                                messages.success(request, 'Event is Created Successfully.', 'alert-success'))
+            else:
+                return redirect('/partner_and_event_register',
+                                messages.success(request, 'Form is invalid', 'alert-success'))
 
         else:
             return redirect('/partner_and_event_register', messages.error(request, 'Form is not valid', 'alert-danger'))
@@ -1582,20 +1508,15 @@ def show_events(request):
     objects = Eventregisterationuser.objects.filter(webregister__created_on__gt=datetime.datetime.now())
     past_event = Eventregisterationuser.objects.filter(webregister__ends_on__lt=datetime.datetime.now())
     return render(request,'Events.html',{'objects':objects, 'past_event':past_event})
-    
+
 import json
 @csrf_exempt
 def event_register_form(request, module_id):
     module = Webregister.objects.get(id=module_id)
     link = module.register_link
-    print(link,'link')
-    print(module.register_link, 'reglink')
     object = Eventregisterationuser.objects.get(webregister=module)
-    print(object,'object')
-
     check_category = Webregister.objects.get(id=module_id)
     target = check_category.targetaudiance
-    print(target,'target')
     title = check_category.eventtitle
 
     if request.method == "POST":
@@ -1604,23 +1525,21 @@ def event_register_form(request, module_id):
             form = IndivdualDoctorForm(request.POST)
             email = request.POST.get('email')
             type_of_doctor = request.POST.get('type_of_doctor')
-            print(type_of_doctor,'type_of_doctor')
-            print(form.errors, 'form')
+
 
             if form.is_valid():
 
                 user = form.save(commit=False)
                 email = form.cleaned_data.get('email')
 
-                print(email, 'email')
                 password = form.cleaned_data.get('password')
+
                 confirm_password = form.cleaned_data.get('confirm_password')
 
                 if password != confirm_password:
                     return redirect('/event_register_form/' + str(module_id),
                                     messages.error(request, "Password Should Match "), 'alert-danger')
 
-                print("yes")
                 type2 = form.cleaned_data.get('type_of_doctor')
                 user.type_of_doctor = type2
                 user.set_password(password)
@@ -1661,8 +1580,11 @@ def event_register_form(request, module_id):
                 try:
 
                     new_user = CustomUser.objects.get(email=to_email)
-                    obj = IndivdualDoctorProfile.objects.create(user=new_user)  # ,register_link=link
-                    print("obj", obj)
+                    obj = IndivdualDoctorProfile.objects.create(user=new_user)
+                    try:
+                        check_to_link = Rlink.objects.create(customUser=new_user,webregister=module,register_link=link)
+                    except:
+                        pass
                 except:
                     pass
 
@@ -1681,7 +1603,9 @@ def event_register_form(request, module_id):
                 user = form1.save(commit=False)
 
                 password = form1.cleaned_data.get('password')
+
                 confirm_password = form1.cleaned_data.get('confirm_password')
+
 
                 if password != confirm_password:
                     return redirect('/event_register_form/' + str(module_id),
@@ -1721,7 +1645,14 @@ def event_register_form(request, module_id):
                 try:
                     new_user = CustomUser.objects.get(email=to_email)
                     obj = IndivdualUserProfile.objects.create(user=new_user)
-                    print("obj", obj)
+                    try:
+                        check_to_link = Rlink.objects.create(customUser=new_user, webregister=module, register_link=link)
+                        # check_to_link = Rlink.objects.create(customUser=new_user, webregister=module,
+                        #                                      register_link=link)
+
+                    except:
+                        pass
+
                 except:
                     pass
 
@@ -1732,40 +1663,44 @@ def event_register_form(request, module_id):
                                 messages.success(request, "Form is invalid", 'alert-success'))
 
         if 'loginForm' in request.POST:
-            print("login")
+
             form2 = UserLoginForm(request.POST)
-            print(request.POST, 'form2')
+
             if form2.is_valid():
                 username = form2.cleaned_data['username']
-                password = form2.cleaned_data['password']  # loginForm
+                password = form2.cleaned_data['password']
 
                 user = authenticate(username=username, password=password)
                 if user is not None and user.is_active:
                     login(request, user)
                     print("fine work")
-                    # for_link = CustomUser.objects.filter(email=username).update(register_link=link)
-                    # for_link = CustomUser.objects.filter(email=username).values()[0] # www.healthperigon.net/2
+
                     for_link = CustomUser.objects.filter(email=username)
-                    print(for_link,'for_link')
+
+                    try:
+                        check_to_link = Rlink.objects.create(customUser=for_link, webregister=module, register_link=link)
+
+                    except:
+                        pass
 
                     previous_data = []
                     for i in for_link:
-                        print("i.register_link",i.register_link)
+
                         if i.register_link == None:
                             previous_data.append(link)
                             for_link.update(register_link=previous_data)
-                            return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
-                                "You have succesfully registered for this ", title, " event"), 'alert-success'))
+                            return redirect('/streaming/'+ str(module_id))
+                            # return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                            #     "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
                         previous_data = i.register_link
-                        print(previous_data,"previous_data")
+
                         if previous_data:
                             previous_data.append(link)
                             for_link.update(register_link=previous_data)
-                            return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
-                                "You have succesfully registered for this ", title, " event"), 'alert-success'))
+                            return redirect('/streaming/'+ str(module_id))
 
-                return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
 
@@ -1780,6 +1715,134 @@ def event_register_form(request, module_id):
 
         return render(request, 'home_user.html',
                       {'form': form, 'object': object, 'target': target, 'form1': form1, 'form2': form2})
+
+@csrf_exempt
+def streaming(request, id):
+    module = Webregister.objects.get(id=id)
+    object = Eventregisterationuser.objects.get(webregister=module)
+    link_check = module.register_link
+    check_auth = CustomUser.objects.filter(email=request.user)
+    data_exists = False
+    for i in check_auth:
+        my_json_data = i.register_link
+        try:
+            if my_json_data == None:
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if link_check not in my_json_data:
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if my_json_data[0] != i.register_link[0]:
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if i.register_link[0] not in my_json_data:
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if i.register_link not in my_json_data[0]:
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+
+        data_exists = True
+    if data_exists == False:
+        return redirect('/event_register_form/' + str(id))
+    else:
+        module = Webregister.objects.get(id=id)
+        print(module,'module')
+        object = Eventregisterationuser.objects.get(webregister=module)
+        link_check = module.register_link
+        check_auth = CustomUser.objects.filter(email=request.user)
+        obj = Question.objects.create(webregister=module)
+        form = QuestionForm(request.POST, instance=obj)
+        orgs = Question.objects.filter(webregister=module,que__isnull=True)
+        print(orgs, 'orgs')
+        orgs.delete()
+        print("yes")
+        # for i in orgs:
+        #     print(i.que,'i')
+        #     j = i.que
+        #     if j == None:
+        #         j.delete()
+
+
+        if request.method == "POST":
+            que = request.POST.get('que')
+            print(que, 'que')
+            print(form.errors)
+            if form.is_valid():
+                form.save()
+
+        else:
+            form = QuestionForm()
+        return render(request, "video_streaming.html", {'module': module, 'object': object})
+
+
+@csrf_exempt
+def password_reset_user_for_event(request):
+    form = PasswordForm(request.POST or None)
+    form1 = PasswordVerificationAdminForm(request.POST or None)
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        phone_no = request.POST.get('phone_no')
+
+    else:
+        form = PasswordForm()
+        form1 = PasswordVerificationAdminForm()
+    return render(request,"password_reset_user_for_event.html", {"form": form, "form1":form1})
+
+@csrf_exempt
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        form_login = UserLoginForm(request.POST)
+        if form_login.is_valid():
+            username = form_login.cleaned_data['username']
+            password = form_login.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None and user.is_active:
+                login(request,user)
+
+                # return HttpResponseRedirect('sign_up')
+                return JsonResponse({"success": True}, status=200)
+            else:
+                return JsonResponse({"success": False}, status=400)
+        else:
+
+            form_login = UserLoginForm()
+        return redirect('/sign_up/')
+
+# @csrf_exempt
+def que_sub(request,id):
+    if request.method == "POST" and request.is_ajax():
+        print("yes")
+        module = Webregister.objects.get(id=id)
+        object = Eventregisterationuser.objects.get(webregister=module)
+        link_check = module.register_link
+        obj = Question.objects.create(webregister=module)
+        print("skjjbsjknc")
+        form = QuestionForm(request.POST, instance=obj)
+        que = request.POST.get('que')
+        print(que, 'que')
+        print(form.errors)
+        if form.is_valid():
+            form.save()
+            print("skjbejknjs")
+            return JsonResponse({"success": True}, status=200)
+        else:
+            return JsonResponse({"success": False}, status=400)
+    # return JsonResponse({"success": False}, status=400)
+
 
 # @csrf_exempt
 # def streaming(request, id):
@@ -1831,122 +1894,8 @@ def event_register_form(request, module_id):
 #         return redirect('/event_register_form/' + str(id))
 #     else:
 #         return render(request, "video_streaming.html", {'module': module, 'object': object})
-@csrf_exempt
-def streaming(request, id):
-    module = Webregister.objects.get(id=id)
-    object = Eventregisterationuser.objects.get(webregister=module)
-    link_check = module.register_link
-    check_auth = CustomUser.objects.filter(email=request.user)
-    print(check_auth,'check_auth')
-
-    data_exists = False
-    for i in check_auth:
-        my_json_data = i.register_link
-        try:
-            if link_check not in my_json_data:
-                print("0")
-                return redirect('/event_register_form/' + str(id))
-        except:
-            pass
-        try:
-            if my_json_data[0] != i.register_link[0]:
-                print("a")
-                return redirect('/event_register_form/' + str(id))
-        except:
-            pass
-        try:
-            if i.register_link[0] not in my_json_data:
-                print("b")
-                return redirect('/event_register_form/' + str(id))
-
-        except:
-            pass
-        try:
-            if i.register_link not in my_json_data[0]:
-                print("c")
-                return redirect('/event_register_form/' + str(id))
-
-        except:
-            pass
 
 
-        if link_check in my_json_data:
-            print("d")
-            if my_json_data == None:
-                print("e")
-                return redirect('/event_register_form/' + str(id))
-        data_exists = True
-        print(data_exists,'data_exists')
-
-    if data_exists == False:
-        return redirect('/event_register_form/' + str(id))
-    else:
-        return render(request, "video_streaming.html", {'module': module, 'object': object}) #,'form':form
-
-
-@csrf_exempt
-def password_reset_user_for_event(request):
-    form = PasswordForm(request.POST or None)
-    form1 = PasswordVerificationAdminForm(request.POST or None)
-
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        phone_no = request.POST.get('phone_no')
-
-        # check = SecurityQuestions.objects.get(id=1)   #change it when adding security question
-    else:
-        form = PasswordForm()
-        form1 = PasswordVerificationAdminForm()
-    return render(request,"password_reset_user_for_event.html", {"form": form, "form1":form1})
-
-@csrf_exempt
-def user_login(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        form_login = UserLoginForm(request.POST)
-        if form_login.is_valid():
-            username = form_login.cleaned_data['username']
-            password = form_login.cleaned_data['password']
-            user = authenticate(username=username, password=password)
-            if user is not None and user.is_active:
-                login(request,user)
-
-                # return HttpResponseRedirect('sign_up')
-                return JsonResponse({"success": True}, status=200)
-            else:
-                return JsonResponse({"success": False}, status=400)
-        else:
-
-            form_login = UserLoginForm()
-        return redirect('/sign_up/')
-
-
-
-
-
-
-# @csrf_exempt
-# def que_sub(request,id):
-#     if request.method == "POST" and request.is_ajax():
-#         print("yes")
-#         module = Webregister.objects.get(id=id)
-#         object = Eventregisterationuser.objects.get(webregister=module)
-#         link_check = module.register_link
-#         obj = Question.objects.create(webregister=module)
-#         print("skjjbsjknc")
-#         form = QuestionForm(request.POST, instance=obj)
-#         que = request.POST.get('que')
-#         print(que, 'que')
-#         print(form.errors)
-#         if form.is_valid():
-#             form.save()
-#             print("skjbejknjs")
-#             return JsonResponse({"success": True}, status=200)
-#         else:
-#             return JsonResponse({"success": False}, status=400)
-#     # return JsonResponse({"success": False}, status=400)
 
 
 

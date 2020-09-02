@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import Eventregisterationuser,Webregister,CustomUser,Question
+from accounts.models import Eventregisterationuser,Webregister,CustomUser,Question,Rlink
 
 # Register your models here.
 class Eventregisteradmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ admin.site.register(Webregister,WebregisterAdmin)
 
 admin.site.register(CustomUser)
 admin.site.register(Question)
+admin.site.register(Rlink)
