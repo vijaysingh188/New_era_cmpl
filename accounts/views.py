@@ -1750,13 +1750,20 @@ def event_register_form(request, module_id):
 
                     previous_data = []
                     for i in for_link:
+                        print("i.register_link",i.register_link)
+                        if i.register_link == None:
+                            previous_data.append(link)
+                            for_link.update(register_link=previous_data)
+                            return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                                "You have succesfully registered for this ", title, " event"), 'alert-success'))
+
                         previous_data = i.register_link
+                        print(previous_data,"previous_data")
                         if previous_data:
                             previous_data.append(link)
-
-                    for_link.update(register_link=previous_data)
-                    return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
-                        "You have succesfully registered for this ", title, " event"), 'alert-success'))
+                            for_link.update(register_link=previous_data)
+                            return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                                "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
                 return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
@@ -1774,38 +1781,108 @@ def event_register_form(request, module_id):
         return render(request, 'home_user.html',
                       {'form': form, 'object': object, 'target': target, 'form1': form1, 'form2': form2})
 
+# @csrf_exempt
+# def streaming(request, id):
+#     module = Webregister.objects.get(id=id)
+#     object = Eventregisterationuser.objects.get(webregister=module)
+#     link_check = module.register_link
+#     print(link_check ,'link_check ')
+#     # www.healthperigon.net / 1
+#     # print(module.register_link, 'register_link')
+#     check_auth = CustomUser.objects.filter(email=request.user)
+#     print(check_auth,'check_auth')
+#     data_exists = False
+#     for i in check_auth:
+#         my_json_data = i.register_link
+#         print(my_json_data, 'my_json_data')
+#         print(my_json_data[0], 'my_json_data[0]')
+#         r_link = i.register_link[0]
+#         print(r_link,'r_link')
+#         try:
+#             if link_check not in my_json_data:
+#                 print("0")
+#                 return redirect('/event_register_form/' + str(id))
+#         except:
+#             pass
+#         try:
+#             if my_json_data[0] != r_link:
+#                 print("a")
+#                 return redirect('/event_register_form/' + str(id))
+#         except:
+#             pass
+#         try:
+#             if r_link not in my_json_data:
+#                 print("b")
+#                 return redirect('/event_register_form/' + str(id))
+#
+#         except:
+#             pass
+#
+#
+#         if link_check in my_json_data:
+#             print("c")
+#             if my_json_data == None:
+#                 print("d")
+#                 return redirect('/event_register_form/' + str(id))
+#         data_exists = True
+#         print(data_exists,'data_exists')
+#
+#     if data_exists == False:
+#         return redirect('/event_register_form/' + str(id))
+#     else:
+#         return render(request, "video_streaming.html", {'module': module, 'object': object})
 @csrf_exempt
 def streaming(request, id):
     module = Webregister.objects.get(id=id)
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
-    print(module.register_link, 'register_link')
     check_auth = CustomUser.objects.filter(email=request.user)
+    print(check_auth,'check_auth')
+
     data_exists = False
     for i in check_auth:
         my_json_data = i.register_link
-        print(i.register_link,'i.register_link')
-        if my_json_data == None:
-            return redirect('/event_register_form/' + str(id))
-        if link_check in my_json_data:
-            data_exists = True
+        try:
+            if link_check not in my_json_data:
+                print("0")
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if my_json_data[0] != i.register_link[0]:
+                print("a")
+                return redirect('/event_register_form/' + str(id))
+        except:
+            pass
+        try:
+            if i.register_link[0] not in my_json_data:
+                print("b")
+                return redirect('/event_register_form/' + str(id))
 
-    # obj = Question.objects.create(webregister=module)
-    # form = QuestionForm(request.POST, instance=obj)
-    #
-    # if request.method == "POST":
-    #     que = request.POST.get('que')
-    #     print(que,'que')
-    #     print(form.errors)
-    #     if form.is_valid():
-    #         form.save()
-    #
-    # else:
-    #     form = QuestionForm()
+        except:
+            pass
+        try:
+            if i.register_link not in my_json_data[0]:
+                print("c")
+                return redirect('/event_register_form/' + str(id))
+
+        except:
+            pass
+
+
+        if link_check in my_json_data:
+            print("d")
+            if my_json_data == None:
+                print("e")
+                return redirect('/event_register_form/' + str(id))
+        data_exists = True
+        print(data_exists,'data_exists')
+
     if data_exists == False:
         return redirect('/event_register_form/' + str(id))
     else:
         return render(request, "video_streaming.html", {'module': module, 'object': object}) #,'form':form
+
 
 @csrf_exempt
 def password_reset_user_for_event(request):
@@ -1830,11 +1907,8 @@ def user_login(request):
 
         form_login = UserLoginForm(request.POST)
         if form_login.is_valid():
-
             username = form_login.cleaned_data['username']
-
             password = form_login.cleaned_data['password']
-
             user = authenticate(username=username, password=password)
             if user is not None and user.is_active:
                 login(request,user)
