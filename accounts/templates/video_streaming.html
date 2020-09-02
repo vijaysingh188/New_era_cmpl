@@ -148,6 +148,14 @@
       </style>
    </head>
    <body>
+                            {% if messages %}
+                            {% for message in messages %}
+                                <div {% if message.tags %} class="alert {{ message.tags }} text-center"{% endif %}>
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
       <header id="header">
          <img src="https://healthperigon.net/media/{{ object.streaming_header }}" class="header-img" alt="">
       </header>

@@ -1762,16 +1762,12 @@ def streaming(request, id):
         check_auth = CustomUser.objects.filter(email=request.user)
         obj = Question.objects.create(webregister=module)
         form = QuestionForm(request.POST, instance=obj)
-        orgs = Question.objects.filter(webregister=module,que__isnull=True)
-        print(orgs, 'orgs')
-        orgs.delete()
-        print("yes")
-        # for i in orgs:
-        #     print(i.que,'i')
-        #     j = i.que
-        #     if j == None:
-        #         j.delete()
-
+        try:
+            orgs = Question.objects.filter(webregister=module,que__isnull=True)
+            orgs.delete()
+            print("yes")
+        except:
+            pass
 
         if request.method == "POST":
             que = request.POST.get('que')
@@ -1782,7 +1778,26 @@ def streaming(request, id):
 
         else:
             form = QuestionForm()
+
         return render(request, "video_streaming.html", {'module': module, 'object': object})
+
+
+def show_questions(request):
+    object = Question.objects.all().values()
+    print(object, 'object')
+    # typeofdoc = CustomUser.objects.filter(email=request.user).values_list('type_of_doctor', flat=True)
+    check = Question.objects.filter().values_list('webregister_id', flat=True)
+    print(check,'check')
+    for i in object:
+        print(i,'i')
+        # {'id': 205, 'webregister_id': 2, 'que': 'djfbjkfv???'}
+
+
+
+    context = {
+       'object':object
+    }
+    return render(request,'asked_question.html',context)
 
 
 @csrf_exempt
@@ -1822,7 +1837,7 @@ def user_login(request):
             form_login = UserLoginForm()
         return redirect('/sign_up/')
 
-# @csrf_exempt
+@csrf_exempt
 def que_sub(request,id):
     if request.method == "POST" and request.is_ajax():
         print("yes")

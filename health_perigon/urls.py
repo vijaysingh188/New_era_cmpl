@@ -10,7 +10,7 @@ contact, activate_account, register, password_reset, contact_master, change_pass
 verify_otp, existing_module_master, create_module_master, edit_module_master, destroy_module_master, 
 addservice,addonservice,destroyonservice,pharmacy,pharmacytable,laboratory,lob,destroypharamcy, aboutus, streaming,
 destroylaboratory,edit_service,edit_pharmacy, add_individual_user, User_creation, account_status_change, Add_streaming_link, user_login, event_register_form, show_events,
-coupon_code_list, register1, Coupon_to_create,add_coupon,Coupon_status_change,custom_account_status_change, Custom_user_list, event_visibility,partner_and_event_register,home_event,registerlink,partner_visibility,eventregister,eventtable,editevent,destroyevent)#,que_sub
+coupon_code_list, register1, Coupon_to_create,add_coupon,Coupon_status_change,custom_account_status_change, Custom_user_list, event_visibility,partner_and_event_register,home_event,registerlink,partner_visibility,eventregister,eventtable,editevent,destroyevent,show_questions)#,que_sub
 from profiles.views import individual_doctor, individual_user, nursing_home, hospital, useraddebyindvidualdoctor, individual_doctor_user_list, individual_doctor_user_creation, individual_doctor_change_password, set_password, user_password
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -88,9 +88,8 @@ urlpatterns = [
     path('event_register_form/<int:module_id>/',event_register_form, name="event_register_form"),
     path('show_events/',show_events, name="show_events"),
     path('password_reset_user_for_event/',password_reset_user_for_event, name="password_reset_user_for_event"),
-    
-    
+    path('show_questions/',show_questions,name='show_questions'),
     path('streaming/<int:id>',streaming,name='streaming'),
-    # path('que_sub/<int:id>', que_sub, name='que_sub')
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

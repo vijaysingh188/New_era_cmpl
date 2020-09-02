@@ -271,6 +271,8 @@ class Question(models.Model):
 
     def __str__(self):
         return str(self.pk)
+    # class Meta:
+    #     ordering = ['-que']
 
 
 class Rlink(models.Model):
@@ -279,6 +281,7 @@ class Rlink(models.Model):
     register_link = models.CharField(max_length=255,null=True, blank=True)
     def __str__(self):
         return str(self.pk)
+
 
 
 
