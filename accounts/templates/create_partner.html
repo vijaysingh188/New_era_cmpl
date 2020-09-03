@@ -928,28 +928,7 @@ given frequency)</span></label>
 
 </script>
 
-<script>
-$(document).ready(function(e) {
-    $(".mybtn").on('click', function (e) {
-    e.preventDefault();
-        });
-        if(!true)
-	$("#filePHOTO").change(function() {
-		$("#file_error").html("");
-		$(".file_upload1").css("border-color", "#F0F0F0");
-		var file_size = $('#filePHOTO')[0].files[0].size;
-		if (file_size > 300) {
-			$("#file_error").html("<p style='color:#FF0000'>File size is greater than 300kb</p>");
-			alert("im here");
-			$(".file_upload1").css("border-color", "#FF0000");
-			$('#streaming_rightpanel').addClass("error");
-			return false;
 
-		}
-		return true;
-	});
-});
-</script>
 
 <script>
     $('#streaming_rightpanel').bind('change', function() {

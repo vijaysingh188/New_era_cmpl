@@ -106,7 +106,13 @@ def register(request):
                     user.type_of_doctor = type
                     user.set_password(password)
                     user.is_hdc_individual = True
+
+                    rt = []
+                    link = ""
+                    rt.append(link)
+                    user.register_link = rt
                     user.save()
+
                     email_subject = 'Welcome To Health Perigon!'
                     valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
                     date = json.dumps(valid_till, indent=4, sort_keys=True, default=str)
@@ -179,6 +185,10 @@ def register(request):
                     user.payment = payment
                     user.set_password(password)
                     user.is_hdc_hospital = True
+                    rt = []
+                    link = ""
+                    rt.append(link)
+                    user.register_link = rt
                     user.save()
                     email_subject = 'Welcome To Health Perigon!'
                     valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
@@ -250,6 +260,10 @@ def register(request):
                     password = form3.cleaned_data.get('password')
                     user.set_password(password)
                     user.is_hdc_nursing_home = True
+                    rt = []
+                    link = ""
+                    rt.append(link)
+                    user.register_link = rt
 
                     user.save()
                     email_subject = 'Welcome To Health Perigon!'
@@ -314,6 +328,10 @@ def register(request):
 
                 user.set_password(password)
                 user.is_individual = True
+                rt = []
+                link = ""
+                rt.append(link)
+                user.register_link = rt
 
                 user.save()
                 email_subject = 'Welcome To Health Perigon!'
@@ -397,6 +415,7 @@ def register1(request):
                     user.set_password(password)
                     user.is_hdc_individual = True
                     rt = []
+                    link = ""
                     rt.append(link)
                     user.register_link = rt
                     user.save()
@@ -473,6 +492,7 @@ def register1(request):
                     user.set_password(password)
                     user.is_hdc_hospital = True
                     rt = []
+                    link = ""
                     rt.append(link)
                     user.register_link = rt
                     user.save()
@@ -548,6 +568,7 @@ def register1(request):
                     user.set_password(password)
                     user.is_hdc_nursing_home = True
                     rt = []
+                    link = ""
                     rt.append(link)
                     user.register_link = rt
                     user.save()
@@ -615,6 +636,7 @@ def register1(request):
                 user.set_password(password)
                 user.is_individual = True
                 rt = []
+                link = ""
                 rt.append(link)
                 user.register_link = rt
 
@@ -1513,7 +1535,10 @@ import json
 @csrf_exempt
 def event_register_form(request, module_id):
     module = Webregister.objects.get(id=module_id)
-    link = module.register_link
+    link = module.register_link #link = www.healthperigon.net/1
+    print(link,'link')
+    str_link = module.streaming_link
+    print(str_link, 'str_link')#www.github.com str_link None str_link
     object = Eventregisterationuser.objects.get(webregister=module)
     check_category = Webregister.objects.get(id=module_id)
     target = check_category.targetaudiance
@@ -1544,7 +1569,9 @@ def event_register_form(request, module_id):
                 user.type_of_doctor = type2
                 user.set_password(password)
                 user.is_hdc_individual = True
+                link = www.healthperigon.net / 100
                 rt = []
+
                 rt.append(link)
                 user.register_link = rt
                 user.save()
@@ -1644,11 +1671,10 @@ def event_register_form(request, module_id):
                 print(data, 'data')
                 try:
                     new_user = CustomUser.objects.get(email=to_email)
+
                     obj = IndivdualUserProfile.objects.create(user=new_user)
                     try:
                         check_to_link = Rlink.objects.create(customUser=new_user, webregister=module, register_link=link)
-                        # check_to_link = Rlink.objects.create(customUser=new_user, webregister=module,
-                        #                                      register_link=link)
 
                     except:
                         pass
@@ -1665,10 +1691,48 @@ def event_register_form(request, module_id):
         if 'loginForm' in request.POST:
 
             form2 = UserLoginForm(request.POST)
+            try:
+                username = request.POST.get('username')
+                for_link = CustomUser.objects.filter(email=username)
+                # some_other_check = CustomUser.objects.filter(email=username).exist()
+                # print(some_other_check,'some_other_check')
+
+                previous_data = []
+                for i in for_link:
+
+                    if i.register_link == None:
+                        previous_data.append(link)
+                        for_link.update(register_link=previous_data)
+                        return redirect('/event_register_form/' + str(module_id),
+                                        messages.success(request, '{}{}{}'.format(
+                                            "You have succesfully registered for this ", title, " event"),
+                                                         'alert-success'))
+
+                    previous_data = i.register_link
+
+                    if previous_data:
+                        try:
+                            if link in previous_data:
+                                return redirect('/event_register_form/' + str(module_id),
+                                        messages.success(request, '{}{}{}'.format(
+                                            "You have already registered for this ", title, " event"),
+                                                         'alert-success'))
+                        except:
+                                pass
+
+                        previous_data.append(link)
+                        for_link.update(register_link=previous_data)
+                        return redirect('/event_register_form/' + str(module_id),
+                                        messages.success(request, '{}{}{}'.format(
+                                            "You have succesfully registered for this ", title, " event"),
+                                                         'alert-success'))
+            except:
+                pass
 
             if form2.is_valid():
                 username = form2.cleaned_data['username']
                 password = form2.cleaned_data['password']
+
 
                 user = authenticate(username=username, password=password)
                 if user is not None and user.is_active:
@@ -1682,6 +1746,9 @@ def event_register_form(request, module_id):
 
                     except:
                         pass
+                    if str_link == None:
+                        return redirect('/event_register_form/' + str(module_id), messages.success(request, '{}{}{}'.format(
+                    "Streamin link is not available  for this ", title, " event"), 'alert-success'))
 
                     previous_data = []
                     for i in for_link:
@@ -1690,8 +1757,7 @@ def event_register_form(request, module_id):
                             previous_data.append(link)
                             for_link.update(register_link=previous_data)
                             return redirect('/streaming/'+ str(module_id))
-                            # return redirect('/streaming/' + str(module_id), messages.success(request, '{}{}{}'.format(
-                            #     "You have succesfully registered for this ", title, " event"), 'alert-success'))
+
 
                         previous_data = i.register_link
 
@@ -1721,6 +1787,10 @@ def streaming(request, id):
     module = Webregister.objects.get(id=id)
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
+    str_link = module.streaming_link
+
+
+
     check_auth = CustomUser.objects.filter(email=request.user)
     data_exists = False
     for i in check_auth:
@@ -1762,6 +1832,7 @@ def streaming(request, id):
         check_auth = CustomUser.objects.filter(email=request.user)
         obj = Question.objects.create(webregister=module)
         form = QuestionForm(request.POST, instance=obj)
+        orgs = Question.objects.filter(webregister=module, que__isnull=True).exists()
         try:
             orgs = Question.objects.filter(webregister=module,que__isnull=True)
             orgs.delete()
@@ -1804,11 +1875,9 @@ def show_questions(request):
 def password_reset_user_for_event(request):
     form = PasswordForm(request.POST or None)
     form1 = PasswordVerificationAdminForm(request.POST or None)
-
     if request.method == 'POST':
         email = request.POST.get('email')
         phone_no = request.POST.get('phone_no')
-
     else:
         form = PasswordForm()
         form1 = PasswordVerificationAdminForm()
