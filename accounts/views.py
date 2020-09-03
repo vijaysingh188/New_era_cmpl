@@ -1532,13 +1532,13 @@ def show_events(request):
     return render(request,'Events.html',{'objects':objects, 'past_event':past_event})
 
 import json
+
+
 @csrf_exempt
 def event_register_form(request, module_id):
     module = Webregister.objects.get(id=module_id)
-    link = module.register_link #link = www.healthperigon.net/1
-    print(link,'link')
+    link = module.register_link
     str_link = module.streaming_link
-    print(str_link, 'str_link')#www.github.com str_link None str_link
     object = Eventregisterationuser.objects.get(webregister=module)
     check_category = Webregister.objects.get(id=module_id)
     target = check_category.targetaudiance
@@ -1546,11 +1546,10 @@ def event_register_form(request, module_id):
 
     if request.method == "POST":
         if 'doctor' in request.POST:
-            print(request.POST, "type_of_doctor")
+
             form = IndivdualDoctorForm(request.POST)
             email = request.POST.get('email')
             type_of_doctor = request.POST.get('type_of_doctor')
-
 
             if form.is_valid():
 
@@ -1569,13 +1568,10 @@ def event_register_form(request, module_id):
                 user.type_of_doctor = type2
                 user.set_password(password)
                 user.is_hdc_individual = True
-                link = www.healthperigon.net / 100
                 rt = []
-
                 rt.append(link)
                 user.register_link = rt
                 user.save()
-
 
                 email_subject = 'Welcome To Health Perigon!'
                 valid_till = (datetime.datetime.now() + datetime.timedelta(days=364)).date()
@@ -1596,25 +1592,24 @@ def event_register_form(request, module_id):
                 payload['authkey'] = "95631AQvoigMsq5ec52866P1"
                 payload['content-type'] = "application/json"
                 payload['mobiles'] = phone_no
-                # payload['register_link'] = link
+
                 payload['flow_id'] = "5efada07d6fc05445570a4f2"
                 payload['ID'] = user.special_id
                 url = "https://api.msg91.com/api/v5/flow/"
                 response = requests.post(url, json=payload)
                 data = response.json()
-                print(data, 'data')
 
                 try:
 
                     new_user = CustomUser.objects.get(email=to_email)
                     obj = IndivdualDoctorProfile.objects.create(user=new_user)
                     try:
-                        check_to_link = Rlink.objects.create(customUser=new_user,webregister=module,register_link=link)
+                        check_to_link = Rlink.objects.create(customUser=new_user, webregister=module,
+                                                             register_link=link)
                     except:
                         pass
                 except:
                     pass
-
 
                 return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
@@ -1622,10 +1617,10 @@ def event_register_form(request, module_id):
                 return redirect('/event_register_form/' + str(module_id),
                                 messages.error(request, ("Form is invalid"), 'alert-danger'))
         if 'individual' in request.POST:
-            print('individual')
+
             form1 = IndivdualUserForm(request.POST)
             username = request.POST.get('email')
-            print(form1.errors, 'error')
+
             if form1.is_valid():
                 user = form1.save(commit=False)
 
@@ -1633,14 +1628,13 @@ def event_register_form(request, module_id):
 
                 confirm_password = form1.cleaned_data.get('confirm_password')
 
-
                 if password != confirm_password:
                     return redirect('/event_register_form/' + str(module_id),
                                     messages.error(request, "Password Should Match "), 'alert-danger')
                 user.set_password(password)
                 user.is_individual = True
-                # user.register_link = link
-                rt =[]
+
+                rt = []
                 rt.append(link)
                 user.register_link = rt
                 user.save()
@@ -1668,13 +1662,14 @@ def event_register_form(request, module_id):
                 url = "https://api.msg91.com/api/v5/flow/"
                 response = requests.post(url, json=payload)
                 data = response.json()
-                print(data, 'data')
+
                 try:
                     new_user = CustomUser.objects.get(email=to_email)
-
                     obj = IndivdualUserProfile.objects.create(user=new_user)
                     try:
-                        check_to_link = Rlink.objects.create(customUser=new_user, webregister=module, register_link=link)
+                        check_to_link = Rlink.objects.create(customUser=new_user, webregister=module,
+                                                             register_link=link)
+
 
                     except:
                         pass
@@ -1694,9 +1689,6 @@ def event_register_form(request, module_id):
             try:
                 username = request.POST.get('username')
                 for_link = CustomUser.objects.filter(email=username)
-                # some_other_check = CustomUser.objects.filter(email=username).exist()
-                # print(some_other_check,'some_other_check')
-
                 previous_data = []
                 for i in for_link:
 
@@ -1712,43 +1704,80 @@ def event_register_form(request, module_id):
 
                     if previous_data:
                         try:
+                            print(previous_data,'previous_data')
                             if link in previous_data:
-                                return redirect('/event_register_form/' + str(module_id),
-                                        messages.success(request, '{}{}{}'.format(
-                                            "You have already registered for this ", title, " event"),
-                                                         'alert-success'))
+                                return redirect('/event_register_form/' + str(module_id), messages.success(request,
+                                                                                                           '{}{}{}'.format(
+                                                                                                               "You have already registered for this ",
+                                                                                                               title,
+                                                                                                               " event"),
+                                                                                                           'alert-success'))
                         except:
-                                pass
+                            pass
 
-                        previous_data.append(link)
-                        for_link.update(register_link=previous_data)
-                        return redirect('/event_register_form/' + str(module_id),
-                                        messages.success(request, '{}{}{}'.format(
-                                            "You have succesfully registered for this ", title, " event"),
-                                                         'alert-success'))
             except:
                 pass
 
             if form2.is_valid():
                 username = form2.cleaned_data['username']
                 password = form2.cleaned_data['password']
+                try:
+                    for_link = CustomUser.objects.filter(email=username)
+                    previous_data = []
+                    for i in for_link:
+                        if i.register_link == None:
+                            previous_data.append(link)
+                            for_link.update(register_link=previous_data)
+                            return redirect('/event_register_form/' + str(module_id), messages.success(request,
+                                                                                                       '{}{}{}'.format(
+                                                                                                           "You have succesfully registered for this ",
+                                                                                                           title,
+                                                                                                           " event"),
+                                                                                                       'alert-success'))
 
+                        previous_data = i.register_link
+
+                        if previous_data:
+                            previous_data.append(link)
+                            for_link.update(register_link=previous_data)
+                            return redirect('/event_register_form/' + str(module_id), messages.success(request,
+                                                                                                       '{}{}{}'.format(
+                                                                                                           "You have succesfully registered for this ",
+                                                                                                           title,
+                                                                                                           " event"),
+                                                                                                       'alert-success'))
+
+                        try:
+                            if str_link == None:
+                                return redirect('/event_register_form/' + str(module_id), messages.success(request,
+                                                                                                           '{}{}{}'.format(
+                                                                                                               "Streaming link is not available  for this ",
+                                                                                                               title,
+                                                                                                               " event"),
+                                                                                                           'alert-success'))
+                        except:
+                            pass
+                except:
+                    pass
 
                 user = authenticate(username=username, password=password)
                 if user is not None and user.is_active:
                     login(request, user)
-                    print("fine work")
 
                     for_link = CustomUser.objects.filter(email=username)
 
                     try:
-                        check_to_link = Rlink.objects.create(customUser=for_link, webregister=module, register_link=link)
+                        check_to_link = Rlink.objects.create(customUser=for_link, webregister=module,
+                                                             register_link=link)
 
                     except:
                         pass
                     if str_link == None:
-                        return redirect('/event_register_form/' + str(module_id), messages.success(request, '{}{}{}'.format(
-                    "Streamin link is not available  for this ", title, " event"), 'alert-success'))
+                        return redirect('/event_register_form/' + str(module_id), messages.success(request,
+                                                                                                   '{}{}{}'.format(
+                                                                                                       "Streamin link is not available  for this ",
+                                                                                                       title, " event"),
+                                                                                                   'alert-success'))
 
                     previous_data = []
                     for i in for_link:
@@ -1756,22 +1785,21 @@ def event_register_form(request, module_id):
                         if i.register_link == None:
                             previous_data.append(link)
                             for_link.update(register_link=previous_data)
-                            return redirect('/streaming/'+ str(module_id))
-
+                            return redirect('/streaming/' + str(module_id))
 
                         previous_data = i.register_link
 
                         if previous_data:
                             previous_data.append(link)
                             for_link.update(register_link=previous_data)
-                            return redirect('/streaming/'+ str(module_id))
+                            return redirect('/streaming/' + str(module_id))
 
                 return redirect('/show_events/', messages.success(request, '{}{}{}'.format(
                     "You have succesfully registered for this ", title, " event"), 'alert-success'))
 
 
             else:
-                return redirect('/event_register_form/' + str(module_id),messages.error(request, "Form is invalid"))
+                return redirect('/event_register_form/' + str(module_id), messages.error(request, "Form is invalid"))
 
 
     else:
@@ -1852,6 +1880,13 @@ def streaming(request, id):
 
         return render(request, "video_streaming.html", {'module': module, 'object': object})
 
+def jointevent(request, id):
+    module = Webregister.objects.get(id=id)
+    object = Eventregisterationuser.objects.get(webregister=module)
+    link_check = module.register_link
+    str_link = module.streaming_link
+
+    return render(request,'jointevent.html', {'module': module, 'object': object})
 
 def show_questions(request):
     object = Question.objects.all().values()

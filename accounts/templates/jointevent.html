@@ -1,0 +1,299 @@
+{% load static %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<title>Health Perigon </title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" type="image/png" href="{% static 'images/icon.png' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,200,300,400,500,600,700,800,900" >
+		<link rel="stylesheet" type="text/css" href="{% static 'css/mystyle.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+		<style>
+		.mrg{
+		margin-top:9%;
+		}
+		@media (max-width: 768px) and (min-width: 430px){
+		.mrg{
+		margin-top:15%;
+		}
+
+		}
+		@media (max-width: 425px) and (min-width: 376px){
+		.mrg{
+		margin-top:25%;
+		}
+		.footer{
+		height:80px;
+		}
+
+		}
+
+		@media (max-width: 375px) and (min-width: 200px){
+		.mrg{
+		margin-top:36%;
+		}
+		.footer{
+		height:95px;
+		}
+		}
+
+		.user_card {
+			height: 400px;
+			width: 350px;
+			margin-top: auto;
+			margin-bottom: 6%;
+			background: #f2f2f2;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 5px;
+
+		}
+		.brand_logo_container {
+			position: absolute;
+			height: 170px;
+			width: 170px;
+			top: -75px;
+			border-radius: 50%;
+			background: #bfbfbf;
+			padding: 10px;
+			text-align: center;
+		}
+		.brand_logo {
+			height: 150px;
+			width: 150px;
+			border-radius: 50%;
+			border: 1px solid white;
+		}
+		.form_container {
+			margin-top: 100px;
+		}
+		.login_btn {
+			width: 100%;
+			background: #00a0e3 !important;
+			color: white !important;
+		}
+		.login_btn:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.login_container {
+			padding: 0 2rem;
+		}
+		.input-group-text {
+			background: #00a0e3 !important;
+			color: white !important;
+			border: 0 !important;
+			border-radius: 0.25rem 0 0 0.25rem !important;
+		}
+		.input_user,
+		.input_pass:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+			background-color: #c0392b !important;
+		}
+
+
+			.divider-text {
+    position: relative;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.divider-text span {
+    padding: 7px;
+    font-size: 12px;
+    position: relative;
+    z-index: 2;
+}
+.divider-text:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    top: 55%;
+    left: 0;
+    z-index: 1;
+}
+
+.btn-facebook {
+    background-color: #405D9D;
+    color: #fff;
+}
+.btn-twitter {
+    background-color: #42AEEC;
+    color: #fff;
+}
+		</style>
+
+
+
+
+
+
+    </head>
+    <body>
+    <!--<header>
+	    <div class="header" >
+		    <div class="container">
+			    <div class="header-left-side">
+				    <div class="logo-holder">
+					    <img src="images/logo.png" class="logo" alt="Health Perigon">
+				    </div>
+				</div>
+                <div class="header-right-side">
+				    <div class="social-icons-holder">
+				        <a class="icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+						<a class="icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+				    </div>
+				</div>
+				<div class="login-btn-holder">
+		            <a class="login-btn" href="login.html">Login</a>
+				</div>
+
+			</div>
+	    </div>
+		<div class="container">
+			<div class="Search-box-bg">
+			    <div class="form-group header-search">
+                    <span class="fa fa-search Search-box-icon"></span>
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+			</div>
+		    <nav class="navbar navbar-expand-md">
+			    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+			        <span class="navbar-toggler-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
+			    </button>
+		         <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+			        <div class=" navbar-nav">
+						<a class="nav-link" href="#">Home</a>
+						<a class="nav-link" href="#">About Us</a>
+						<a class="nav-link active" href="Events.html">Event</a>
+						<a class="nav-link" href="#">Register</a>
+						<a class="nav-link " href="#">Contact Us</a>
+			        </div>
+		        </div>
+	        </nav>
+        </div>
+    </header>-->
+	<!-- main-->
+	<div  class="container-fluid">
+		{% for object in objects %}
+
+		<div  class="main">
+
+			<div class="d-flex mrg justify-content-center h-100">
+			<div class="user_card">
+				<div class="d-flex justify-content-center">
+					<div class="brand_logo_container">
+						<img src="{% static 'images/logosp.png' %}" class="brand_logo" alt="Logo">
+					</div>
+				</div>
+				<div class="d-flex justify-content-center form_container">
+					<form>
+						<div class="input-group mb-3">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-user icon" aria-hidden="true"></i></span>
+							</div>
+							<input type="text" name="" class="form-control input_user" value="" placeholder="Email id or Phone number">
+						</div>
+						<div style="margin-bottom:2%" class="input-group mb-2">
+							<div class="input-group-append">
+								<span class="input-group-text"><i class="fa fa-key icon" aria-hidden="true"></i></span>
+							</div>
+							<input type="password" name="" class="form-control input_pass" value="" placeholder="Enter password">
+						</div>
+
+							<div class="d-flex justify-content-center mt-3 login_container">
+
+				 	<button type="button"  name="button" class="btn login_btn">View Streaming</button>
+				   </div>
+					</form>
+				</div>
+
+				<div class="mt-4">
+					<div class="d-flex justify-content-center links">
+						If you haven't registered for this event,<a style="color:#00a0e3" href="{% url 'event_register_form' object.webregister.id %}" class="ml-2">click here</a>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+
+
+
+		</div>
+
+
+		{% endfor %}
+
+		</div>
+
+
+
+
+
+
+
+	</div>
+	<footer class="footer">
+	    <div class="container">
+		    <div class="copyright">
+			    <p>Copyright © Health Perigon 2020. All Rights Reserved</p>
+			</div>
+			<div class="footer-social-icons-holder">
+				<a class="footer-icon-style " href="#"><i class="fa fa-facebook icon" aria-hidden="true"></i></a>
+			        <a class="footer-icon-style" href="#"><i class="fa fa-twitter icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-whatsapp icon" aria-hidden="true"></i></a>
+					<a class="footer-icon-style" href="#"><i class="fa fa-instagram icon" aria-hidden="true"></i></a>
+		    </div>
+		</div>
+	<footer>
+	<script>
+	    function selectFormType() {
+        if (document.getElementById('hdc').checked) {
+            document.getElementById('hdcform').style.display = 'block';
+        }
+         else document.getElementById('hdcform').style.display = 'none';
+
+		if (document.getElementById('individual').checked) {
+            document.getElementById('individualform').style.display = 'block';
+        }
+         else document.getElementById('individualform').style.display = 'none';
+		}
+	</script>
+
+    <script>
+	    function paymentCheck() {
+        if (document.getElementById('pay').checked) {
+            document.getElementById('payselect').style.display = 'inline-block';
+        }
+         else document.getElementById('payselect').style.display = 'none';
+
+		if (document.getElementById('usecode').checked) {
+            document.getElementById('usecodeselect').style.display = 'inline-block';
+        }
+         else document.getElementById('usecodeselect').style.display = 'none';
+        }
+	</script>
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+	<script src="{% static 'js/popper-1.16.0.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </body>
+</html>
