@@ -9,6 +9,7 @@ from .models import Rlink,SecurityQuestions,Question, ModuleMaster, Contact, Lab
 from django.http import Http404
 from django.http import Http404
 from django.contrib import messages
+import json
 from django.http import JsonResponse
 import requests
 from django.contrib.sites.shortcuts import get_current_site
@@ -1531,7 +1532,7 @@ def show_events(request):
     past_event = Eventregisterationuser.objects.filter(webregister__ends_on__lt=datetime.datetime.now())
     return render(request,'Events.html',{'objects':objects, 'past_event':past_event})
 
-import json
+
 
 
 @csrf_exempt
@@ -1540,16 +1541,33 @@ def event_register_form(request, module_id):
     link = module.register_link
     str_link = module.streaming_link
     object = Eventregisterationuser.objects.get(webregister=module)
-    check_category = Webregister.objects.get(id=module_id)
-    target = check_category.targetaudiance
-    title = check_category.eventtitle
+    # check_category = Webregister.objects.get(id=module_id)
+    target = module.targetaudiance
+    title = module.eventtitle
 
     if request.method == "POST":
         if 'doctor' in request.POST:
 
             form = IndivdualDoctorForm(request.POST)
             email = request.POST.get('email')
+
             type_of_doctor = request.POST.get('type_of_doctor')
+
+
+
+            for_link = CustomUser.objects.filter(email=email).exists()
+            if for_link == True:
+                for_link = CustomUser.objects.filter(email=email)
+                previous_data = []
+                for i in for_link:
+                    previous_data = i.register_link
+                    if link in previous_data:
+                        return redirect('/event_register_form/' + str(module_id),
+                                        messages.error(request, '{}{}{}'.format(
+                                            "You have already registered for this ", title, " event"), 'alert-danger'))
+            else:
+                pass
+
 
             if form.is_valid():
 
@@ -1620,6 +1638,19 @@ def event_register_form(request, module_id):
 
             form1 = IndivdualUserForm(request.POST)
             username = request.POST.get('email')
+            for_link = CustomUser.objects.filter(email=username).exists()
+            if for_link == True:
+                for_link = CustomUser.objects.filter(email=username)
+                previous_data = []
+                for i in for_link:
+                    previous_data = i.register_link
+                    if link in previous_data:
+
+                        return redirect('/event_register_form/' + str(module_id), messages.error(request, '{}{}{}'.format(
+                            "You have already registered for this ", title, " event"), 'alert-danger'))
+            else:
+                pass
+
 
             if form1.is_valid():
                 user = form1.save(commit=False)
@@ -1631,6 +1662,19 @@ def event_register_form(request, module_id):
                 if password != confirm_password:
                     return redirect('/event_register_form/' + str(module_id),
                                     messages.error(request, "Password Should Match "), 'alert-danger')
+                try:
+                    username = request.POST.get('username')
+                    for_link = CustomUser.objects.filter(email=username)
+                    print(for_link,'for_link')
+                    previous_data = []
+                    for i in for_link:
+                        if link in previous_data:
+                            print("yoooooo")
+                            return redirect('/event_register_form/' + str(module_id), messages.error(request,'{}{}{}'.format("You have already registered for this ",title, " event"),'alert-danger'))
+
+
+                except:
+                    pass
                 user.set_password(password)
                 user.is_individual = True
 
@@ -1663,14 +1707,13 @@ def event_register_form(request, module_id):
                 response = requests.post(url, json=payload)
                 data = response.json()
 
+
                 try:
                     new_user = CustomUser.objects.get(email=to_email)
                     obj = IndivdualUserProfile.objects.create(user=new_user)
                     try:
                         check_to_link = Rlink.objects.create(customUser=new_user, webregister=module,
                                                              register_link=link)
-
-
                     except:
                         pass
 
@@ -1811,6 +1854,78 @@ def event_register_form(request, module_id):
                       {'form': form, 'object': object, 'target': target, 'form1': form1, 'form2': form2})
 
 @csrf_exempt
+def jointevent(request, module_id):
+    module = Webregister.objects.get(id=module_id)
+    object = Eventregisterationuser.objects.get(webregister=module)
+    link_check = module.register_link
+    str_link = module.streaming_link
+
+    form2 = UserLoginForm(request.POST)
+    if form2.is_valid():
+        username = form2.cleaned_data['username']
+        password = form2.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            # check_auth = CustomUser.objects.filter(email=username)
+            check_auth = CustomUser.objects.filter(email=request.user)
+            print(check_auth,'check_auth')
+            data_exists = False
+            for i in check_auth:
+                my_json_data = i.register_link
+                try:
+
+                    if my_json_data == None:
+                        print("a")
+                        return redirect('/jointevent/' + str(module_id), messages.error(request, "Not Registered for this event"))
+                except:
+                    pass
+                try:
+
+                    if link_check not in my_json_data:
+                        print("b")
+                        return redirect('/jointevent/' + str(module_id), messages.error(request, "Not Registered for this event"))
+                except:
+                    pass
+                try:
+
+                    if my_json_data[0] != i.register_link[0]:
+                        print("c")
+                        return redirect('/jointevent/' + str(module_id), messages.error(request, "Not Registered for this event"))
+                except:
+                    pass
+                try:
+
+                    if i.register_link[0] not in my_json_data:
+                        print("d")
+                        return redirect('/jointevent/' + str(module_id), messages.error(request, "Not Registered for this event"))
+                except:
+                    pass
+                try:
+
+                    if i.register_link not in my_json_data[0]:
+                        print("e")
+                        return redirect('/event_register_form/' + str(module_id), messages.error(request, "Not Registered for this event"))
+                except:
+                    pass
+
+                data_exists = True
+            if data_exists == True:
+                return redirect('/streaming/' + str(module_id))
+            else:
+                return redirect('/jointevent/' + str(module_id), messages.error(request, "Not Registered for this event"))
+
+
+
+
+        else:
+            return redirect('/jointevent/' + str(module_id), messages.error(request, "Username or password is incorrect"))
+
+    return render(request, 'jointevent.html',{'module': module, 'object': object})
+
+
+
+@csrf_exempt
 def streaming(request, id):
     module = Webregister.objects.get(id=id)
     object = Eventregisterationuser.objects.get(webregister=module)
@@ -1880,13 +1995,7 @@ def streaming(request, id):
 
         return render(request, "video_streaming.html", {'module': module, 'object': object})
 
-def jointevent(request, id):
-    module = Webregister.objects.get(id=id)
-    object = Eventregisterationuser.objects.get(webregister=module)
-    link_check = module.register_link
-    str_link = module.streaming_link
 
-    return render(request,'jointevent.html', {'module': module, 'object': object})
 
 def show_questions(request):
     object = Question.objects.all().values()

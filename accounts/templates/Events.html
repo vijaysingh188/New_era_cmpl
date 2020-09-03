@@ -380,9 +380,7 @@ border-radius: 10px;
 				    <div class="col-md-12">
 					
 					
-					<!--<div class="Aboutus-slider-content">
-						<img class="d-block w-100 carv" src="images/eventpagebanner.jpg" alt="Health Perigon Event">
-					</div>-->
+
 					
 					<br><br>
 						<nav>
@@ -431,7 +429,7 @@ border-radius: 10px;
 									{% if object.webregister.sponserby != "" %}
 									<p style="font-weight:500">Supported By: <span style="font-weight:300">{{ object.webregister.sponserby }}</span></p>
 									{%endif%}
-										<!--<a data-toggle="modal" href="#myModal1" class="modalbtn">Detailed Programme</a>-->
+
 	
 									</div>
 
@@ -439,9 +437,9 @@ border-radius: 10px;
 										<a href="{% url 'event_register_form' object.webregister.id %}" class="Cbtn Cbtn-primary">Register Now</a>
 										
 										{% if object.webregister.streaming_link != None %}
-										<a href="{% url 'streaming' object.webregister.id %}" class="Cbtn Cbtn-danger">Join Event</a>
+										<a href="{% url 'jointevent' object.webregister.id %}" class="Cbtn Cbtn-danger">Join Event</a>
 									    {%endif%}
-										
+
 									</div>
 								</div>
 							</div> 
@@ -491,9 +489,8 @@ border-radius: 10px;
 										<li>{{ past.webregister.Chairpersons}}</li>
 										<li>{{ past.webregister.ContactPersonanme }}</li>
 									</ul>
-<!--									<h6>Session Info</h6>-->
-<!--										<p style="font-weight:300">Et et consectetur ipsum labore excepteur est proident excepteur ad velit occaecat qui minim occaecat veniam. </p>-->
-					 
+
+
 									</div>
 									{% if object.webregister.streaming_link != None %}
 									<div style="background:none" class="footer">
@@ -524,14 +521,14 @@ border-radius: 10px;
 	
 	
 	
-	<!-- Modal1 -->
+
 	<div id="myModal1" class="modal fade in">
         <div class="modal-dialog">
             <div class="modal-content">
  
                 <div class="modal-header">
                     <a class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span></a>
-                    <!--<h4 class="modal-title">Event Title</h4>-->
+
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					  <span aria-hidden="true">×</span>
 					</button>
@@ -559,11 +556,11 @@ border-radius: 10px;
                 </div>
                
  
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dalog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 	
-	<!-- Modal1 -->
+
 	<div id="myModal2" class="modal fade in">
         <div class="modal-dialog">
             <div class="modal-content">

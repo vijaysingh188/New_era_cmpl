@@ -90,7 +90,7 @@ urlpatterns = [
     path('password_reset_user_for_event/',password_reset_user_for_event, name="password_reset_user_for_event"),
     path('show_questions/',show_questions,name='show_questions'),
     path('streaming/<int:id>',streaming,name='streaming'),
-    path('jointevent/<int:id>',jointevent, name="jointevent"),
+    path('jointevent/<int:module_id>',jointevent, name="jointevent"),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
