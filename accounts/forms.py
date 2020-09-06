@@ -352,11 +352,14 @@ class Eventregistertable(forms.ModelForm):
         ('Conference', 'Conference'),
     )
     eventtype = forms.ChoiceField(choices=EVENT_OPTION) #format='%Y-%m-%d %H:%M:%S',
-    created_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))  #format='%Y-%m-%dT%H:%M 12:30PM Sep 2020
+    created_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))
     ends_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))
+
     Chairpersons = forms.CharField(widget=forms.TextInput(),required=False)
     mobilenumber = forms.CharField(max_length=10, min_length=10, widget=forms.TextInput(), required=False)
     email = forms.EmailField(required=False)
+    password = forms.CharField(widget=forms.TextInput(attrs={'id':'password'}), required=False)
+
     Moderatorname = forms.CharField(widget=forms.TextInput(), required=False)
     mmobile = forms.CharField(max_length=10, min_length=10, widget=forms.TextInput(), required=False)
     memail = forms.EmailField(required=False)
@@ -384,7 +387,7 @@ class Eventregistertable(forms.ModelForm):
     class Meta:
         model = Webregister
         fields = ['eventtitle', 'targetaudiance', 'eventtype', 'created_on','ends_on','Chairpersons','mobilenumber',
-                  'email', 'Moderatorname', 'mmobile', 'memail', 'ContactPersonanme', 'Cmobile', 'Cemail',
+                  'email','password', 'Moderatorname', 'mmobile', 'memail', 'ContactPersonanme', 'Cmobile', 'Cemail',
                   'organizedby','sponserby','Registerationrequired', 'paymentrequired', 'partnerrequired']
 
 class SignUpForm(UserCreationForm):

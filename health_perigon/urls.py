@@ -85,12 +85,14 @@ urlpatterns = [
     path('partner_and_event_register/',partner_and_event_register,name="partner_and_event_register"),
     path('Add_streaming_link',Add_streaming_link, name="Add_streaming_link"),
     path('user_login/',user_login, name="user_login"),
+
     path('event_register_form/<int:module_id>/',event_register_form, name="event_register_form"),
     path('show_events/',show_events, name="show_events"),
     path('password_reset_user_for_event/',password_reset_user_for_event, name="password_reset_user_for_event"),
-    path('show_questions/',show_questions,name='show_questions'),
     path('streaming/<int:id>',streaming,name='streaming'),
     path('jointevent/<int:module_id>',jointevent, name="jointevent"),
+
+    path('show_questions/',show_questions,name='show_questions'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

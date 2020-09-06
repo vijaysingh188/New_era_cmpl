@@ -551,7 +551,7 @@ button.btn-check-login:hover {
          else document.getElementById('usecodeselect').style.display = 'none';
         }
 	</script>
-		<script>
+		<script>id_type_of_doctor
 
 			$( document ).ready(function() {
     document.getElementById("id_phone_no").setAttribute("placeholder", "Phone Number");
@@ -560,10 +560,16 @@ button.btn-check-login:hover {
 
 
 
-
 });
 </script>
+<script>
+	$( document ).ready(function() {
+			$("#id_type_of_doctor option[value='DF']").hide();
+			$("#id_type_of_doctor option[value='DG']").hide();
 
+
+	});
+</script>
 
 
 

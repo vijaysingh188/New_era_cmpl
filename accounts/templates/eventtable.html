@@ -168,7 +168,7 @@
 												<td >{{ module.eventtitle }}</td>
 												<td>{{ module.eventtype }}</td>
 												<td>{{ module.targetaudiance }}</td>
-												<td><a href="{% url 'show_events' %}" >{{module.register_link}}</td>
+												<td><a href="{% url 'event_register_form' module.id %}">{{module.register_link}}</td>
 												<td>{{ module.created_on }}</td>
 												<td>{{ module.ends_on }}</td>
 

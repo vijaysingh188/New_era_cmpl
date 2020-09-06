@@ -1428,7 +1428,7 @@ def home_event(request):
 @csrf_exempt
 def eventtable(request):
      module=Webregister.objects.all().values()
-     return render(request,"eventtable.html",{'module':module})
+     return render(request,"eventtable.html",{'module':module}) #,'new_check':new_check
 
 
 # @csrf_exempt
@@ -1931,8 +1931,8 @@ def streaming(request, id):
     object = Eventregisterationuser.objects.get(webregister=module)
     link_check = module.register_link
     str_link = module.streaming_link
-
-
+    target = module.targetaudiance
+    title = module.eventtitle
 
     check_auth = CustomUser.objects.filter(email=request.user)
     data_exists = False
@@ -1969,7 +1969,6 @@ def streaming(request, id):
         return redirect('/event_register_form/' + str(id))
     else:
         module = Webregister.objects.get(id=id)
-        print(module,'module')
         object = Eventregisterationuser.objects.get(webregister=module)
         link_check = module.register_link
         check_auth = CustomUser.objects.filter(email=request.user)
@@ -1979,21 +1978,18 @@ def streaming(request, id):
         try:
             orgs = Question.objects.filter(webregister=module,que__isnull=True)
             orgs.delete()
-            print("yes")
+
         except:
             pass
-
         if request.method == "POST":
             que = request.POST.get('que')
-            print(que, 'que')
-            print(form.errors)
             if form.is_valid():
                 form.save()
 
         else:
             form = QuestionForm()
 
-        return render(request, "video_streaming.html", {'module': module, 'object': object})
+        return render(request, "video_streaming.html", {'module': module, 'object': object,'title':title})
 
 
 

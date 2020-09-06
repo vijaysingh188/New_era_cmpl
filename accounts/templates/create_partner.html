@@ -8,6 +8,14 @@
 
 
 	   <style>
+
+	   .ad label{
+	   float:left;
+	   }
+	   .ad input[type="text"]{
+	   width:96% !important;
+	   }
+
 		.category {
     text-transform: capitalize;
     font-weight: 700;
@@ -567,22 +575,6 @@ span.switch-label:after {
                                             </div>
 
                                             <div class="col-md-4 mb-3">
-                                                <label>Chairpersons Name</label>
-                                                <input type="text" class="form-control" id="Chairpersons"  name="Chairpersons" />
-                                            </div>
-
-                                             <div class="col-md-4 mb-3">
-                                                <label>Chairpersons Mobile Number</label>
-                                                <input type="tel" class="form-control"  id="mobilenumber" name="mobilenumber" pattern="[0-9]{10}" />
-
-                                            </div>
-
-                                             <div class="col-md-4 mb-3">
-                                                <label>Chairpersons Email Address</label>
-                                                <input type="email" class="form-control" id="email" name="email" />
-                                            </div>
-
-                                            <div class="col-md-4 mb-3">
                                                 <label>Moderator Name</label>
                                                 <input type="text" class="form-control" id="Moderatorname"  name="Moderatorname" />
                                             </div>
@@ -623,6 +615,49 @@ span.switch-label:after {
                                                 <label>Supported by</label>
                                                 <input type="text" class="form-control" id="sponserby" name="sponserby" />
                                             </div>
+
+											 <div class="col-md-12">
+												<div data-role="appendRow">
+													<div class="form-inline form-row">
+
+
+
+													  <div class=" col-lg-3 ad">
+														<label>Chairpersons Name</label>
+                                                          <input type="text" class="form-control" id="Chairpersons"  name="Chairpersons" />
+<!--														 <input type="text" class="form-control" id="field-name">-->
+													  </div>
+
+													   <div class=" col-lg-3 ad">
+														<label style="padding-left: 2%;">Chairpersons Mobile Number</label>
+                                                           <input type="tel" class="form-control"  id="mobilenumber" name="mobilenumber" pattern="[0-9]{10}" />
+<!--														 <input style="margin-left: 2%;" type="text" class="form-control" id="field-name">-->
+													  </div>
+
+													   <div class=" col-lg-3 ad">
+														<label style="padding-left: 2%;">Chairpersons Email Address</label>
+                                                           <input type="email" class="form-control" id="email" name="email" />
+<!--														 <input style="margin-left: 2%;" type="text" class="form-control" id="field-name">-->
+													  </div>
+
+													   <div class=" col-lg-3 ad">
+														<label style="padding-left: 2%;">Chairpersons Password</label>
+                                                           <input type="text" class="form-control" id="password" name="password" />
+<!--														 <input style="margin-left: 2%;" type="text" class="form-control" id="field-name">-->
+													  </div>
+
+															<div class="col-md-12">
+                                                <div style="text-align:right" class="mybtn-holder">
+                                                    <button data-role="add" class="mybtn" data-toggle="collapse" data-target="#demo">Add Chairperson</button>
+                                                    <button data-role="remove" class="mybtn" type="submit">Remove</button>
+                                                </div>
+                                            </div>
+
+
+													</div>  <!-- /div.form-inline -->
+												</div>  <!-- /div[data-role="dynamic-fields"] -->
+											</div>
+
 
                                             <div class="col-md-4 mb-3">
                                             <label>Registration Required</label>
@@ -967,6 +1002,49 @@ given frequency)</span></label>
     }
 });
 </script>
+
+
+<script>
+			// Dynamically add-on fields
+
+$(function() {
+    // Remove button click
+    $(document).on(
+        'click',
+        '[data-role="appendRow"] > .form-inline [data-role="remove"]',
+        function(e) {
+            e.preventDefault();
+            $(this).closest('.form-row').remove();
+        }
+    );
+    // Add button click
+    $(document).on(
+        'click',
+        '[data-role="appendRow"] > .form-row [data-role="add"]',
+        function(e) {
+            e.preventDefault();
+            var container = $(this).closest('[data-role="appendRow"]');
+            new_field_group = container.children().filter('.form-row:first-child').clone();
+
+            container.append(new_field_group);
+            console.log(typeof(new_field_group))
+            console.log(new_field_group.first().html())
+            var letStart = new_field_group.first().html()
+        }
+    );
+});
+
+
+// file upload
+
+$(document).on('change', '.file-upload', function(){
+  var i = $(this).prev('label').clone();
+  var file = this.files[0].name;
+  $(this).prev('label').text(file);
+});
+
+
+		</script>
 
   {% endblock %}
 

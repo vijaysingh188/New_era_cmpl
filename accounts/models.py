@@ -13,6 +13,9 @@ from django_countries.fields import CountryField
 from django.db import models
 import jsonfield
 
+df = []
+
+
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)
@@ -21,7 +24,7 @@ class CustomUser(AbstractUser):
     lastname = models.CharField(max_length=10, blank=True, null=True)
     title = models.CharField(max_length=10, blank=True, null=True)
     middle_name = models.CharField(max_length=255, blank=True, null=True)
-    phone_no = models.CharField(max_length=255, unique=True)
+    phone_no = models.CharField(max_length=255, unique=True, null=True, blank=True)
     payment = models.CharField(max_length=255, blank=True, null=True)
     usecode = models.CharField(max_length=255, blank=True, null=True)
     type_of_doctor = models.CharField(max_length=255, blank=True, null=True)
@@ -44,7 +47,7 @@ class CustomUser(AbstractUser):
     is_hdc_nursing_home = models.BooleanField(default=False)
     useraddebyindvidualdoctor=models.BooleanField(default=False)
     special_id = models.CharField(max_length=255, null=True, default=None)
-    register_link = jsonfield.JSONField(blank=True)
+    register_link = jsonfield.JSONField(default=df, blank=True, null=True)
 
 
     USERNAME_FIELD = 'email'
@@ -211,8 +214,8 @@ class Coupon(models.Model):
     modified = models.DateTimeField(auto_now=True)
     active = models.BooleanField(default=True)
 
-    objects = models.Manager()            #default
-    coupon = CouponManager()              #override
+    objects = models.Manager()
+    coupon = CouponManager()
 
     def expired(self):
         return self.endDate is not None and self.endDate < timezone.now()
@@ -230,6 +233,7 @@ class Webregister(models.Model):
     Chairpersons = models.CharField(max_length=255)
     mobilenumber = models.CharField(max_length=255)
     email = models.EmailField()
+    password = models.CharField(max_length=255)
     Moderatorname = models.CharField(max_length=266)
     mmobile = models.CharField(max_length=255, blank=True)
     memail = models.EmailField()
