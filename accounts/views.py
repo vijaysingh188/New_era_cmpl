@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import Rlink,SecurityQuestions,Question, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
+from .models import Rlink,SecurityQuestions,Question,LoginDetails, ModuleMaster, Contact, LaboratoryPreDefine, LaboratoryEmpty, CustomUser, AddOnServices,pharamcytab, LaboratoryModule, Coupon, Webregister, Eventregisterationuser
 from django.http import Http404
 from django.http import Http404
 from django.contrib import messages
@@ -1806,6 +1806,8 @@ def event_register_form(request, module_id):
                 user = authenticate(username=username, password=password)
                 if user is not None and user.is_active:
                     login(request, user)
+                    last_login = datetime.datetime.now()
+                    new = LoginDetails.objects.create(loginuser=request.user, last_login=last_login, webregister=module)
 
                     for_link = CustomUser.objects.filter(email=username)
 
@@ -2120,6 +2122,23 @@ def que_sub(request,id):
 #         return render(request, "video_streaming.html", {'module': module, 'object': object})
 
 
+def logout_event(request):
+	sodmzs = request.user
+	sodmzs.last_logout = datetime.datetime.now()
+	sodmzs.save()
+	new = LoginDetails.objects.filter(loginuser=request.user)
+	for i in new:
+		if i.last_logout == None:
+			i.last_logout = sodmzs.last_logout
+			i.save()
+	logout(request)
+	return redirect('/show_events')
 
+def event_user_tracking(request):
+	event = Webregister.objects.all()
+	email = Rlink.objects.all()
+	detail = CustomUser.objects.all()
+	logindetails = LoginDetails.objects.all()
+	return render(request, "user_tracking.html",{"event":event,"email":email, "detail":detail, "logindetails":logindetails})
 
 

@@ -288,6 +288,12 @@ class Rlink(models.Model):
 
 
 
-
+class LoginDetails(models.Model):
+    loginuser = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    webregister = models.ForeignKey(Webregister, on_delete=models.CASCADE)
+    last_login = models.DateTimeField()
+    last_logout = models.DateTimeField()
+    def __str__(self):
+        return str(self.loginuser)
 
 
