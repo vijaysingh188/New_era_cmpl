@@ -3,7 +3,26 @@
   <component name="ChangeListManager">
     <list default="true" id="150f13fd-4bd4-40a7-ac79-a76364d60744" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0002_auto_20200830_2050.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0003_question.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0004_auto_20200901_1327.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0005_auto_20200901_1351.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0006_auto_20200901_1430.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0007_rlink.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0008_auto_20200902_1145.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0009_webregister_password.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0010_auto_20200906_1446.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0011_auto_20200906_1458.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0012_auto_20200906_1514.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0013_remove_customuser_register_link.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0014_auto_20200906_1532.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0015_customuser_register_link.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/migrations/0016_logindetails.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/asked_question.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/asked_question.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/templates/create_partner.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/create_partner.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/health_perigon/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/health_perigon/urls.py" afterDir="false" />
     </list>
@@ -57,17 +76,17 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="184" y="6" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1599048925241" />
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1599383251297">
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog" timestamp="1599645917339">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1599383251297" />
+    <state x="379" y="188" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1599645917338" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/accounts/views.py</url>
-          <line>2016</line>
+          <line>2066</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

@@ -254,7 +254,13 @@ class Webregister(models.Model):
         
     class Meta:
         ordering = ['-created_on']
+class Question(models.Model):
+    customUser = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    webregister = models.ForeignKey(Webregister, on_delete=models.CASCADE)
+    que = models.CharField(max_length=255,null=True, blank=True)
 
+    def __str__(self):
+        return str(self.pk)
 class Eventregisterationuser(models.Model):
     webregister = models.ForeignKey(Webregister,on_delete=models.CASCADE)
     header_eventimage = models.FileField(upload_to='images',null=True, blank=True)
@@ -268,15 +274,6 @@ class Eventregisterationuser(models.Model):
     def __str__(self):
         return str(self.pk)
 
-
-class Question(models.Model):
-    webregister = models.ForeignKey(Webregister, on_delete=models.CASCADE)
-    que = models.CharField(max_length=255,null=True, blank=True)
-
-    def __str__(self):
-        return str(self.pk)
-    # class Meta:
-    #     ordering = ['-que']
 
 
 class Rlink(models.Model):

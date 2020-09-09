@@ -7,7 +7,7 @@ from django.conf import settings
 from accounts.views import (home,password_reset_user_for_event, password_reset_admin, change_password_admin, send_otp_admin, laboratory_edit, 
 laboratory_update, laboratory_insertion, verify_otp_admin, login_view_admin, login_view, logout_view, 
 contact, activate_account, register, password_reset, contact_master, change_password, send_otp, 
-verify_otp, existing_module_master, create_module_master, edit_module_master, destroy_module_master,event_user_tracking,
+verify_otp, existing_module_master, create_module_master, edit_module_master, destroy_module_master,event_user_tracking,chairpersonlogin,
 addservice,addonservice,destroyonservice,pharmacy,pharmacytable,laboratory,lob,destroypharamcy, aboutus, streaming,logout_event,
 destroylaboratory,edit_service,edit_pharmacy, add_individual_user, User_creation, account_status_change, Add_streaming_link, user_login, event_register_form, show_events,
 coupon_code_list, register1, Coupon_to_create,add_coupon,Coupon_status_change,custom_account_status_change, Custom_user_list, event_visibility,partner_and_event_register,home_event,registerlink,partner_visibility,eventregister,eventtable,editevent,destroyevent,show_questions,jointevent)#,que_sub
@@ -92,9 +92,12 @@ urlpatterns = [
     path('streaming/<int:id>',streaming,name='streaming'),
     path('jointevent/<int:module_id>',jointevent, name="jointevent"),
 
-    path('show_questions/',show_questions,name='show_questions'),
+    path('show_questions/<int:id>',show_questions,name="show_questions"),
+    # path('show_questions/',show_questions,name="show_questions"),
+
     path('event_user_tracking/',event_user_tracking,name='event_user_tracking'),
     path('logout/',logout_event, name="logout_event"),
+    path('chairpersonlogin/',chairpersonlogin,name='chairpersonlogin'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

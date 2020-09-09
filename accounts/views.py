@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from .forms import UserLoginForm,QuestionForm, PasswordVerificationAdminForm, SecurityQuestionsForm, PasswordForm, SignUpForm, IndivdualUserForm, IndivdualDoctorForm, HospitalForm, NursingHomeForm, ModuleMasterForm, ContactForm, PasswordVerificationForm, AddServices,pharamcy, CouponForm, EventregisteruserForm,Eventregistertable
+from .forms import ChairpersonForm,UserLoginForm,QuestionForm, PasswordVerificationAdminForm, SecurityQuestionsForm, PasswordForm, SignUpForm, IndivdualUserForm, IndivdualDoctorForm, HospitalForm, NursingHomeForm, ModuleMasterForm, ContactForm, PasswordVerificationForm, AddServices,pharamcy, CouponForm, EventregisteruserForm,Eventregistertable
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
@@ -1506,6 +1506,7 @@ def partner_and_event_register(request):
             aa.register_link = 'www.healthperigon.net/'+ str(Webregister.objects.latest('id'))
             aa.save()
             obj = Eventregisterationuser.objects.create(webregister=aa)
+            # user_to_create = CustomUser.objects.create()
             form1 = EventregisteruserForm(request.POST, request.FILES, instance=obj)
 
 
@@ -1669,7 +1670,7 @@ def event_register_form(request, module_id):
                     previous_data = []
                     for i in for_link:
                         if link in previous_data:
-                            print("yoooooo")
+
                             return redirect('/event_register_form/' + str(module_id), messages.error(request,'{}{}{}'.format("You have already registered for this ",title, " event"),'alert-danger'))
 
 
@@ -1974,7 +1975,7 @@ def streaming(request, id):
         object = Eventregisterationuser.objects.get(webregister=module)
         link_check = module.register_link
         check_auth = CustomUser.objects.filter(email=request.user)
-        obj = Question.objects.create(webregister=module)
+        obj = Question.objects.create(customUser=request.user,webregister=module)
         form = QuestionForm(request.POST, instance=obj)
         orgs = Question.objects.filter(webregister=module, que__isnull=True).exists()
         try:
@@ -1993,24 +1994,67 @@ def streaming(request, id):
 
         return render(request, "video_streaming.html", {'module': module, 'object': object,'title':title})
 
+@csrf_exempt
+def chairpersonlogin(request):
+    if request.method == "POST":
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        form = ChairpersonForm(request.POST)
+        if form.is_valid():
+            object = Webregister.objects.filter(email=email,password=password).exists()
 
+            if object == True:
+                object = Webregister.objects.get(email=email, password=password)
+                return redirect('/show_questions/'+str(object))
+            else:
+                return redirect('/chairpersonlogin/', messages.error(request, "authentication failed"))
+        else:
+            return redirect('/chairpersonlogin/', messages.error(request, "Invalid form"))
 
-def show_questions(request):
-    object = Question.objects.all().values()
-    print(object, 'object')
-    # typeofdoc = CustomUser.objects.filter(email=request.user).values_list('type_of_doctor', flat=True)
-    check = Question.objects.filter().values_list('webregister_id', flat=True)
-    print(check,'check')
-    for i in object:
-        print(i,'i')
-        # {'id': 205, 'webregister_id': 2, 'que': 'djfbjkfv???'}
+    else:
+        form = ChairpersonForm()
+    return render(request,'Chairperson.html',{'form':form})
 
+# def show_questions(request,id):
+#     object = Question.objects.filter(webregister_id=id).values()
+#     username = CustomUser.objects.all()
+#
+#     context = {
+#        'object':object,
+#         'username':username
+#     }
+#     return render(request,'asked_question.html',context)
 
-
+def show_questions(request,id):
+    object = Question.objects.filter(webregister_id=id).values()
+    object1 = Question.objects.filter(webregister_id=id).values_list('customUser_id',flat=True)
+    name_data=CustomUser.objects.filter(id__in=object1).values('firstname')
+    for i,k in zip(name_data,object):
+        print(i,"iii")
+        k.update(i)
+    print(object,"onj")
     context = {
-       'object':object
+       'object':object,
+
     }
     return render(request,'asked_question.html',context)
+
+# def show_questions(request): #Question
+#
+#     object = Question.objects.all().values()
+#     print(object, 'object')
+#     for i in object:
+#         user = i['customUser_id']
+#         let_new = CustomUser.objects.filter(id=user).values_list('email', flat=True)[0]
+#         print(let_new,'let_new')
+#
+#
+#
+#
+#     context = {
+#        'object':object
+#     }
+#     return render(request,'asked_question.html',context)
 
 
 @csrf_exempt
@@ -2069,7 +2113,6 @@ def que_sub(request,id):
             return JsonResponse({"success": False}, status=400)
     # return JsonResponse({"success": False}, status=400)
 
-
 # @csrf_exempt
 # def streaming(request, id):
 #     module = Webregister.objects.get(id=id)
@@ -2123,22 +2166,22 @@ def que_sub(request,id):
 
 
 def logout_event(request):
-	sodmzs = request.user
-	sodmzs.last_logout = datetime.datetime.now()
-	sodmzs.save()
-	new = LoginDetails.objects.filter(loginuser=request.user)
-	for i in new:
-		if i.last_logout == None:
-			i.last_logout = sodmzs.last_logout
-			i.save()
-	logout(request)
-	return redirect('/show_events')
+    sodmzs = request.user
+    sodmzs.last_logout = datetime.datetime.now()
+    sodmzs.save()
+    new = LoginDetails.objects.filter(loginuser=request.user)
+    for i in new:
+        if i.last_logout == None:
+            i.last_logout = sodmzs.last_logout
+            i.save()
+    logout(request)
+    return redirect('/show_events')
 
 def event_user_tracking(request):
-	event = Webregister.objects.all()
-	email = Rlink.objects.all()
-	detail = CustomUser.objects.all()
-	logindetails = LoginDetails.objects.all()
-	return render(request, "user_tracking.html",{"event":event,"email":email, "detail":detail, "logindetails":logindetails})
+    event = Webregister.objects.all()
+    email = Rlink.objects.all()
+    detail = CustomUser.objects.all()
+    logindetails = LoginDetails.objects.all()
+    return render(request, "user_tracking.html",{"event":event,"email":email, "detail":detail, "logindetails":logindetails})
 
 

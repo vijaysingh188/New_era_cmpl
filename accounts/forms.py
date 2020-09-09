@@ -351,7 +351,7 @@ class Eventregistertable(forms.ModelForm):
         ('Webinar', 'webinar'),
         ('Conference', 'Conference'),
     )
-    eventtype = forms.ChoiceField(choices=EVENT_OPTION) #format='%Y-%m-%d %H:%M:%S',
+    eventtype = forms.ChoiceField(choices=EVENT_OPTION)
     created_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))
     ends_on = forms.DateTimeField(widget=forms.DateTimeInput(format='%Y-%m-%dT%H:%M',attrs={'type': 'datetime-local'}))
 
@@ -400,3 +400,6 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['que']
+class ChairpersonForm(forms.Form):
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder':'Email'}))
+    password = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Password'}))
